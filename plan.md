@@ -1,7 +1,7 @@
 # Low-Latency Market Data & Execution Engine
 
 > Detailed reference: `Low_Latency_Cpp_Systems_Engine_Master_Project_Plan_v3.md` (the "master plan").
-> This file is the working blueprint. If the two disagree, update this file first (see claude.md protocols).
+> This file is the working blueprint. If the two disagree, update this file first (see CLAUDE.md protocols).
 
 ## Overview
 
@@ -124,6 +124,7 @@ The engine is a testbed for a small set of deep, reproducible performance experi
 - [ ] Write `docs/experiments/E4-threading-model.md`, including where the hypothesis was wrong
 - [ ] Checkpoint "core": README draft with the hero plot, core resume bullets filled with measured numbers
 - [ ] Tag v0.5
+- [ ] Write `docs/study-guide.md`: beginner reading order through the code and experiments, concepts per file, links to references (for the user's interview preparation)
 
 ### Phase 5: Network Feed Handler → E5 (weeks 9–10)
 - [ ] Write `scripts/netns_setup.sh`: `exch`/`engine` namespaces, veth pair, multicast routes
@@ -228,6 +229,8 @@ The engine is a testbed for a small set of deep, reproducible performance experi
 
 - **Machine:** i5-8250U, SMT siblings 0/4, 1/5, 2/6, 3/7. Engine cores 2,3 with siblings 6,7 idle in E6. constant/nonstop TSC, LBR, Intel PT, RAPL available. Only GCC 15.2 was present at plan time (clang, perf, llvm-bolt need installing).
 - **RAM 7.6 GiB:** always stream ITCH; never load a full day.
-- **Time budget:** 15–20 h/week. Fallbacks: stop at the core checkpoint if ≤8 weeks remain; at ≤11 weeks, do P5 without retransmit + minimal P6 and skip E6.
+- **Schedule (revised 2026-10-04):** Claude implements the core checkpoint (P0–P4) directly, targeting the user's HFT resume deadline of 2026-10-06; interviews are expected ~early December 2026. The fallback rule applies: the first resume uses the core-only bullets. Quality is not cut for the deadline; anything not yet measured goes on the resume in neutral wording. After the resume, the user studies the core in detail (study guide), then P5+ continues toward v1.0.
+- **Original time budget:** 15–20 h/week. Fallbacks: stop at the core checkpoint if ≤8 weeks remain; at ≤11 weeks, do P5 without retransmit + minimal P6 and skip E6.
+- **ITCH data (verified 2026-10-04):** files are listed at `https://emi.nasdaq.com/ITCH/Nasdaq%20ITCH/`. Primary dev day: `07302019.NASDAQ_ITCH50.gz` (3.66 GB, has an `.md5sum`). No terms-of-use text is shown on the listing; this is recorded in `data/README.md`.
 - **Experiment write-up template and benchmark methodology:** master plan §5.3 and §9.
-- **Unverified items:** current ITCH sample-data URL and terms; ARM free-tier availability; GitHub ARM64 runner availability.
+- **Unverified items:** ITCH terms of use (URL verified); ARM free-tier availability; GitHub ARM64 runner availability.
