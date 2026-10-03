@@ -1,0 +1,26 @@
+# Build
+build/
+out/
+cmake-build-*/
+compile_commands.json
+
+# Market data: NEVER commit Nasdaq ITCH files or derived slices
+data/*
+!data/README.md
+!data/checksums.sha256
+
+# Experiment outputs / profiling artifacts
+results/
+perf.data*
+*.pcap
+*.profraw
+*.profdata
+*.fdata
+
+# Python
+__pycache__/
+.venv/
+
+# Editor
+.vscode/
+.idea/
