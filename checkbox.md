@@ -21,17 +21,17 @@
 - [ ] Write `scripts/tune_machine.sh` apply/restore (performance governor, `no_turbo=1`, `nmi_watchdog=0` so top-down analysis gets all PMU counters)
 - [x] Write `scripts/run_bench.py`: N interleaved runs, warm-up, pinning, CSV output + env JSON
 - [x] Write `scripts/analyse.py`: percentiles, median across runs, 95% bootstrap CI, percentile plots
-- [ ] E0: benchmark per-call cost of `rdtsc`, `lfence;rdtsc`, `rdtscp`, `steady_clock::now()`, `clock_gettime(MONOTONIC / MONOTONIC_RAW)`
-- [ ] E0: measure cross-core TSC skew for core pairs via ping-pong (NTP-style offset, bounded by RTT/2)
-- [ ] E0: measure histogram record cost
-- [ ] Write `docs/experiments/E0-measurement.md` and `docs/methodology.md`
+- [x] E0: benchmark per-call cost of `rdtsc`, `lfence;rdtsc`, `rdtscp`, `steady_clock::now()`, `clock_gettime(MONOTONIC / MONOTONIC_RAW)`
+- [x] E0: measure cross-core TSC skew for core pairs via ping-pong (NTP-style offset, bounded by RTT/2)
+- [x] E0: measure histogram record cost
+- [x] Write `docs/experiments/E0-measurement.md` and `docs/methodology.md`
 - [ ] Tag v0.1
 
 ## Phase 1: ITCH Decoder, Reference Book, Differential Testing → E1 (weeks 2–3)
 - [ ] Verify the current ITCH 5.0 sample-data location and terms of use; document them in `data/README.md`
 - [ ] Write `scripts/fetch_itch.sh` with `data/checksums.sha256` verification (Nasdaq data is never committed)
 - [ ] Implement a streaming ITCH file reader (pigz/zlib) handling the 2-byte big-endian length framing
-- [ ] Write `scripts/slice_itch.py` for local dev slices (first N messages; top-K symbols)
+- [ ] Write `tools/slice_itch` (C++; a Python per-message loop is too slow for a ~300M-message day) for local dev slices (first N messages; named symbols; top-K symbols)
 - [ ] Implement C++20 `bswap`/`load_be` helpers and the 48-bit timestamp loader, with unit tests
 - [ ] Implement the ITCH decoder for A, F, E, C, X, D, U, R, S, H with bounds checks, skipping other types by length
 - [ ] Build the stock-locate → symbol directory from `R` messages; books indexed by locate

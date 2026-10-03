@@ -10,7 +10,7 @@ data/*
 !data/checksums.sha256
 
 # Experiment outputs / profiling artifacts
-results/
+/results/
 perf.data*
 *.pcap
 *.profraw

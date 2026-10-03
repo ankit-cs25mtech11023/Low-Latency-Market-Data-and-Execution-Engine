@@ -1,0 +1,79 @@
+{
+  "name": "E0-skew",
+  "cmd": "{bin}/apps/e0_skew --pairs {pairs} --out {out}",
+  "params": [
+    "pairs=all"
+  ],
+  "runs": 10,
+  "warmup_runs": 1,
+  "order_mode": "rotate",
+  "seed": 1,
+  "variants": [
+    "pairs=all"
+  ],
+  "perf_stat": "",
+  "git_sha": "7291ce50328911fe962e32bdc091e508116f5892",
+  "git_dirty": false,
+  "started_at": "2026-10-03T22:11:07Z",
+  "argv": [
+    "scripts/run_bench.py",
+    "--name",
+    "E0-skew",
+    "--build",
+    "build/release",
+    "--runs",
+    "10",
+    "--no-build",
+    "--cmd",
+    "{bin}/apps/e0_skew --pairs {pairs} --out {out}",
+    "--param",
+    "pairs=all"
+  ],
+  "finished_at": "2026-10-03T22:12:23Z",
+  "order": [
+    [
+      -1,
+      "pairs=all"
+    ],
+    [
+      0,
+      "pairs=all"
+    ],
+    [
+      1,
+      "pairs=all"
+    ],
+    [
+      2,
+      "pairs=all"
+    ],
+    [
+      3,
+      "pairs=all"
+    ],
+    [
+      4,
+      "pairs=all"
+    ],
+    [
+      5,
+      "pairs=all"
+    ],
+    [
+      6,
+      "pairs=all"
+    ],
+    [
+      7,
+      "pairs=all"
+    ],
+    [
+      8,
+      "pairs=all"
+    ],
+    [
+      9,
+      "pairs=all"
+    ]
+  ]
+}

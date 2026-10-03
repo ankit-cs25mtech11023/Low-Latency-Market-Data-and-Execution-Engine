@@ -1,0 +1,124 @@
+{
+  "name": "E0-hist-counters",
+  "cmd": "{bin}/apps/e0_timers --variant {variant} --cpu 2 --counters cycles,instructions,branch-misses,L1-dcache-load-misses --out {out}",
+  "params": [
+    "variant=hist_record,hist_baseline"
+  ],
+  "runs": 10,
+  "warmup_runs": 1,
+  "order_mode": "rotate",
+  "seed": 1,
+  "variants": [
+    "variant=hist_record",
+    "variant=hist_baseline"
+  ],
+  "perf_stat": "",
+  "git_sha": "7291ce50328911fe962e32bdc091e508116f5892",
+  "git_dirty": false,
+  "started_at": "2026-10-03T22:14:18Z",
+  "argv": [
+    "scripts/run_bench.py",
+    "--name",
+    "E0-hist-counters",
+    "--build",
+    "build/release",
+    "--runs",
+    "10",
+    "--no-build",
+    "--cmd",
+    "{bin}/apps/e0_timers --variant {variant} --cpu 2 --counters cycles,instructions,branch-misses,L1-dcache-load-misses --out {out}",
+    "--param",
+    "variant=hist_record,hist_baseline"
+  ],
+  "finished_at": "2026-10-03T22:15:01Z",
+  "order": [
+    [
+      -1,
+      "variant=hist_baseline"
+    ],
+    [
+      -1,
+      "variant=hist_record"
+    ],
+    [
+      0,
+      "variant=hist_record"
+    ],
+    [
+      0,
+      "variant=hist_baseline"
+    ],
+    [
+      1,
+      "variant=hist_baseline"
+    ],
+    [
+      1,
+      "variant=hist_record"
+    ],
+    [
+      2,
+      "variant=hist_record"
+    ],
+    [
+      2,
+      "variant=hist_baseline"
+    ],
+    [
+      3,
+      "variant=hist_baseline"
+    ],
+    [
+      3,
+      "variant=hist_record"
+    ],
+    [
+      4,
+      "variant=hist_record"
+    ],
+    [
+      4,
+      "variant=hist_baseline"
+    ],
+    [
+      5,
+      "variant=hist_baseline"
+    ],
+    [
+      5,
+      "variant=hist_record"
+    ],
+    [
+      6,
+      "variant=hist_record"
+    ],
+    [
+      6,
+      "variant=hist_baseline"
+    ],
+    [
+      7,
+      "variant=hist_baseline"
+    ],
+    [
+      7,
+      "variant=hist_record"
+    ],
+    [
+      8,
+      "variant=hist_record"
+    ],
+    [
+      8,
+      "variant=hist_baseline"
+    ],
+    [
+      9,
+      "variant=hist_baseline"
+    ],
+    [
+      9,
+      "variant=hist_record"
+    ]
+  ]
+}

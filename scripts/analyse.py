@@ -17,6 +17,7 @@ Statistics (master plan §9):
 
 Usage:
   scripts/analyse.py summary results/E0-timers/latest            # table + plots
+  scripts/analyse.py summary DIR --panels 'TSC:rdtsc,rdtscp;OS:steady_clock'  # grouped plot panels
   scripts/analyse.py compare results/X/latest varA varB --metric p99
   scripts/analyse.py skew results/E0-skew/latest                 # cross-core TSC offsets
 """
@@ -130,7 +131,7 @@ def fmt(v: float) -> str:
     return f"{v:.3f}" if abs(v) < 10 else f"{v:.1f}" if abs(v) < 1000 else f"{v:.0f}"
 
 
-def summary(result_dir: Path, plot: bool) -> None:
+def summary(result_dir: Path, plot: bool, panels: str | None = None) -> None:
     rng = np.random.default_rng(12345)
     variants = load_variants(result_dir)
     if not variants:
@@ -171,7 +172,7 @@ def summary(result_dir: Path, plot: bool) -> None:
     print(table)
 
     if plot:
-        percentile_plot(variants, result_dir / "percentiles.png")
+        percentile_plot(variants, result_dir / "percentiles.png", panels)
 
 
 def counter_table(variants: dict[str, list[Run]], rng: np.random.Generator, result_dir: Path) -> str:
@@ -202,34 +203,79 @@ def counter_table(variants: dict[str, list[Run]], rng: np.random.Generator, resu
     return "\n".join(lines)
 
 
-def percentile_plot(variants: dict[str, list[Run]], path: Path) -> None:
+# Fixed categorical order (validated for CVD separation on a light surface). Hues are assigned
+# by position within a panel and never cycled: a panel holds at most len(SERIES_COLORS) lines.
+# Line style is a second encoding so identity never depends on colour alone.
+SERIES_COLORS = ["#2a78d6", "#eb6834", "#1baf7a", "#eda100", "#e87ba4"]
+SERIES_STYLES = ["-", "--", "-.", ":", (0, (5, 1, 1, 1, 1, 1))]
+
+
+def parse_panels(spec: str | None, names: list[str]) -> list[tuple[str, list[str]]]:
+    """'Title:a,b;Title2:c' -> [(title, [variant names])]. Names match a variant either exactly
+    or by the value after '=' (so 'rdtsc' selects 'variant=rdtsc'). Without a spec, variants
+    are chunked in order into panels of at most len(SERIES_COLORS)."""
+    cap = len(SERIES_COLORS)
+    if not spec:
+        return [("", names[i:i + cap]) for i in range(0, len(names), cap)]
+
+    def find(key: str) -> str:
+        hits = [n for n in names if n == key or n.split("=", 1)[-1] == key]
+        if len(hits) != 1:
+            sys.exit(f"--panels: '{key}' matches {hits or 'no variant'}")
+        return hits[0]
+
+    panels = []
+    for part in spec.split(";"):
+        title, _, keys = part.rpartition(":")
+        sel = [find(k.strip()) for k in keys.split(",") if k.strip()]
+        if len(sel) > cap:
+            sys.exit(f"--panels: panel '{title}' has {len(sel)} series; the limit is {cap} (split it)")
+        panels.append((title.strip(), sel))
+    return panels
+
+
+def percentile_plot(variants: dict[str, list[Run]], path: Path, panels_spec: str | None = None) -> None:
     import matplotlib
     matplotlib.use("Agg")
     import matplotlib.pyplot as plt
+    from matplotlib import ticker
 
-    fig, ax = plt.subplots(figsize=(9, 5.5))
+    panels = parse_panels(panels_spec, list(variants))
+    fig, axes = plt.subplots(len(panels), 1, figsize=(9, 3.6 * len(panels)), squeeze=False)
     qs = 1 - np.logspace(0, -6, 400)
-    for v, runs in variants.items():
-        # Merge all runs of a variant (same binary, same calibration within ~ppm).
-        tpn = float(np.median([r.ticks_per_ns for r in runs]))
-        div = runs[0].divisor
-        highs = np.concatenate([r.high for r in runs])
-        counts = np.concatenate([r.count for r in runs])
-        order = np.argsort(highs, kind="stable")
-        hi, cnt = highs[order], counts[order]
-        cum = np.cumsum(cnt)
-        n = cum[-1]
-        qs_v = qs[qs <= 1 - 1 / n] if n > 1 else qs[:1]
-        idx = np.searchsorted(cum, np.maximum(1, np.ceil(qs_v * n)))
-        ax.plot(1 / (1 - qs_v), hi[idx] / div / tpn, label=v)
-    ax.set_xscale("log")
-    ax.set_yscale("log")
-    ax.set_xticks([1, 2, 10, 100, 1e3, 1e4, 1e5, 1e6])
-    ax.set_xticklabels(["0%", "50%", "90%", "99%", "99.9%", "99.99%", "99.999%", "99.9999%"])
-    ax.set_xlabel("percentile")
-    ax.set_ylabel("latency (ns)")
-    ax.grid(True, which="both", alpha=0.3)
-    ax.legend(fontsize=8)
+    for ax, (title, names) in zip(axes[:, 0], panels):
+        for i, v in enumerate(names):
+            runs = variants[v]
+            # Merge all runs of a variant (same binary, same calibration within ~ppm).
+            tpn = float(np.median([r.ticks_per_ns for r in runs]))
+            div = runs[0].divisor
+            highs = np.concatenate([r.high for r in runs])
+            counts = np.concatenate([r.count for r in runs])
+            order = np.argsort(highs, kind="stable")
+            hi, cnt = highs[order], counts[order]
+            cum = np.cumsum(cnt)
+            n = cum[-1]
+            qs_v = qs[qs <= 1 - 1 / n] if n > 1 else qs[:1]
+            idx = np.searchsorted(cum, np.maximum(1, np.ceil(qs_v * n)))
+            ax.plot(1 / (1 - qs_v), hi[idx] / div / tpn, label=v.split("=", 1)[-1], color=SERIES_COLORS[i],
+                    linestyle=SERIES_STYLES[i], linewidth=2)
+        ax.set_xscale("log")
+        ax.set_yscale("log")
+        ax.set_xticks([1, 2, 10, 100, 1e3, 1e4, 1e5, 1e6])
+        ax.set_xticklabels(["0%", "50%", "90%", "99%", "99.9%", "99.99%", "99.999%", "99.9999%"])
+        ax.set_ylabel("latency (ns)")
+        # Label 1-2-5 steps so short log ranges (less than a decade) still have readable ticks.
+        ax.yaxis.set_major_locator(ticker.LogLocator(base=10, subs=(1.0, 2.0, 5.0)))
+        ax.yaxis.set_major_formatter(ticker.FuncFormatter(lambda y, _: f"{y:g}"))
+        ax.yaxis.set_minor_formatter(ticker.NullFormatter())
+        if title:
+            ax.set_title(title, loc="left", fontsize=11)
+        ax.grid(True, which="major", color="#d8d7d3", linewidth=0.6)
+        ax.grid(True, which="minor", color="#ecebe8", linewidth=0.4)
+        for side in ("top", "right"):
+            ax.spines[side].set_visible(False)
+        ax.legend(fontsize=8, loc="upper left", frameon=False)
+    axes[-1, 0].set_xlabel("percentile (all runs merged)")
     fig.tight_layout()
     fig.savefig(path, dpi=130)
     print(f"plot: {path}")
@@ -320,6 +366,7 @@ def main() -> int:
     s = sub.add_parser("summary")
     s.add_argument("dir", type=Path)
     s.add_argument("--no-plot", action="store_true")
+    s.add_argument("--panels", help="plot panels as 'Title:varA,varB;Title2:varC' (max 5 series per panel)")
     c = sub.add_parser("compare")
     c.add_argument("dir", type=Path)
     c.add_argument("a")
@@ -330,7 +377,7 @@ def main() -> int:
     args = ap.parse_args()
     d = args.dir.resolve()
     if args.cmd == "summary":
-        summary(d, not args.no_plot)
+        summary(d, not args.no_plot, args.panels)
     elif args.cmd == "skew":
         skew(d)
     else:
