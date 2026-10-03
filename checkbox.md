@@ -94,7 +94,6 @@
 - [ ] Write `docs/experiments/E4-threading-model.md`, including where the hypothesis was wrong
 - [ ] Checkpoint "core": README draft with the hero plot, core resume bullets filled with measured numbers
 - [ ] Tag v0.5
-- [ ] Write `docs/study-guide.md`: beginner reading order through the code and experiments, concepts per file, links to references (for the user's interview preparation)
 
 ## Phase 5: Network Feed Handler → E5 (weeks 9–10)
 - [ ] Write `scripts/netns_setup.sh`: `exch`/`engine` namespaces, veth pair, multicast routes
@@ -143,6 +142,7 @@
 - [ ] Write `docs/limitations.md`
 - [ ] Final README (hero plot, results, reproduce commands)
 - [ ] Fill HFT resume bullets and pitch with measured numbers
+- [ ] Write `docs/study-guide.md`: beginner reading order through the code and experiments, concepts per file, links to references (for the user's interview preparation)
 - [ ] Mock interview preparation using master plan §18
 - [ ] Verify the v1.0 definition of done (master plan §14)
 - [ ] Tag v1.0

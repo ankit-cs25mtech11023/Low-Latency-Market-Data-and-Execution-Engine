@@ -13,9 +13,9 @@ The working blueprint is `plan.md`; progress is tracked in `checkbox.md`; full d
 **Phase 0: Toolchain and Measurement Infrastructure → E0.** In progress. Blocked on the user installing the missing tools (clang/llvm, cmake, ninja, perf, …); code is written meanwhile.
 
 ## Working Agreement with the User (2026-10-04)
-- **Who builds:** Claude owns the implementation of the core checkpoint (P0–P4, E0–E4, tag v0.5) end to end. The user is a beginner in HFT/low-latency systems.
-- **Deadline:** the user submits a resume to an HFT firm on 2026-10-06. Interviews are expected around early December 2026.
-- **Order of work:** (1) finish core v0.5 → (2) write the core resume bullets from measured numbers only → (3) the user studies every part in detail before interviews (see the study-guide task in plan.md). P5+ (v1.0) continues after that.
+- **Who builds:** Claude owns the implementation up to **v1.0 = core + HFT specialization (P0–P8, E0–E6)** end to end. The user is a beginner in HFT/low-latency systems.
+- **Deadline:** the user submits a resume to an HFT firm on 2026-10-06. Interviews are expected around early December 2026. Aim for v1.0 by the deadline; if it is missed, the resume describes only what is done and measured by then (core-only bullets if needed). Work continues to v1.0 afterwards either way.
+- **Order of work:** (1) build P0–P8 → (2) resume bullets from measured numbers only → (3) the user studies every part in detail (study-guide task in P8) → (4) v1.1/silicon later.
 - **No quality cuts for the deadline.** Do not skip tests, statistics or write-ups to finish faster. Anything not measured by the deadline is described on the resume with neutral wording, never estimated.
 - **No workarounds.** If something needs the user (sudo, installs, downloads, accounts, a GitHub remote, hardware) or Claude is stuck, stop and tell the user exactly what to do. Do not substitute pip/conda/vendored tools, skip a step, or fake an input.
 - **Explain for a beginner.** Code comments and docs should explain *why*, not only *what*, so the user can learn from them later.
