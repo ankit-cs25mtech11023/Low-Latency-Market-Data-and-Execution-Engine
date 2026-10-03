@@ -48,11 +48,13 @@ TEST(Histogram, IndexRoundTripsAtBoundaries) {
 
 TEST(Histogram, RelativeErrorBound) {
     // Bucket width / bucket low < 2^-P for every bucket above the exact range.
-    const double bound = 1.0 / static_cast<double>(H::kSubBuckets);
+    // Checked in integer arithmetic: width < low / 2^P, i.e. width < (low >> P).
+    // (A double-precision ratio rounds to exactly 2^-P for the huge top buckets, where
+    // width = 2^k - 1 and low = 2^(k+P), and would report a false failure.)
     for (std::size_t i = H::kSubBuckets; i < H::kBucketCount; ++i) {
-        const double lo = static_cast<double>(H::lowest_of(i));
-        const double width = static_cast<double>(H::highest_of(i) - H::lowest_of(i));
-        ASSERT_LT(width / lo, bound) << "bucket " << i;
+        const std::uint64_t lo = H::lowest_of(i);
+        const std::uint64_t width = H::highest_of(i) - lo;
+        ASSERT_LT(width, lo >> H::kPrecisionBits) << "bucket " << i;
     }
 }
 

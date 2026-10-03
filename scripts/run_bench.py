@@ -9,7 +9,7 @@ fake difference between variants.
 Each variant is one process invocation built from a command template:
 
   scripts/run_bench.py --name E0-timers --build build/release --runs 10 \
-      --cmd "{bin}/e0_timers --variant {variant} --cpu 2 --out {out}" \
+      --cmd "{bin}/apps/e0_timers --variant {variant} --cpu 2 --out {out}" \
       --param variant=rdtsc,rdtscp,steady_clock
 
 Several --param flags form a cross product (e.g. load x work for E4). The placeholders are

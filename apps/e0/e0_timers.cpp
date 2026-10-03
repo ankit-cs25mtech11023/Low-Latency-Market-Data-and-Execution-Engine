@@ -12,6 +12,12 @@
 //     Every stage latency measured later includes this floor.
 //
 // Run one variant per process (scripts/run_bench.py interleaves variants across runs).
+//
+// TSC ticks are not core cycles: the TSC ticks at a fixed rate (1.8 GHz on this CPU) while
+// the core clock depends on the governor/turbo state. To report true core cycles per call,
+// hardware counters (--counters, default cycles,instructions,ref-cycles) are enabled around
+// the measured batches only, excluding calibration and warm-up. analyse.py divides them by
+// the number of calls. Use --counters none where perf_event_open is not permitted.
 
 #include <time.h>
 
@@ -28,6 +34,7 @@
 #include "lle/core/cpu.hpp"
 #include "lle/core/tsc.hpp"
 #include "lle/telemetry/histogram.hpp"
+#include "lle/telemetry/perf_counters.hpp"
 #include "lle/telemetry/result_io.hpp"
 
 namespace {
@@ -115,6 +122,7 @@ int main(int argc, char** argv) try {
     const std::int64_t k = cli.i64("batch-size", 1000);
     const std::int64_t warmup = cli.i64("warmup-batches", 10'000);
     const std::string out = cli.str("out");
+    const std::string counters_arg = cli.str("counters", "cycles,instructions,ref-cycles");
 
     lle::require_invariant_tsc();
     lle::pin_current_thread(cpu);
@@ -137,16 +145,23 @@ int main(int argc, char** argv) try {
         else if (variant == "hist_baseline") run_hist(*hist, n, k, true);
         else throw std::invalid_argument("unknown variant " + variant);
     };
+    // Open the counters before warm-up so the open() syscalls are not inside the region.
+    std::unique_ptr<lle::PerfCounters> pmu;
+    if (counters_arg != "none") pmu = std::make_unique<lle::PerfCounters>(lle::parse_perf_events(counters_arg));
+
     run(warmup);  // warm caches, branch predictors, and let the core settle at its frequency
     hist->reset();
+    if (pmu) pmu->start();
     run(batches);
+    const std::string counters_json = pmu ? pmu->stop().to_json() : "null";
 
     const bool per_call = variant != "empty_region";
     const std::string params = R"({"experiment":"E0","variant":")" + lle::json_escape(variant) +
                                R"(","cpu":)" + std::to_string(cpu) + R"(,"batches":)" + std::to_string(batches) +
                                R"(,"batch_size":)" + std::to_string(per_call ? k : 1) +
                                R"(,"value_divisor":)" + std::to_string(per_call ? k : 1) +
-                               R"(,"unit":"ticks","ran_on_cpu":)" + std::to_string(lle::current_cpu()) + "}";
+                               R"(,"unit":"ticks","ran_on_cpu":)" + std::to_string(lle::current_cpu()) +
+                               R"(,"counters":)" + counters_json + "}";
     lle::write_run(out, *hist, cal, params);
     std::printf("%s: p50 %.2f ticks/call (%.2f ns), TSC %.4f GHz\n", variant.c_str(),
                 static_cast<double>(hist->value_at_quantile(0.5)) / static_cast<double>(per_call ? k : 1),

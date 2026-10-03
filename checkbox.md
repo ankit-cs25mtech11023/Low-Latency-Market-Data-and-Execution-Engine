@@ -3,23 +3,24 @@
 > Mirrors plan.md phases/tasks. Mark `[x]` only when fully implemented and working.
 
 ## Phase 0: Toolchain and Measurement Infrastructure → E0 (weeks 1–1.5)
-- [ ] Install toolchain: clang, lld, llvm (llvm-mca, llvm-profdata, llvm-bolt), linux-perf, cmake, ninja, gdb, valgrind, pigz, python3 + numpy/pandas/matplotlib, pmu-tools (toplev), rtla, tcpdump, wireshark
-- [ ] Set `kernel.perf_event_paranoid=1` for development and document it in `docs/linux-tuning.md`
-- [ ] Initialize git repo with `.gitignore` (build dirs, `data/` downloads, results), README stub and LICENSE
-- [ ] Create the CMake project skeleton with the directory layout from master plan §6
-- [ ] Add CMakePresets: debug, release (`-O2 -DNDEBUG`), relwithdebinfo (`-O2 -g -fno-omit-frame-pointer`), asan, ubsan, tsan
-- [ ] Enable warnings `-Wall -Wextra -Wpedantic -Wconversion -Wshadow -Wold-style-cast`, with `-Werror` in CI
+- [x] Install toolchain: clang, lld, llvm (llvm-mca, llvm-profdata, llvm-bolt), linux-perf, cmake, ninja, gdb, valgrind, pigz, python3 + numpy/pandas/matplotlib, pmu-tools (toplev), rtla, tcpdump, wireshark
+- [x] Set `kernel.perf_event_paranoid=1` for development and document it in `docs/linux-tuning.md`
+- [x] Initialize git repo with `.gitignore` (build dirs, `data/` downloads, results), README stub and LICENSE
+- [x] Create the CMake project skeleton with the directory layout from master plan §6
+- [x] Add CMakePresets: debug, release (`-O2 -DNDEBUG`), relwithdebinfo (`-O2 -g -fno-omit-frame-pointer`), asan, ubsan, tsan
+- [x] Enable warnings `-Wall -Wextra -Wpedantic -Wconversion -Wshadow -Wold-style-cast`, with `-Werror` in CI
 - [ ] Add `.clang-format` and `.clang-tidy`
-- [ ] Integrate GoogleTest and Google Benchmark via CMake FetchContent
+- [x] Integrate GoogleTest and Google Benchmark via CMake FetchContent
 - [ ] Add a GitHub Actions CI skeleton: {gcc, clang} × {debug, asan, ubsan, tsan}, build + ctest
-- [ ] Implement the TSC clock: `lfence;rdtsc` start stamp, `rdtscp;lfence` end stamp, behind an arch-abstract interface
-- [ ] Implement TSC calibration against `CLOCK_MONOTONIC_RAW` (~1 s) and a startup check for `constant_tsc`/`nonstop_tsc`
-- [ ] Implement the log-linear histogram (fixed memory, no allocation on record) with unit tests; validate against HdrHistogram_c
-- [ ] Implement a CPU pinning helper (`pthread_setaffinity_np`)
-- [ ] Write `scripts/env_capture.sh` (CPU, microcode, kernel, cmdline, governor, turbo, isolated CPUs, compiler, flags, git SHA → JSON)
-- [ ] Write `scripts/tune_machine.sh` apply/restore (performance governor, `no_turbo=1`)
-- [ ] Write `scripts/run_bench.py`: N interleaved runs, warm-up, pinning, CSV output + env JSON
-- [ ] Write `scripts/analyse.py`: percentiles, median across runs, 95% bootstrap CI, percentile plots
+- [x] Implement the TSC clock: `lfence;rdtsc` start stamp, `rdtscp;lfence` end stamp, behind an arch-abstract interface
+- [x] Implement TSC calibration against `CLOCK_MONOTONIC_RAW` (~1 s) and a startup check for `constant_tsc`/`nonstop_tsc`
+- [x] Implement the log-linear histogram (fixed memory, no allocation on record) with unit tests; validate against HdrHistogram_c
+- [x] Implement a CPU pinning helper (`pthread_setaffinity_np`)
+- [x] Implement region-scoped hardware counters (`perf_event_open` group around the timed region only; cycles/op, instructions/op in every result)
+- [x] Write `scripts/env_capture.sh` (CPU, microcode, kernel, cmdline, governor, turbo, isolated CPUs, compiler, flags, git SHA → JSON)
+- [ ] Write `scripts/tune_machine.sh` apply/restore (performance governor, `no_turbo=1`, `nmi_watchdog=0` so top-down analysis gets all PMU counters)
+- [x] Write `scripts/run_bench.py`: N interleaved runs, warm-up, pinning, CSV output + env JSON
+- [x] Write `scripts/analyse.py`: percentiles, median across runs, 95% bootstrap CI, percentile plots
 - [ ] E0: benchmark per-call cost of `rdtsc`, `lfence;rdtsc`, `rdtscp`, `steady_clock::now()`, `clock_gettime(MONOTONIC / MONOTONIC_RAW)`
 - [ ] E0: measure cross-core TSC skew for core pairs via ping-pong (NTP-style offset, bounded by RTT/2)
 - [ ] E0: measure histogram record cost

@@ -7,6 +7,7 @@ add_library(lle_core
     core/tsc.cpp
     core/cpu.cpp
     telemetry/result_io.cpp
+    telemetry/perf_counters.cpp
     protocol/itch_file.cpp)
 target_include_directories(lle_core PUBLIC
     ${PROJECT_SOURCE_DIR}/include

@@ -9,12 +9,16 @@ Statistics (master plan §9):
      report the 2.5th..97.5th percentile of those medians).
   3. A percentile is only reported if every run has enough samples for it
      (p99 >= 1e4, p99.9 >= 1e5, p99.99 >= 1e6); otherwise it is left blank.
-  4. A-vs-B claims use the bootstrap CI of the difference of medians; a difference is only
+  4. Hardware counters (if the run recorded params.counters, measured around the timed
+     region only) are divided by the number of operations (samples x value_divisor) and
+     summarized the same way: cycles/op, instructions/op, IPC, effective core GHz.
+  5. A-vs-B claims use the bootstrap CI of the difference of medians; a difference is only
      called real if that CI excludes 0 (Mann-Whitney U p-value is shown alongside).
 
 Usage:
   scripts/analyse.py summary results/E0-timers/latest            # table + plots
   scripts/analyse.py compare results/X/latest varA varB --metric p99
+  scripts/analyse.py skew results/E0-skew/latest                 # cross-core TSC offsets
 """
 from __future__ import annotations
 
@@ -44,6 +48,7 @@ class Run:
     ticks_per_ns: float = 1.0
     total: int = 0
     metrics_ns: dict = field(default_factory=dict)
+    counter_metrics: dict = field(default_factory=dict)
 
     def quantile_ticks(self, q: float) -> float:
         """Nearest-rank quantile: smallest bucket whose cumulative count reaches ceil(q*N)."""
@@ -67,7 +72,31 @@ def load_run(hist_csv: Path) -> Run:
     r.metrics_ns["max"] = to_ns(float(meta["summary_ticks"]["max"]))
     r.metrics_ns["mean"] = to_ns(float(meta["summary_ticks"]["mean"]))
     r.metrics_ns["min"] = to_ns(float(meta["summary_ticks"]["min"]))
+    r.counter_metrics = counter_metrics(meta["params"].get("counters"), r.total * r.divisor)
     return r
+
+
+def counter_metrics(c: dict | None, ops: float) -> dict:
+    """Per-operation counter values. The counts cover the whole timed region, so per-op values
+    include the amortized loop and histogram-record overhead (1/value_divisor of it per op)."""
+    if not c or ops <= 0:
+        return {}
+    out = {}
+    if "cycles" in c:
+        out["cycles/op"] = c["cycles"] / ops
+        if c.get("time_running_ns"):
+            out["core GHz"] = c["cycles"] / c["time_running_ns"]
+    if "instructions" in c:
+        out["instr/op"] = c["instructions"] / ops
+        if c.get("cycles"):
+            out["IPC"] = c["instructions"] / c["cycles"]
+    if c.get("time_enabled_ns"):
+        out["pmu running %"] = 100.0 * c["time_running_ns"] / c["time_enabled_ns"]
+    for k in ("branch-misses", "cache-misses", "L1-dcache-load-misses", "dTLB-load-misses", "page-faults",
+              "context-switches"):
+        if k in c:
+            out[f"{k}/op"] = c[k] / ops
+    return out
 
 
 def load_variants(result_dir: Path) -> dict[str, list[Run]]:
@@ -135,11 +164,42 @@ def summary(result_dir: Path, plot: bool) -> None:
         any_row = next(x for x in rows if x["variant"] == v)
         lines.append(f"| {v} | {any_row['runs']} | {any_row['samples_per_run']} | " + " | ".join(cells) + " |")
     table = "\n".join(lines)
+    ctable = counter_table(variants, rng, result_dir)
+    if ctable:
+        table += "\n\nHardware counters, timed region only (median across runs [95% CI]):\n\n" + ctable
     (result_dir / "summary.md").write_text(table + "\n")
     print(table)
 
     if plot:
         percentile_plot(variants, result_dir / "percentiles.png")
+
+
+def counter_table(variants: dict[str, list[Run]], rng: np.random.Generator, result_dir: Path) -> str:
+    names: list[str] = []
+    for runs in variants.values():
+        for r in runs:
+            names += [k for k in r.counter_metrics if k not in names]
+    if not names:
+        return ""
+    rows, lines = [], ["| variant | " + " | ".join(names) + " |", "|---|" + "---|" * len(names)]
+    for v, runs in variants.items():
+        cells = []
+        for m in names:
+            x = np.array([r.counter_metrics.get(m, math.nan) for r in runs])
+            if np.all(np.isnan(x)):
+                cells.append("")
+                continue
+            lo, hi = bootstrap_median_ci(x, rng)
+            med = float(np.nanmedian(x))
+            rows.append({"variant": v, "metric": m, "median": med, "ci95_lo": lo, "ci95_hi": hi,
+                         "runs": int(np.sum(~np.isnan(x)))})
+            cells.append(f"{fmt(med)} [{fmt(lo)}, {fmt(hi)}]")
+        lines.append(f"| {v} | " + " | ".join(cells) + " |")
+    with open(result_dir / "counters.csv", "w", newline="") as f:
+        w = csv.DictWriter(f, fieldnames=list(rows[0].keys()))
+        w.writeheader()
+        w.writerows(rows)
+    return "\n".join(lines)
 
 
 def percentile_plot(variants: dict[str, list[Run]], path: Path) -> None:
@@ -191,6 +251,69 @@ def compare(result_dir: Path, a: str, b: str, metric: str) -> None:
           f"Mann-Whitney p = {p:.4g} -> {verdict}")
 
 
+def skew(result_dir: Path) -> None:
+    """Cross-core TSC offsets from e0_skew runs (<variant>/runNN.skew.csv).
+
+    For each ordered pair A->B a run reports offset(B rel. A) estimated NTP-style from the 1%
+    lowest-RTT round trips, and its bound (RTT/2). A one-direction estimate mixes two things:
+      * real skew s:      TSC_B - TSC_A; it flips sign when the roles are swapped;
+      * path asymmetry a: B's stamp sits off-centre in the round trip (polling, rdtsc latency);
+                          it has the same sign in both directions.
+    off(A->B) = s + a and off(B->A) = -s + a, so s = (off_AB - off_BA)/2, a = (off_AB + off_BA)/2.
+    """
+    rng = np.random.default_rng(12345)
+    per_pair: dict[tuple[int, int], list[dict]] = {}
+    for f in sorted(result_dir.glob("*/run*.skew.csv")):
+        meta = json.loads(Path(str(f).replace(".skew.csv", ".meta.json")).read_text())
+        tpn = float(meta["tsc_calibration"]["ticks_per_ns"])
+        with open(f) as fh:
+            for row in csv.DictReader(fh):
+                key = (int(row["cpu_a"]), int(row["cpu_b"]))
+                per_pair.setdefault(key, []).append({
+                    "off": float(row["offset_median_best1pct"]) / tpn, "bound": float(row["bound_best1pct"]) / tpn,
+                    "half_rtt_p50": float(row["p50_rtt"]) / 2 / tpn, "violations": int(row["violations"]),
+                    "run": f.name})
+    if not per_pair:
+        sys.exit(f"no *.skew.csv under {result_dir}")
+    env = result_dir / "env.json"
+    ncpu = int(json.loads(env.read_text())["before"]["logical_cpus"]) if env.exists() else max(max(k) for k in per_pair) + 1
+    rows = []
+    for (a, b), ab in sorted(per_pair.items()):
+        if a > b or (b, a) not in per_pair:
+            continue
+        ba = per_pair[(b, a)]
+        # Pair the runs by run index (with --pairs all, both directions come from the same process).
+        by_run = {r["run"]: r for r in ba}
+        common = [(x, by_run[x["run"]]) for x in ab if x["run"] in by_run]
+        s_ns = np.array([(x["off"] - y["off"]) / 2 for x, y in common])
+        a_ns = np.array([(x["off"] + y["off"]) / 2 for x, y in common])
+        bound = np.array([max(x["bound"], y["bound"]) for x, y in common])
+        half_rtt = np.array([(x["half_rtt_p50"] + y["half_rtt_p50"]) / 2 for x, y in common])
+        s_lo, s_hi = bootstrap_median_ci(s_ns, rng)
+        rows.append({"cpu_a": a, "cpu_b": b, "relation": "SMT sibling" if abs(a - b) == ncpu // 2 else "cross-core",
+                     "runs": len(common), "skew_ns": float(np.median(s_ns)), "skew_ci95_lo": s_lo,
+                     "skew_ci95_hi": s_hi, "asymmetry_ns": float(np.median(a_ns)),
+                     "bound_ns": float(np.median(bound)), "half_rtt_p50_ns": float(np.median(half_rtt)),
+                     "violations": sum(x["violations"] + y["violations"] for x, y in common)})
+    with open(result_dir / "skew.csv", "w", newline="") as fh:
+        w = csv.DictWriter(fh, fieldnames=list(rows[0].keys()))
+        w.writeheader()
+        w.writerows(rows)
+    lines = ["| CPUs | relation | runs | skew ns (95% CI) | asymmetry ns | bound ns (RTT/2, best 1%) | "
+             "one-way p50 ns | violations |", "|---|---|---|---|---|---|---|---|"]
+    for r in rows:
+        lines.append(f"| {r['cpu_a']}-{r['cpu_b']} | {r['relation']} | {r['runs']} | {fmt(r['skew_ns'])} "
+                     f"[{fmt(r['skew_ci95_lo'])}, {fmt(r['skew_ci95_hi'])}] | {fmt(r['asymmetry_ns'])} | "
+                     f"{fmt(r['bound_ns'])} | {fmt(r['half_rtt_p50_ns'])} | {r['violations']} |")
+    worst = max(rows, key=lambda r: abs(r["skew_ns"]))
+    lines.append("")
+    lines.append(f"Largest |skew| estimate: {fmt(worst['skew_ns'])} ns (CPUs {worst['cpu_a']}-{worst['cpu_b']}); "
+                 f"largest bound: {fmt(max(r['bound_ns'] for r in rows))} ns.")
+    table = "\n".join(lines)
+    (result_dir / "skew.md").write_text(table + "\n")
+    print(table)
+
+
 def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     sub = ap.add_subparsers(dest="cmd", required=True)
@@ -202,10 +325,14 @@ def main() -> int:
     c.add_argument("a")
     c.add_argument("b")
     c.add_argument("--metric", default="p50")
+    k = sub.add_parser("skew")
+    k.add_argument("dir", type=Path)
     args = ap.parse_args()
     d = args.dir.resolve()
     if args.cmd == "summary":
         summary(d, not args.no_plot)
+    elif args.cmd == "skew":
+        skew(d)
     else:
         compare(d, args.a, args.b, args.metric)
     return 0

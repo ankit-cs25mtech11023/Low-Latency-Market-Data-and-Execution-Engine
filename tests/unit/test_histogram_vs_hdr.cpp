@@ -26,8 +26,12 @@ void compare_on(const std::vector<std::uint64_t>& data) {
         ASSERT_TRUE(hdr_record_value(hdr.get(), static_cast<int64_t>(v)));
     }
     EXPECT_EQ(static_cast<std::int64_t>(ours->count()), hdr->total_count);
-    EXPECT_EQ(static_cast<std::int64_t>(ours->max()), hdr_max(hdr.get()));
-    EXPECT_EQ(static_cast<std::int64_t>(ours->min()), hdr_min(hdr.get()));
+    // Our min/max are exact; HdrHistogram's hdr_min/hdr_max report the lowest/highest
+    // *equivalent* value of the bucket holding the extreme, so compare by equivalence.
+    EXPECT_TRUE(hdr_values_are_equivalent(hdr.get(), static_cast<std::int64_t>(ours->max()), hdr_max(hdr.get())))
+        << "ours=" << ours->max() << " hdr=" << hdr_max(hdr.get());
+    EXPECT_TRUE(hdr_values_are_equivalent(hdr.get(), static_cast<std::int64_t>(ours->min()), hdr_min(hdr.get())))
+        << "ours=" << ours->min() << " hdr=" << hdr_min(hdr.get());
     for (double q : {0.5, 0.9, 0.99, 0.999, 0.9999}) {
         const double a = static_cast<double>(ours->value_at_quantile(q));
         const double b = static_cast<double>(hdr_value_at_percentile(hdr.get(), q * 100.0));

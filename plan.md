@@ -46,8 +46,9 @@ The engine is a testbed for a small set of deep, reproducible performance experi
 - [ ] Implement TSC calibration against `CLOCK_MONOTONIC_RAW` (~1 s) and a startup check for `constant_tsc`/`nonstop_tsc`
 - [ ] Implement the log-linear histogram (fixed memory, no allocation on record) with unit tests; validate against HdrHistogram_c
 - [ ] Implement a CPU pinning helper (`pthread_setaffinity_np`)
+- [ ] Implement region-scoped hardware counters (`perf_event_open` group around the timed region only; cycles/op, instructions/op in every result)
 - [ ] Write `scripts/env_capture.sh` (CPU, microcode, kernel, cmdline, governor, turbo, isolated CPUs, compiler, flags, git SHA → JSON)
-- [ ] Write `scripts/tune_machine.sh` apply/restore (performance governor, `no_turbo=1`)
+- [ ] Write `scripts/tune_machine.sh` apply/restore (performance governor, `no_turbo=1`, `nmi_watchdog=0` so top-down analysis gets all PMU counters)
 - [ ] Write `scripts/run_bench.py`: N interleaved runs, warm-up, pinning, CSV output + env JSON
 - [ ] Write `scripts/analyse.py`: percentiles, median across runs, 95% bootstrap CI, percentile plots
 - [ ] E0: benchmark per-call cost of `rdtsc`, `lfence;rdtsc`, `rdtscp`, `steady_clock::now()`, `clock_gettime(MONOTONIC / MONOTONIC_RAW)`
