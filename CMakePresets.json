@@ -1,0 +1,56 @@
+{
+  "version": 6,
+  "cmakeMinimumRequired": { "major": 3, "minor": 25, "patch": 0 },
+  "configurePresets": [
+    {
+      "name": "base",
+      "hidden": true,
+      "generator": "Ninja",
+      "binaryDir": "${sourceDir}/build/${presetName}",
+      "cacheVariables": { "CMAKE_EXPORT_COMPILE_COMMANDS": "ON" }
+    },
+    { "name": "gcc",   "hidden": true, "cacheVariables": { "CMAKE_C_COMPILER": "gcc",   "CMAKE_CXX_COMPILER": "g++" } },
+    { "name": "clang", "hidden": true, "cacheVariables": { "CMAKE_C_COMPILER": "clang", "CMAKE_CXX_COMPILER": "clang++" } },
+
+    { "name": "debug",          "displayName": "GCC debug",                         "inherits": ["base", "gcc"], "cacheVariables": { "CMAKE_BUILD_TYPE": "Debug" } },
+    { "name": "release",        "displayName": "GCC release (-O2 -DNDEBUG, perf baseline)", "inherits": ["base", "gcc"], "cacheVariables": { "CMAKE_BUILD_TYPE": "Release" } },
+    { "name": "relwithdebinfo", "displayName": "GCC -O2 -g frame pointers (profiling)", "inherits": ["base", "gcc"], "cacheVariables": { "CMAKE_BUILD_TYPE": "RelWithDebInfo" } },
+    { "name": "asan",           "displayName": "GCC ASan",  "inherits": ["base", "gcc"], "cacheVariables": { "CMAKE_BUILD_TYPE": "Debug", "LLE_SANITIZER": "address" } },
+    { "name": "ubsan",          "displayName": "GCC UBSan", "inherits": ["base", "gcc"], "cacheVariables": { "CMAKE_BUILD_TYPE": "Debug", "LLE_SANITIZER": "undefined" } },
+    { "name": "tsan",           "displayName": "GCC TSan",  "inherits": ["base", "gcc"], "cacheVariables": { "CMAKE_BUILD_TYPE": "RelWithDebInfo", "LLE_SANITIZER": "thread" } },
+
+    { "name": "clang-debug",    "inherits": ["base", "clang"], "cacheVariables": { "CMAKE_BUILD_TYPE": "Debug" } },
+    { "name": "clang-release",  "inherits": ["base", "clang"], "cacheVariables": { "CMAKE_BUILD_TYPE": "Release" } },
+    { "name": "clang-asan",     "inherits": ["base", "clang"], "cacheVariables": { "CMAKE_BUILD_TYPE": "Debug", "LLE_SANITIZER": "address" } },
+    { "name": "clang-ubsan",    "inherits": ["base", "clang"], "cacheVariables": { "CMAKE_BUILD_TYPE": "Debug", "LLE_SANITIZER": "undefined" } },
+    { "name": "clang-tsan",     "inherits": ["base", "clang"], "cacheVariables": { "CMAKE_BUILD_TYPE": "RelWithDebInfo", "LLE_SANITIZER": "thread" } },
+    { "name": "fuzz",           "displayName": "clang libFuzzer + ASan/UBSan", "inherits": ["base", "clang"],
+      "cacheVariables": { "CMAKE_BUILD_TYPE": "RelWithDebInfo", "LLE_BUILD_FUZZ": "ON", "LLE_BUILD_BENCH": "OFF" } }
+  ],
+  "buildPresets": [
+    { "name": "debug",          "configurePreset": "debug" },
+    { "name": "release",        "configurePreset": "release" },
+    { "name": "relwithdebinfo", "configurePreset": "relwithdebinfo" },
+    { "name": "asan",           "configurePreset": "asan" },
+    { "name": "ubsan",          "configurePreset": "ubsan" },
+    { "name": "tsan",           "configurePreset": "tsan" },
+    { "name": "clang-debug",    "configurePreset": "clang-debug" },
+    { "name": "clang-release",  "configurePreset": "clang-release" },
+    { "name": "clang-asan",     "configurePreset": "clang-asan" },
+    { "name": "clang-ubsan",    "configurePreset": "clang-ubsan" },
+    { "name": "clang-tsan",     "configurePreset": "clang-tsan" },
+    { "name": "fuzz",           "configurePreset": "fuzz" }
+  ],
+  "testPresets": [
+    { "name": "base-test", "hidden": true, "output": { "outputOnFailure": true }, "execution": { "noTestsAction": "error" } },
+    { "name": "debug",       "inherits": "base-test", "configurePreset": "debug" },
+    { "name": "release",     "inherits": "base-test", "configurePreset": "release" },
+    { "name": "asan",        "inherits": "base-test", "configurePreset": "asan" },
+    { "name": "ubsan",       "inherits": "base-test", "configurePreset": "ubsan" },
+    { "name": "tsan",        "inherits": "base-test", "configurePreset": "tsan" },
+    { "name": "clang-debug", "inherits": "base-test", "configurePreset": "clang-debug" },
+    { "name": "clang-asan",  "inherits": "base-test", "configurePreset": "clang-asan" },
+    { "name": "clang-ubsan", "inherits": "base-test", "configurePreset": "clang-ubsan" },
+    { "name": "clang-tsan",  "inherits": "base-test", "configurePreset": "clang-tsan" }
+  ]
+}
