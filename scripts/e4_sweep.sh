@@ -23,9 +23,13 @@ runs=${E4_RUNS:-10}
 for w in "${works[@]}"; do
     cap=$(awk -F, -v w="$w" 'NR > 1 && $2 == "a" && $1 + 0 == w + 0 { print $4 }' "$cap_csv")
     [[ -n "$cap" ]] || { echo "no Model A capacity for work $w in $cap_csv" >&2; exit 1; }
-    rates=$(python3 -c "import sys; c=float(sys.argv[1]); print(','.join(f'{c*float(f):.4g}' for f in sys.argv[2:]))" \
-        "$cap" $fractions)
-    echo "work $w ns: A capacity $cap msg/s -> rates $rates"
+    # capacity.csv holds M msg/s; e4_threading --rate takes msg/s.
+    rates=$(python3 -c "
+import sys
+c = float(sys.argv[1]) * 1e6
+assert 1e4 < c < 1e8, f'implausible capacity {c} msg/s'
+print(','.join(f'{c * float(f):.4g}' for f in sys.argv[2:]))" "$cap" $fractions)
+    echo "work $w ns: A capacity $cap M msg/s -> rates $rates msg/s"
     python3 scripts/run_bench.py --name "E4-sweep-w$w" --build build/release --runs "$runs" --warmup-runs 0 \
         --cmd "{bin}/apps/e4_threading --model {model} --mode latency --arrival {arrival} --rate {rate} --work-ns $w --input $input --start-time 09:30:00 --window 1000000 --out {out}" \
         --param model=a,b --param arrival=smooth,bursty --param "rate=$rates"
