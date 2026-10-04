@@ -19,7 +19,7 @@
 // the measured batches only, excluding calibration and warm-up. analyse.py divides them by
 // the number of calls. Use --counters none where perf_event_open is not permitted.
 
-#include <time.h>
+#include <ctime>
 
 #include <chrono>
 #include <cstdio>

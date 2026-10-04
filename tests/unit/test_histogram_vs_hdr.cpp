@@ -33,8 +33,8 @@ void compare_on(const std::vector<std::uint64_t>& data) {
     EXPECT_TRUE(hdr_values_are_equivalent(hdr.get(), static_cast<std::int64_t>(ours->min()), hdr_min(hdr.get())))
         << "ours=" << ours->min() << " hdr=" << hdr_min(hdr.get());
     for (double q : {0.5, 0.9, 0.99, 0.999, 0.9999}) {
-        const double a = static_cast<double>(ours->value_at_quantile(q));
-        const double b = static_cast<double>(hdr_value_at_percentile(hdr.get(), q * 100.0));
+        const auto a = static_cast<double>(ours->value_at_quantile(q));
+        const auto b = static_cast<double>(hdr_value_at_percentile(hdr.get(), q * 100.0));
         const double rel = std::abs(a - b) / std::max(b, 1.0);
         EXPECT_LT(rel, 1.0 / 128 + 1.0 / 1024) << "q=" << q << " ours=" << a << " hdr=" << b;
     }

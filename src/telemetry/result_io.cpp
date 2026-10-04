@@ -48,7 +48,8 @@ std::string json_escape(const std::string& s) {
 }
 
 std::string build_info_json() {
-    return std::string(R"({"git_sha":")") + json_escape(build_info::git_sha) + R"(","build_type":")" +
+    return std::string(R"({"git_sha":")") + json_escape(build_info::git_sha) + R"(","git_dirty":)" +
+           (build_info::git_dirty ? "true" : "false") + R"(,"build_type":")" +
            json_escape(build_info::build_type) + R"(","compiler":")" + json_escape(build_info::compiler) +
            R"(","cxx_flags":")" + json_escape(build_info::cxx_flags) + R"(","sanitizer":")" +
            json_escape(build_info::sanitizer) + R"("})";

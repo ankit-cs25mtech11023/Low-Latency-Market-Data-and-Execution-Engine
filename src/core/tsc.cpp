@@ -1,6 +1,6 @@
 #include "lle/core/tsc.hpp"
 
-#include <time.h>
+#include <ctime>
 
 #include <algorithm>
 #include <cstdio>
@@ -63,7 +63,7 @@ TscCalibration calibrate_tsc(double seconds) {
     const Pair p1 = sample_pair();
 
     TscCalibration c;
-    const double dns = static_cast<double>(p1.ns - p0.ns);
+    const auto dns = static_cast<double>(p1.ns - p0.ns);
     c.ticks_per_ns = static_cast<double>(p1.tsc - p0.tsc) / dns;
     c.tsc0 = p0.tsc;
     c.mono_raw_ns0 = p0.ns;
@@ -86,7 +86,7 @@ TscFeatures detect_tsc_features() {
     std::ifstream cpuinfo("/proc/cpuinfo");
     std::string line;
     while (std::getline(cpuinfo, line)) {
-        if (line.rfind("flags", 0) == 0) {
+        if (line.starts_with("flags")) {
             f.constant_tsc = has_flag(line, "constant_tsc");
             f.nonstop_tsc = has_flag(line, "nonstop_tsc");
             f.rdtscp = has_flag(line, "rdtscp");

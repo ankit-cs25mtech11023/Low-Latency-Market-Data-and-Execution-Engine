@@ -63,7 +63,7 @@ TEST(PerfCounters, SoftwareEventsCountPageFaults) {
     if (!pc) GTEST_SKIP() << "perf_event_open not permitted here";
     pc->start();
     // Touch 64 fresh pages: each first write faults the page in.
-    auto mem = std::make_unique<char[]>(64 * 4096);
+    auto mem = std::make_unique<char[]>(std::size_t{64} * 4096);
     for (int i = 0; i < 64; ++i) mem[static_cast<std::size_t>(i) * 4096] = 1;
     lle::do_not_optimize(mem[0]);
     const auto r = pc->stop();

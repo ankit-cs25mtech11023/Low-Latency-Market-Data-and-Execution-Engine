@@ -9,16 +9,22 @@
 #include <cstdlib>
 #include <cstring>
 #include <stdexcept>
+#include <string>
+#include <system_error>
 
 #include "lle/protocol/endian.hpp"
 
 namespace lle::itch {
 namespace {
 
+// std::strerror may return a pointer to a shared static buffer (not thread-safe); the
+// error_code message is built from the thread-safe strerror_r.
+std::string errno_message(int err) { return std::error_code(err, std::generic_category()).message(); }
+
 class FdSource final : public ByteSource {
 public:
     explicit FdSource(const std::string& path) : fd_(::open(path.c_str(), O_RDONLY | O_CLOEXEC)) {
-        if (fd_ < 0) throw std::runtime_error("open " + path + ": " + std::strerror(errno));
+        if (fd_ < 0) throw std::runtime_error("open " + path + ": " + errno_message(errno));
         ::posix_fadvise(fd_, 0, 0, POSIX_FADV_SEQUENTIAL);
     }
     ~FdSource() override { ::close(fd_); }
@@ -29,7 +35,7 @@ public:
         for (;;) {
             const ssize_t r = ::read(fd_, dst, n);
             if (r >= 0) return static_cast<std::size_t>(r);
-            if (errno != EINTR) throw std::runtime_error(std::string("read: ") + std::strerror(errno));
+            if (errno != EINTR) throw std::runtime_error("read: " + errno_message(errno));
         }
     }
 
@@ -50,10 +56,11 @@ public:
     std::size_t read(std::byte* dst, std::size_t n) override {
         const unsigned chunk = n > (1u << 30) ? (1u << 30) : static_cast<unsigned>(n);
         const int r = gzread(gz_, dst, chunk);
-        if (r < 0) {
-            int err = 0;
-            throw std::runtime_error(std::string("gzread: ") + gzerror(gz_, &err));
-        }
+        int err = Z_OK;
+        const char* msg = gzerror(gz_, &err);
+        // r == 0 with an error set means the compressed stream itself is truncated or corrupt
+        // (zlib reports Z_BUF_ERROR "unexpected end of file"), not a clean end of data.
+        if (r < 0 || (r == 0 && err != Z_OK)) throw std::runtime_error(std::string("gzread: ") + msg);
         return static_cast<std::size_t>(r);
     }
 
@@ -66,13 +73,24 @@ public:
     explicit PipeSource(const std::string& cmd) : f_(::popen(cmd.c_str(), "r")) {
         if (f_ == nullptr) throw std::runtime_error("popen failed: " + cmd);
     }
-    ~PipeSource() override { ::pclose(f_); }
+    ~PipeSource() override {
+        if (f_ != nullptr) ::pclose(f_);
+    }
     PipeSource(const PipeSource&) = delete;
     PipeSource& operator=(const PipeSource&) = delete;
 
     std::size_t read(std::byte* dst, std::size_t n) override {
+        if (f_ == nullptr) return 0;
         const std::size_t r = std::fread(dst, 1, n, f_);
-        if (r == 0 && std::ferror(f_)) throw std::runtime_error("pipe read failed");
+        if (r == 0) {
+            if (std::ferror(f_)) throw std::runtime_error("pipe read failed");
+            // End of output: only a clean end if the decompressor exited successfully. A
+            // corrupt or truncated .gz makes pigz exit non-zero, possibly at a point that looks
+            // like a message boundary, so the exit status is the only reliable signal.
+            const int status = ::pclose(f_);
+            f_ = nullptr;
+            if (status != 0) throw std::runtime_error("decompressor failed (exit status " + std::to_string(status) + ")");
+        }
         return r;
     }
 
@@ -85,7 +103,9 @@ public:
     explicit MemorySource(std::vector<std::byte> d) : data_(std::move(d)) {}
     std::size_t read(std::byte* dst, std::size_t n) override {
         const std::size_t k = std::min(n, data_.size() - pos_);
-        std::memcpy(dst, data_.data() + pos_, k);
+        // memcpy with a null source is undefined even for 0 bytes, and an empty vector's
+        // data() may be null (UBSan flags it), so skip the copy when there is nothing to copy.
+        if (k != 0) std::memcpy(dst, data_.data() + pos_, k);
         pos_ += k;
         return k;
     }
@@ -94,10 +114,6 @@ private:
     std::vector<std::byte> data_;
     std::size_t pos_ = 0;
 };
-
-bool ends_with(const std::string& s, const std::string& suf) {
-    return s.size() >= suf.size() && s.compare(s.size() - suf.size(), suf.size(), suf) == 0;
-}
 
 std::string shell_quote(const std::string& s) {
     std::string out = "'";
@@ -109,8 +125,11 @@ std::string shell_quote(const std::string& s) {
 
 std::unique_ptr<ByteSource> open_source(const std::string& path, Decompressor d) {
     if (d == Decompressor::Auto) {
-        if (!ends_with(path, ".gz")) d = Decompressor::None;
-        else d = (std::system("command -v pigz >/dev/null 2>&1") == 0) ? Decompressor::Pigz : Decompressor::Zlib;
+        if (!path.ends_with(".gz")) d = Decompressor::None;
+        // std::system is not thread-safe; this runs once when a file is opened, never concurrently.
+        else d = (std::system("command -v pigz >/dev/null 2>&1") == 0)  // NOLINT(concurrency-mt-unsafe)
+                     ? Decompressor::Pigz
+                     : Decompressor::Zlib;
     }
     switch (d) {
         case Decompressor::None: return std::make_unique<FdSource>(path);

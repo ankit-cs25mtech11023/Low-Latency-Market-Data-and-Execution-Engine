@@ -32,7 +32,7 @@
 
 namespace lle {
 
-enum class PerfEvent {
+enum class PerfEvent : std::uint8_t {
     kCycles,          // core clock cycles (runs at the actual core frequency)
     kInstructions,    // instructions retired
     kRefCycles,       // reference cycles: ticks at a fixed rate regardless of core frequency

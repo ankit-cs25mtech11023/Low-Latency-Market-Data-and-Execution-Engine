@@ -36,6 +36,10 @@ public:
             ++c_.bad_locate;
             return;
         }
+        if (qty == 0) {  // never sent by Nasdaq; adding it would leave a level with 0 shares
+            ++c_.zero_qty;
+            return;
+        }
         if (orders_.count(ref) != 0) {  // should never happen: refs are day-unique
             ++c_.duplicate_ref;
             return;

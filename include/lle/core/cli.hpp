@@ -16,9 +16,9 @@ public:
     Cli(int argc, char** argv) {
         for (int i = 1; i < argc; ++i) {
             std::string_view a = argv[i];
-            if (a.size() < 3 || a.substr(0, 2) != "--") throw std::invalid_argument("unexpected argument: " + std::string(a));
+            if (a.size() < 3 || !a.starts_with("--")) throw std::invalid_argument("unexpected argument: " + std::string(a));
             std::string key(a.substr(2));
-            if (i + 1 < argc && std::string_view(argv[i + 1]).substr(0, 2) != "--")
+            if (i + 1 < argc && !std::string_view(argv[i + 1]).starts_with("--"))
                 kv_[key] = argv[++i];
             else
                 kv_[key] = "1";

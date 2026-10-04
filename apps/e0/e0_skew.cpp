@@ -92,7 +92,7 @@ PairResult measure_pair(int cpu_a, int cpu_b, std::size_t samples, std::size_t w
     r.a = cpu_a;
     r.b = cpu_b;
     for (std::size_t i = warmup; i < total; ++i) {
-        const double rtt = static_cast<double>(t3[i] - t0[i]);
+        const auto rtt = static_cast<double>(t3[i] - t0[i]);
         // Signed differences: tb may legitimately be "before" t0 if B's clock is behind A's.
         // offset = tb - (t0 + t3)/2 = (tb - t0) - rtt/2
         const auto tb_minus_t0 = static_cast<std::int64_t>(tb[i] - t0[i]);
@@ -101,7 +101,7 @@ PairResult measure_pair(int cpu_a, int cpu_b, std::size_t samples, std::size_t w
         if (tb_minus_t0 < 0 || t3_minus_tb < 0) ++r.violations;
         s.push_back({rtt, off});
     }
-    std::sort(s.begin(), s.end(), [](const S& x, const S& y) { return x.rtt < y.rtt; });
+    std::ranges::sort(s, {}, &S::rtt);
     r.n = s.size();
     r.min_rtt = s.front().rtt;
     r.p50_rtt = s[s.size() / 2].rtt;
@@ -109,6 +109,7 @@ PairResult measure_pair(int cpu_a, int cpu_b, std::size_t samples, std::size_t w
     r.offset_at_min_rtt = s.front().offset;
     const std::size_t best = std::max<std::size_t>(1, s.size() / 100);
     std::vector<double> offs;
+    offs.reserve(best);
     for (std::size_t i = 0; i < best; ++i) offs.push_back(s[i].offset);
     std::nth_element(offs.begin(), offs.begin() + static_cast<std::ptrdiff_t>(offs.size() / 2), offs.end());
     r.offset_median_best = offs[offs.size() / 2];

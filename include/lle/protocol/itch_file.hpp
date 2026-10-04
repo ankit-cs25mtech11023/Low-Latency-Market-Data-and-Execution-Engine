@@ -14,9 +14,27 @@
 #include <cstdint>
 #include <memory>
 #include <string>
+#include <span>
+#include <stdexcept>
 #include <vector>
 
+#include "lle/protocol/endian.hpp"
+
 namespace lle::itch {
+
+// Calls f(message, length) for every framed message of an in-memory stream (tests, fuzzing,
+// pre-loaded slices). Throws std::runtime_error if the data ends inside a frame.
+template <class F>
+void for_each_framed(std::span<const std::byte> data, F&& f) {
+    std::size_t pos = 0;
+    while (pos < data.size()) {
+        if (data.size() - pos < 2) throw std::runtime_error("stream ends inside a length prefix");
+        const std::size_t n = proto::load_be<std::uint16_t>(data.data() + pos);
+        if (data.size() - pos - 2 < n) throw std::runtime_error("stream ends inside a message");
+        f(data.data() + pos + 2, n);
+        pos += 2 + n;
+    }
+}
 
 class ByteSource {
 public:
@@ -25,7 +43,7 @@ public:
     virtual std::size_t read(std::byte* dst, std::size_t n) = 0;
 };
 
-enum class Decompressor { Auto, None, Zlib, Pigz };
+enum class Decompressor : std::uint8_t { Auto, None, Zlib, Pigz };
 
 // Opens `path`. With Auto, ".gz" files use pigz if it is installed, else zlib.
 [[nodiscard]] std::unique_ptr<ByteSource> open_source(const std::string& path, Decompressor d = Decompressor::Auto);

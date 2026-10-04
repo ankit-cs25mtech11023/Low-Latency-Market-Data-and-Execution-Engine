@@ -51,7 +51,7 @@ public:
     [[nodiscard]] static constexpr std::uint64_t lowest_of(std::size_t idx) noexcept {
         const std::size_t group = idx >> PrecisionBits;
         if (group == 0) return idx;
-        const unsigned shift = static_cast<unsigned>(group - 1);
+        const auto shift = static_cast<unsigned>(group - 1);
         const std::uint64_t mantissa = idx - (static_cast<std::uint64_t>(shift) << PrecisionBits);
         return mantissa << shift;
     }
@@ -60,7 +60,7 @@ public:
     [[nodiscard]] static constexpr std::uint64_t highest_of(std::size_t idx) noexcept {
         const std::size_t group = idx >> PrecisionBits;
         if (group == 0) return idx;
-        const unsigned shift = static_cast<unsigned>(group - 1);
+        const auto shift = static_cast<unsigned>(group - 1);
         return lowest_of(idx) + ((std::uint64_t{1} << shift) - 1);
     }
 

@@ -33,10 +33,21 @@ include(Sanitizers)
 string(TOUPPER "${CMAKE_BUILD_TYPE}" _lle_bt)
 set(LLE_BUILD_FLAGS "${CMAKE_CXX_FLAGS} ${CMAKE_CXX_FLAGS_${_lle_bt}}")
 string(STRIP "${LLE_BUILD_FLAGS}" LLE_BUILD_FLAGS)
-execute_process(COMMAND git rev-parse --short=12 HEAD
-    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
-    OUTPUT_VARIABLE LLE_GIT_SHA OUTPUT_STRIP_TRAILING_WHITESPACE ERROR_QUIET)
-configure_file(cmake/build_info.hpp.in ${CMAKE_CURRENT_BINARY_DIR}/generated/lle/build_info.hpp @ONLY)
+# The header is regenerated on every build (see cmake/GenBuildInfo.cmake for why).
+set(LLE_BUILD_INFO_HPP ${CMAKE_CURRENT_BINARY_DIR}/generated/lle/build_info.hpp)
+add_custom_target(lle_build_info ALL
+    COMMAND ${CMAKE_COMMAND}
+        -DSRC_DIR=${CMAKE_CURRENT_SOURCE_DIR}
+        -DTEMPLATE=${CMAKE_CURRENT_SOURCE_DIR}/cmake/build_info.hpp.in
+        -DOUT=${LLE_BUILD_INFO_HPP}
+        -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}
+        -DCMAKE_CXX_COMPILER_ID=${CMAKE_CXX_COMPILER_ID}
+        -DCMAKE_CXX_COMPILER_VERSION=${CMAKE_CXX_COMPILER_VERSION}
+        "-DLLE_BUILD_FLAGS=${LLE_BUILD_FLAGS}"
+        -DLLE_SANITIZER=${LLE_SANITIZER}
+        -P ${CMAKE_CURRENT_SOURCE_DIR}/cmake/GenBuildInfo.cmake
+    BYPRODUCTS ${LLE_BUILD_INFO_HPP}
+    COMMENT "Recording git SHA in build_info.hpp")
 
 add_subdirectory(src)
 

@@ -53,6 +53,7 @@ struct BookCounters {
     std::uint64_t overfill = 0;         // executed/cancelled more shares than the order had
     std::uint64_t locate_mismatch = 0;  // message locate differs from the order's locate
     std::uint64_t bad_locate = 0;       // locate outside the book's range
+    std::uint64_t zero_qty = 0;         // add/replace with 0 shares: ignored (would create an empty level)
 };
 
 inline constexpr Price kNoPrice = 0;

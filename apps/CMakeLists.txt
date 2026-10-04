@@ -6,3 +6,4 @@ endfunction()
 
 lle_add_app(e0_timers e0/e0_timers.cpp)
 lle_add_app(e0_skew   e0/e0_skew.cpp)
+lle_add_app(e1_workload e1/e1_workload.cpp)

@@ -89,7 +89,7 @@ TEST(Histogram, QuantilesMatchExactWithinBound) {
         data.push_back(v);
         h->record(v);
     }
-    std::sort(data.begin(), data.end());
+    std::ranges::sort(data);
     for (double q : {0.01, 0.1, 0.5, 0.9, 0.99, 0.999, 0.9999}) {
         const auto exact = exact_quantile(data, q);
         const auto approx = h->value_at_quantile(q);

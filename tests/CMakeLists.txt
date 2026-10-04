@@ -16,3 +16,12 @@ if(LLE_HDR_VALIDATE)
     lle_add_test(test_histogram_vs_hdr unit/test_histogram_vs_hdr.cpp)
     target_link_libraries(test_histogram_vs_hdr PRIVATE hdr_histogram_static)
 endif()
+
+lle_add_test(test_protocol
+    unit/test_itch.cpp
+    unit/test_itch_file.cpp)
+
+lle_add_test(test_book
+    unit/test_reference_book.cpp
+    unit/test_differential.cpp
+    unit/test_book_properties.cpp)

@@ -25,7 +25,7 @@
     { "name": "clang-ubsan",    "inherits": ["base", "clang"], "cacheVariables": { "CMAKE_BUILD_TYPE": "Debug", "LLE_SANITIZER": "undefined" } },
     { "name": "clang-tsan",     "inherits": ["base", "clang"], "cacheVariables": { "CMAKE_BUILD_TYPE": "RelWithDebInfo", "LLE_SANITIZER": "thread" } },
     { "name": "fuzz",           "displayName": "clang libFuzzer + ASan/UBSan", "inherits": ["base", "clang"],
-      "cacheVariables": { "CMAKE_BUILD_TYPE": "RelWithDebInfo", "LLE_BUILD_FUZZ": "ON", "LLE_BUILD_BENCH": "OFF" } }
+      "cacheVariables": { "CMAKE_BUILD_TYPE": "RelWithDebInfo", "LLE_SANITIZER": "fuzzer", "LLE_BUILD_FUZZ": "ON", "LLE_BUILD_BENCH": "OFF" } }
   ],
   "buildPresets": [
     { "name": "debug",          "configurePreset": "debug" },

@@ -29,10 +29,17 @@ public:
     [[nodiscard]] bool known(Locate loc) const noexcept { return known_[loc]; }
     [[nodiscard]] std::uint32_t round_lot(Locate loc) const noexcept { return lots_[loc]; }
 
+    // Trading state from H (trading action) messages: 'T' trading, 'H' halted, 'P' paused,
+    // 'Q' quotation only (e.g. before an IPO or a halt re-opening). 0 = no H seen yet.
+    // A halted or quotation-only book does not match, so it may legitimately be crossed.
+    void set_state(Locate loc, char state) noexcept { state_[loc] = state; }
+    [[nodiscard]] char state(Locate loc) const noexcept { return state_[loc]; }
+
 private:
     std::array<std::array<char, 8>, 65536> syms_{};
     std::array<std::uint32_t, 65536> lots_{};
     std::array<bool, 65536> known_{};
+    std::array<char, 65536> state_{};
 };
 
 struct MessageCounts {
@@ -79,7 +86,7 @@ public:
     }
     void on_trading_action(const itch::TradingAction& m) {
         count('H');
-        (void)m;
+        dir_.set_state(m.h.locate, m.state);
     }
     void on_other(char type, const std::byte*, std::size_t) { count(type); }
 

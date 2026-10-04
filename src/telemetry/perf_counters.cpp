@@ -99,7 +99,7 @@ std::string PerfReading::to_json() const {
         s += "\"" + std::string(perf_event_name(events[i])) + "\":" + std::to_string(values[i]) + ",";
     }
     char buf[128];
-    std::snprintf(buf, sizeof buf, "\"time_enabled_ns\":%llu,\"time_running_ns\":%llu}",
+    std::snprintf(buf, sizeof buf, R"("time_enabled_ns":%llu,"time_running_ns":%llu})",
                   static_cast<unsigned long long>(time_enabled_ns), static_cast<unsigned long long>(time_running_ns));
     return s + buf;
 }
