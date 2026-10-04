@@ -71,9 +71,17 @@ the reason H3 exists. H1, H2 and H4 come from the design (`plan.md` P2) and E1.
   instrumentation itself (stamp pair + histogram record, ~97 cycles per message from E0).
 - **Heap allocations:** an `operator new` counting shim (`apps/e2/alloc_count.cpp`) counts
   allocations inside the timed region only.
-- **Runs:** N = 10 per book, interleaved in rotating order (`ref, fast, fast-fib`, then
-  `fast, fast-fib, ref`, ...), no discarded warm-up runs (each run is a full pass of the day
-  and already has its own 1 M-message warm-up). The book thread is pinned to CPU 2; `pigz` is not pinned (the scheduler may place it on any other CPU, including CPU 2's SMT sibling, CPU 6).
+- **Runs:** N = 10 per book, interleaved in rotating order (session A: `ref, fast-fib`, then
+  `fast-fib, ref`, ...), no discarded warm-up runs (each run is a full pass of the day and
+  already has its own 1 M-message warm-up). The book thread is pinned to CPU 2; `pigz` is
+  started off that core (allowed CPUs 0-1, 3-5, 7: not CPU 2 and not its SMT sibling CPU 6)
+  by `ChildAffinityScope` (`lle/core/cpu.hpp`).
+- **Two sessions.** Session A: `ref` vs `fast-fib`, N = 10 each, interleaved. Session B:
+  `fast` (identity hash), N = 10, run afterwards, because a full-day pass of `fast` takes far
+  longer than the others (see "Where the hypotheses were wrong", H3).
+- **Aborted first attempt (not used).** Run `results/E2-book/20261004T102616Z` was stopped
+  after 2 of 30 runs: `pigz` had inherited the book thread's pinning and ran on CPU 2,
+  time-sliced with the measured code. Fixed in `7e2a7a2`; no number from that run is used.
   Median across runs with 95% bootstrap CI; speedups are ratios of medians with their own
   bootstrap CI (`scripts/analyse.py compare`).
 - **Correctness of what was timed:** `tools/diff_books` replays the same day through the
@@ -102,9 +110,9 @@ the reason H3 exists. H1, H2 and H4 come from the design (`plan.md` P2) and E1.
   and counter ratios transfer better. The measured CPU is not isolated (`isolcpus` /
   `nohz_full` not set), so timer interrupts land in timed regions; they mostly affect the
   per-message tail.
-- **`pigz` is not pinned.** It may share CPU 2's physical core (SMT sibling CPU 6) for part of
-  a run, which slows the book thread and adds noise. All three books run under the same
-  conditions, interleaved, so the comparison is fair, but absolute numbers include this.
+- **`pigz` shares the machine.** It runs on other physical cores, but it still shares the L3
+  cache and memory bandwidth with the book thread. All books run under the same conditions,
+  interleaved, so the comparison is fair; absolute numbers include this background load.
 - **Allocation shim overhead.** The `operator new` replacement adds one thread-local increment
   per allocation. It slows the reference book slightly (it allocates) and not the optimized
   book (it does not), so it inflates the measured speedup by at most the cost of that
@@ -127,12 +135,13 @@ sudo scripts/tune_machine.sh apply
 cmake --preset release && cmake --build --preset release
 scripts/fetch_itch.sh 07302019            # see data/README.md; checksum-verified
 
+# Session A (ref vs fast-fib); session B is the same command with --param book=fast
 python3 scripts/run_bench.py --name E2-book --build build/release --runs 10 --warmup-runs 0 \
   --cmd "{bin}/apps/e2_book --book {book} --mode both --input data/07302019.NASDAQ_ITCH50.gz --cpu 2 --out {out} --out-permsg {out}_permsg" \
-  --param book=ref,fast,fast-fib
+  --param book=ref,fast-fib
 python3 scripts/e2_split.py results/E2-book/latest
 python3 scripts/analyse.py summary results/E2-book/latest
-python3 scripts/analyse.py compare results/E2-book/latest "book=ref__method=batch" "book=fast__method=batch" --metric mean
+python3 scripts/analyse.py compare results/E2-book/latest "book=ref__method=batch" "book=fast-fib__method=batch" --metric mean
 
 # Full-day correctness of the optimized book against the reference book
 ./build/release/tools/diff_books --input data/07302019.NASDAQ_ITCH50.gz --book fast --out results/E2/diff_fullday_fast.json
