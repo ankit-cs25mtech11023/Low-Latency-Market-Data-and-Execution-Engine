@@ -13,7 +13,8 @@ Statistics (master plan §9):
      region only) are divided by the number of operations (samples x value_divisor) and
      summarized the same way: cycles/op, instructions/op, IPC, effective core GHz.
   5. A-vs-B claims use the bootstrap CI of the difference of medians; a difference is only
-     called real if that CI excludes 0 (Mann-Whitney U p-value is shown alongside).
+     called real if that CI excludes 0 (Mann-Whitney U p-value is shown alongside). The ratio
+     of medians (speedup) is printed with its own bootstrap CI.
 
 Usage:
   scripts/analyse.py summary results/E0-timers/latest            # table + plots
@@ -74,6 +75,9 @@ def load_run(hist_csv: Path) -> Run:
     r.metrics_ns["mean"] = to_ns(float(meta["summary_ticks"]["mean"]))
     r.metrics_ns["min"] = to_ns(float(meta["summary_ticks"]["min"]))
     r.counter_metrics = counter_metrics(meta["params"].get("counters"), r.total * r.divisor)
+    if meta["params"].get("heap_allocations_measured") is not None and r.total > 0:
+        # Counted by an operator-new shim around the timed region only (E2 driver).
+        r.counter_metrics["heap allocs/op"] = meta["params"]["heap_allocations_measured"] / (r.total * r.divisor)
     return r
 
 
@@ -125,9 +129,20 @@ def bootstrap_diff_ci(a: np.ndarray, b: np.ndarray, rng: np.random.Generator) ->
     return float(np.median(a) - np.median(b)), float(np.quantile(d, 0.025)), float(np.quantile(d, 0.975))
 
 
+def bootstrap_ratio_ci(a: np.ndarray, b: np.ndarray, rng: np.random.Generator) -> tuple[float, float, float]:
+    """Ratio of medians (e.g. a speedup "A takes 2.6x as long as B") with a 95% bootstrap CI:
+    each side's runs are resampled independently, as in bootstrap_diff_ci."""
+    ma = np.median(rng.choice(a, size=(BOOT, len(a)), replace=True), axis=1)
+    mb = np.median(rng.choice(b, size=(BOOT, len(b)), replace=True), axis=1)
+    q = ma / mb
+    return float(np.median(a) / np.median(b)), float(np.quantile(q, 0.025)), float(np.quantile(q, 0.975))
+
+
 def fmt(v: float) -> str:
     if math.isnan(v):
         return ""
+    if 0 < abs(v) < 0.001:
+        return f"{v:.2e}"  # e.g. allocations per message: keep rare-but-nonzero visible
     return f"{v:.3f}" if abs(v) < 10 else f"{v:.1f}" if abs(v) < 1000 else f"{v:.0f}"
 
 
@@ -295,6 +310,8 @@ def compare(result_dir: Path, a: str, b: str, metric: str) -> None:
     verdict = "significant" if (lo > 0 or hi < 0) else "NOT significant (CI includes 0)"
     print(f"{metric}: median({a}) - median({b}) = {d:.3f} ns, 95% CI [{lo:.3f}, {hi:.3f}], "
           f"Mann-Whitney p = {p:.4g} -> {verdict}")
+    q, qlo, qhi = bootstrap_ratio_ci(xa, xb, rng)
+    print(f"{metric}: median({a}) / median({b}) = {q:.3f}x, 95% CI [{qlo:.3f}, {qhi:.3f}]")
 
 
 def skew(result_dir: Path) -> None:

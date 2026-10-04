@@ -216,12 +216,13 @@ int main(int argc, char** argv) try {
             R"(,"unit":"ticks","warmup_msgs":)" + std::to_string(o.warmup) + R"(,"total_msgs":)" +
             std::to_string(total) + R"(,"measured_msgs":)" + std::to_string(s.measured_msgs) +
             R"(,"measured_batches":)" + std::to_string(s.measured_batches) + R"(,"heap_allocations_measured":)" +
-            std::to_string(s.allocations) + R"(,"book_counters":)" + book_json + R"(,"counters":)" + pmu_json + "}";
+            (e2::kAllocShim ? std::to_string(s.allocations) : std::string("null")) + R"(,"book_counters":)" +
+            book_json + R"(,"counters":)" + pmu_json + "}";
         write_run(o.out[m], s.hist, cal, params);
-        std::printf("%s/%s: %llu msgs measured, p50 %.1f ns/msg, heap allocations %llu\n", book_name.c_str(),
+        std::printf("%s/%s: %llu msgs measured, p50 %.1f ns/msg, heap allocations %s\n", book_name.c_str(),
                     m == kBatch ? "batch" : "permsg", static_cast<unsigned long long>(s.measured_msgs),
                     cal.to_ns(static_cast<double>(s.hist.value_at_quantile(0.5)) / static_cast<double>(divisor)),
-                    static_cast<unsigned long long>(s.allocations));
+                    e2::kAllocShim ? std::to_string(s.allocations).c_str() : "not measured (sanitizer build)");
     }
     return 0;
 } catch (const std::exception& e) {

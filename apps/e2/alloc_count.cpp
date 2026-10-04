@@ -18,6 +18,7 @@ namespace e2 {
 thread_local std::uint64_t g_allocations = 0;
 }
 
+#if LLE_ALLOC_SHIM
 namespace {
 void* counted_alloc(std::size_t n) {
     ++e2::g_allocations;
@@ -84,3 +85,4 @@ void operator delete(void* p, std::size_t, std::align_val_t) noexcept {
 void operator delete[](void* p, std::size_t, std::align_val_t) noexcept {
     std::free(p);
 }
+#endif  // LLE_ALLOC_SHIM

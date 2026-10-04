@@ -66,4 +66,4 @@ Commit with `git add .` + `git commit -m "<specific message>"`:
 - Feature: `"Implement <feature> — Phase <X> step complete"`
 - Conventional Commits style is also fine (`feat(book): …`, `perf(memory): …`, `docs(exp): E2 …`).
 
-Never use `--author` or override the git identity.
+Never use `--author` or override the git identity. Never add a `Co-Authored-By: Claude` trailer or any Claude attribution to commits or PRs: Claude must not appear as a GitHub contributor.
