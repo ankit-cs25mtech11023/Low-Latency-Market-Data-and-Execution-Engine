@@ -9,7 +9,7 @@
 - [x] Create the CMake project skeleton with the directory layout from master plan §6
 - [x] Add CMakePresets: debug, release (`-O2 -DNDEBUG`), relwithdebinfo (`-O2 -g -fno-omit-frame-pointer`), asan, ubsan, tsan
 - [x] Enable warnings `-Wall -Wextra -Wpedantic -Wconversion -Wshadow -Wold-style-cast`, with `-Werror` in CI
-- [ ] Add `.clang-format` and `.clang-tidy`
+- [x] Add `.clang-format` and `.clang-tidy`
 - [x] Integrate GoogleTest and Google Benchmark via CMake FetchContent
 - [ ] Add a GitHub Actions CI skeleton: {gcc, clang} × {debug, asan, ubsan, tsan}, build + ctest
 - [x] Implement the TSC clock: `lfence;rdtsc` start stamp, `rdtscp;lfence` end stamp, behind an arch-abstract interface
@@ -28,24 +28,24 @@
 - [ ] Tag v0.1
 
 ## Phase 1: ITCH Decoder, Reference Book, Differential Testing → E1 (weeks 2–3)
-- [ ] Verify the current ITCH 5.0 sample-data location and terms of use; document them in `data/README.md`
-- [ ] Write `scripts/fetch_itch.sh` with `data/checksums.sha256` verification (Nasdaq data is never committed)
-- [ ] Implement a streaming ITCH file reader (pigz/zlib) handling the 2-byte big-endian length framing
-- [ ] Write `tools/slice_itch` (C++; a Python per-message loop is too slow for a ~300M-message day) for local dev slices (first N messages; named symbols; top-K symbols)
-- [ ] Implement C++20 `bswap`/`load_be` helpers and the 48-bit timestamp loader, with unit tests
-- [ ] Implement the ITCH decoder for A, F, E, C, X, D, U, R, S, H with bounds checks, skipping other types by length
-- [ ] Build the stock-locate → symbol directory from `R` messages; books indexed by locate
-- [ ] Define a common book interface shared by the reference and optimized books
-- [ ] Implement the reference book: `std::map` levels, `std::list` orders, `std::unordered_map` ref → handle
-- [ ] Unit tests per message type: partial executions, replace priority loss, unknown refs, zero-qty results
-- [ ] Implement `tools/gen_fixture`: synthetic ITCH-format generator (fixed seed, adversarial modes) for CI
-- [ ] Implement the differential harness: compare top-of-book every message and full depth every N; dump a reproduction on mismatch
-- [ ] Add property-based random and adversarial stream tests
-- [ ] Add a libFuzzer target for the ITCH decoder (ASan/UBSan)
-- [ ] Add logged invariants: crossed/locked books, negative quantities
-- [ ] Process a full real ITCH day through the reference book within the RAM budget
-- [ ] E1 analysis tool: message mix, add/cancel/execute ratios, order lifetimes, depth and level occupancy, price distance from best, symbol skew, burstiness (1 ms / 10 ms / 1 s peaks vs mean), order-ref density
-- [ ] Write `docs/experiments/E1-workload.md` and `docs/itch-moldudp64.md`
+- [x] Verify the current ITCH 5.0 sample-data location and terms of use; document them in `data/README.md`
+- [x] Write `scripts/fetch_itch.sh` with `data/checksums.sha256` verification (Nasdaq data is never committed)
+- [x] Implement a streaming ITCH file reader (pigz/zlib) handling the 2-byte big-endian length framing
+- [x] Write `tools/slice_itch` (C++; a Python per-message loop is too slow for a ~300M-message day) for local dev slices (first N messages; named symbols; top-K symbols)
+- [x] Implement C++20 `bswap`/`load_be` helpers and the 48-bit timestamp loader, with unit tests
+- [x] Implement the ITCH decoder for A, F, E, C, X, D, U, R, S, H with bounds checks, skipping other types by length
+- [x] Build the stock-locate → symbol directory from `R` messages; books indexed by locate
+- [x] Define a common book interface shared by the reference and optimized books
+- [x] Implement the reference book: `std::map` levels, `std::list` orders, `std::unordered_map` ref → handle
+- [x] Unit tests per message type: partial executions, replace priority loss, unknown refs, zero-qty results
+- [x] Implement `tools/gen_fixture`: synthetic ITCH-format generator (fixed seed, adversarial modes) for CI
+- [x] Implement the differential harness: compare top-of-book every message and full depth every N; dump a reproduction on mismatch
+- [x] Add property-based random and adversarial stream tests
+- [x] Add a libFuzzer target for the ITCH decoder (ASan/UBSan)
+- [x] Add logged invariants: crossed/locked books, negative quantities
+- [x] Process a full real ITCH day through the reference book within the RAM budget
+- [x] E1 analysis tool: message mix, add/cancel/execute ratios, order lifetimes, depth and level occupancy, price distance from best, symbol skew, burstiness (1 ms / 10 ms / 1 s peaks vs mean), order-ref density
+- [x] Write `docs/experiments/E1-workload.md` and `docs/itch-moldudp64.md`
 - [ ] Tag v0.2
 
 ## Phase 2: Optimized Order Book, Memory, Profiling → E2 (weeks 4–6)
