@@ -67,7 +67,7 @@
 - [ ] Top-down analysis (toplev / `perf stat -M TopdownL1/L2`) per layer
 - [ ] Use Intel PT / magic-trace to explain at least one p99.9 event
 - [ ] Compare llvm-mca's prediction for the hottest loop with measured throughput
-- [ ] E2 session B (`fast`, identity hash, N = 10 full days): runs 2026-10-04 13:13–~17:10 UTC; write-up after
+- [x] E2 session B (`fast`, identity hash, N = 10 full days): ran 2026-10-04 13:13–17:10 UTC; written up in E2-orderbook.md
 - [ ] E2 runs: L0–L5 plus leave-one-out ablation on the full day, top-symbol slice and adversarial synthetic stream
 - [ ] Write `docs/experiments/E2-orderbook.md` (mechanism per layer) and `docs/orderbook.md`
 - [ ] Tag v0.3

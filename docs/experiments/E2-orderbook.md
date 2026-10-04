@@ -6,8 +6,8 @@
 > (see `plan.md` P2): per-layer ablation and leave-one-out builds, the tick-ladder + bitmap
 > variant, `mlockall`/prefault (L4) and 2 MiB pages (L5, both need memlock/hugepage limits
 > set with sudo), top-down analysis, Intel PT for a p99.9 event, and llvm-mca.
-> Session A (`ref` vs `fast-fib`, N = 10 full days each) is complete and reported below;
-> session B (timing of the identity-hash `fast` book) is pending.
+> Session A (`ref` vs `fast-fib`, N = 10 full days each) and session B (the identity-hash
+> `fast` book, N = 10 full days, run afterwards) are complete and reported below.
 
 ## Question
 
@@ -130,6 +130,23 @@ fast-fib batch p50 CI is 313.3–315.6 ns.
 and `fast-fib` side by side: **282 229 684 messages, top of book compared after 276 789 789
 of them, full depth compared 2 768 times (every 100 000), all agree**; 0 unknown refs,
 0 live orders at the end ([`diff_fullday_fast-fib.json`](../results/E2/diff_fullday_fast-fib.json)).
+**Session B: the identity-hash `fast` book** (N = 10 full days, run after session A, so this is
+a cross-session comparison, not an interleaved one; see the caveat below the table):
+
+| book | throughput mean | throughput p50 | per-msg p50 | per-msg p99 | per-msg p99.9 | instr/msg | dTLB misses/msg |
+|---|---|---|---|---|---|---|---|
+| `fast-fib` (session A) | **311.0** [310.4, 320.0] | 313.3 [313.3, 315.6] | 301.7 [301.7, 305.0] | **1 199** [1 191, 1 271] | 1 715 [1 706, 2 719] | **301** | 1.55 |
+| `fast` identity (session B) | 4 233 [4 208, 4 435] | 560.0 [554.4, 604.4] | **239.4** [236.1, 261.7] | 180 337 [179 768, 184 319] | 397 084 [394 808, 418 702] | 21 081 | **0.62** |
+
+Full table: [`sessionB-summary.md`](../results/E2/sessionB-summary.md), counters
+[`sessionB-counters.csv`](../results/E2/sessionB-counters.csv). The identity hash is faster on
+the *typical* message (per-message p50 239 vs 302 ns, 2.5× fewer dTLB misses: consecutive refs
+share pages) but **13.6× slower on average** and **150× worse at p99**, because it executes
+**70× more instructions per message** (21 081 vs 301): the probe loop of H3 below. Caveat: the
+two sessions ran at different times and the core clock differed (1.585 GHz in session B vs
+1.465 GHz in session A, cycles / time), so only differences far larger than that 8% are claimed;
+13.6× and 70× instructions (a clock-independent count) are.
+
 The full-day differential of the identity-hash `fast` book has not been run yet (it shares
 all code with `fast-fib` except the hash function; both run in the unit and property tests).
 
@@ -186,8 +203,10 @@ What the counters say:
 - **H3 (identity hash beats Fibonacci hash): wrong, and in the most expensive way.** The
   identity hash (`ref mod 2^22`) was so slow on the full day that a `fast` run had not finished
   after 18 minutes, where a `ref` run took about 9.5 minutes under the same conditions (in the
-  aborted first attempt, not a reported timing); the timing session for it (session B) was moved after this
-  write-up. `perf record` on that run (`docs/results/E2/identity-profile/`) shows where the
+  aborted first attempt). Session B then timed it (N = 10 full days): mean **4 233 ns/msg vs
+  311 for `fast-fib` (13.6×)**, per-message p99 **180 µs vs 1.2 µs**, and **21 081 instructions per
+  message vs 301**. Yet its per-message p50 is *lower* (239 vs 302 ns) with 2.5× fewer dTLB
+  misses, so the locality half of H3 was right for the typical message. `perf record` on that run (`docs/results/E2/identity-profile/`) shows where the
   time went: `add` 34%, `on_delete` 26%, `main` 25% of samples (other
   handlers are inlined into it; its hottest instructions are again a probe loop), and inside `add` **97% of the samples sit on the 5
   instructions of the linear-probe loop** (`cmp (%rax),%rcx; add $1,%rdx; shl $4,%rax;
@@ -222,7 +241,8 @@ comes from memory behaviour, not from executing less code: 1.4× fewer instructi
 fewer LLC misses, 3.4× fewer dTLB misses and IPC nearly doubled. The hash function of the
 ref map decides whether the design works at all: the locality-preserving identity hash,
 fine on a 1 M-message slice, degrades through primary clustering once order refs wrap
-the table on the full day.
+the table on the full day: 13.6× slower on average and 150× worse at p99 than the Fibonacci hash,
+with 70× more instructions per message, even though its median message is faster.
 
 ## Threats to validity
 
@@ -241,7 +261,9 @@ the table on the full day.
   E0 measurement floor (21.1 ns at p50) and the fences stop the CPU from overlapping
   messages; per-message counters also count the stamp pair and the histogram record.
   Throughput (batch) numbers amortize this over 1 024 messages.
-- **Identity hash.** It is bad on the real day (H3), not only on adversarial keys. The
+- **Identity hash.** It is bad on the real day (H3), not only on adversarial keys. Its timing
+  (session B) was not interleaved with session A and ran at a ~8% higher core clock; the
+  reported differences (13.6× mean, 70× instructions) are far larger than that. The
   reported optimized book uses the Fibonacci hash; an adversarial stream for it is planned
   (`plan.md` P2).
 - **Core clock below nominal.** Average core clock in the timed region was 1.47–1.54 GHz
@@ -265,6 +287,11 @@ python3 scripts/run_bench.py --name E2-book --build build/release --runs 10 --wa
 python3 scripts/e2_split.py results/E2-book/latest
 python3 scripts/analyse.py summary results/E2-book/latest
 python3 scripts/analyse.py compare results/E2-book/latest "book=ref__method=batch" "book=fast-fib__method=batch" --metric mean
+# Session B (results/E2-book/20261004T131348Z here)
+python3 scripts/run_bench.py --name E2-book --build build/release --runs 10 --warmup-runs 0 \
+  --cmd "{bin}/apps/e2_book --book {book} --mode both --input data/07302019.NASDAQ_ITCH50.gz --cpu 2 --out {out} --out-permsg {out}_permsg" \
+  --param book=fast
+python3 scripts/e2_split.py results/E2-book/latest && python3 scripts/analyse.py summary results/E2-book/latest
 
 # Full-day correctness of the optimized book against the reference book
 ./build/release/tools/diff_books --input data/07302019.NASDAQ_ITCH50.gz --book fast --out results/E2/diff_fullday_fast.json

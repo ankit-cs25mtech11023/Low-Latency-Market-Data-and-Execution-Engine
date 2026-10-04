@@ -1,0 +1,76 @@
+{
+  "name": "E2-book",
+  "cmd": "{bin}/apps/e2_book --book {book} --mode both --input data/07302019.NASDAQ_ITCH50.gz --cpu 2 --out {out} --out-permsg {out}_permsg",
+  "params": [
+    "book=fast"
+  ],
+  "runs": 10,
+  "warmup_runs": 0,
+  "order_mode": "rotate",
+  "seed": 1,
+  "variants": [
+    "book=fast"
+  ],
+  "perf_stat": "",
+  "git_sha": "ba5daf002fdace8432a2cab193789ddb80ccc17d",
+  "git_dirty": false,
+  "started_at": "2026-10-04T13:13:48Z",
+  "argv": [
+    "scripts/run_bench.py",
+    "--name",
+    "E2-book",
+    "--build",
+    "build/release",
+    "--runs",
+    "10",
+    "--warmup-runs",
+    "0",
+    "--cmd",
+    "{bin}/apps/e2_book --book {book} --mode both --input data/07302019.NASDAQ_ITCH50.gz --cpu 2 --out {out} --out-permsg {out}_permsg",
+    "--param",
+    "book=fast"
+  ],
+  "finished_at": "2026-10-04T17:07:22Z",
+  "order": [
+    [
+      0,
+      "book=fast"
+    ],
+    [
+      1,
+      "book=fast"
+    ],
+    [
+      2,
+      "book=fast"
+    ],
+    [
+      3,
+      "book=fast"
+    ],
+    [
+      4,
+      "book=fast"
+    ],
+    [
+      5,
+      "book=fast"
+    ],
+    [
+      6,
+      "book=fast"
+    ],
+    [
+      7,
+      "book=fast"
+    ],
+    [
+      8,
+      "book=fast"
+    ],
+    [
+      9,
+      "book=fast"
+    ]
+  ]
+}

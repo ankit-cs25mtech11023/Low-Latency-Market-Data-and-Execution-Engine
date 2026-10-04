@@ -52,6 +52,15 @@ should be higher for B than for A even where B's throughput is higher.
   the favourable, everything-cached case). Every message before the measured window is
   pushed through the engine unmeasured, rebuilding all books exactly as in the real day;
   then a window of M messages starting at a fixed feed time is replayed open loop.
+  **Window: M = 1 000 000 messages starting at feed time 09:30:00.000** (the first ~14 s of
+  continuous trading after the opening cross), after a warm-up of the **10 411 212** messages
+  from 04:00 to 09:30. Input file: the first 12.5 M messages of the day
+  (`slice_itch --first 12500000`, plain, so loading avoids gzip). Why 09:30 and not a midday
+  window: the warm-up must replay every earlier message (books are rebuilt exactly), and a
+  10:00 window needs 44 M warm-up messages (1.29 GB of bodies, ~1.8 GB resident on a machine
+  with ~3 GB free) and 09:45 one needs 30 M (19 s per run, 6.7 h for the grid); 09:30 needs
+  10.4 M (5–8 s per run). The cost: the window is the busiest part of the day, not a typical
+  one (see threats).
 - Feeder: a pinned thread on CPU 0 replaying from memory. Engine: Model A on CPU 2; Model B's
   decode / decision / sink stages on CPUs 1 / 2 / 3. All four physical cores are busy in
   Model B; CPU 0 also serves interrupts, which hits the feeder (both models alike; feeder
@@ -59,7 +68,8 @@ should be higher for B than for A even where B's throughput is higher.
 - Rings: E3's best variant (acquire/release, cached remote index, 128-byte padding),
   1 024 slots of one 64-byte record each, for the feeder ring and both internal rings.
 - Identical work: both models call the same decode, decision (book + imbalance strategy +
-  cool-down and position-limit risk + optional spin of k ns) and sink functions. Every run
+  cool-down and position-limit risk + optional spin of k ns) and sink functions. The spin
+  runs only for measured messages (it changes no state, so the warm-up skips it). Every run
   writes an order digest; all runs on the same window must have the same digest.
 
 ## Method
