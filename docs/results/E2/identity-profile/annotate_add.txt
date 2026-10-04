@@ -1,0 +1,390 @@
+ Percent |	Source code & Disassembly of e2_book for cpu-clock (1562 samples, percent: local period)
+--------------------------------------------------------------------------------------------------------
+         :
+         :
+         :
+         : 3     Disassembly of section .text:
+         :
+         : 5     00000000000130a0 <lle::book::BasicFastBook<(lle::book::RefHash)1>::add(unsigned short, unsigned long, lle::itch::Side, unsigned int, unsigned int)>:
+    0.06 :   130a0:  push   %r15
+    0.00 :   130a2:  mov    %esi,%r11d
+    0.00 :   130a5:  push   %r14
+    0.00 :   130a7:  mov    %r8d,%r14d
+    0.00 :   130aa:  movabs $0xaaaaaaaaaaaaaaab,%r8
+    0.00 :   130b4:  push   %r13
+    0.00 :   130b6:  push   %r12
+    0.00 :   130b8:  push   %rbp
+    0.00 :   130b9:  push   %rbx
+    0.00 :   130ba:  movzwl %si,%ebx
+    0.00 :   130bd:  sub    $0x48,%rsp
+    0.00 :   130c1:  mov    (%rdi),%r10
+    0.00 :   130c4:  mov    0x8(%rdi),%rax
+    0.00 :   130c8:  addq   $0x1,0x78(%rdi)
+    0.00 :   130cd:  sub    %r10,%rax
+    0.00 :   130d0:  sar    $0x4,%rax
+    0.00 :   130d4:  imul   %r8,%rax
+    0.00 :   130d8:  cmp    %rax,%rbx
+    0.00 :   130db:  jae    13300 <lle::book::BasicFastBook<(lle::book::RefHash)1>::add(unsigned short, unsigned long, lle::itch::Side, unsigned int, unsigned int)+0x260>
+    0.00 :   130e1:  test   %r9d,%r9d
+    0.00 :   130e4:  jne    13100 <lle::book::BasicFastBook<(lle::book::RefHash)1>::add(unsigned short, unsigned long, lle::itch::Side, unsigned int, unsigned int)+0x60>
+    0.00 :   130e6:  addq   $0x1,0xc8(%rdi)
+    0.00 :   130ee:  add    $0x48,%rsp
+    0.00 :   130f2:  pop    %rbx
+    0.00 :   130f3:  pop    %rbp
+    0.00 :   130f4:  pop    %r12
+    0.00 :   130f6:  pop    %r13
+    0.00 :   130f8:  pop    %r14
+    0.00 :   130fa:  pop    %r15
+    0.00 :   130fc:  ret
+    0.00 :   130fd:  nopl   (%rax)
+    0.00 :   13100:  mov    %r9d,%r15d
+    0.00 :   13103:  mov    %r11d,%r12d
+    0.00 :   13106:  mov    %rdi,%r9
+    0.00 :   13109:  mov    0x38(%rdi),%r11d
+    0.00 :   1310d:  mov    0x18(%rdi),%rdi
+    0.00 :   13111:  mov    %ecx,%esi
+    0.00 :   13113:  mov    %r14d,%ebp
+    0.00 :   13116:  mov    %ecx,%r13d
+    0.00 :   13119:  mov    %rdx,%rcx
+    0.00 :   1311c:  mov    %rdi,%r14
+    0.00 :   1311f:  cmp    $0xffffffff,%r11d
+    0.00 :   13123:  jne    13320 <lle::book::BasicFastBook<(lle::book::RefHash)1>::add(unsigned short, unsigned long, lle::itch::Side, unsigned int, unsigned int)+0x280>
+    0.00 :   13129:  mov    0x20(%r9),%rax
+    0.00 :   1312d:  mov    0x30(%r9),%r11
+    0.00 :   13131:  sub    %rdi,%rax
+    0.00 :   13134:  sar    $0x5,%rax
+    0.00 :   13138:  cmp    %rax,%r11
+    0.00 :   1313b:  jae    13678 <lle::book::BasicFastBook<(lle::book::RefHash)1>::add(unsigned short, unsigned long, lle::itch::Side, unsigned int, unsigned int)+0x5d8>
+    0.00 :   13141:  lea    0x1(%r11),%rax
+    0.00 :   13145:  mov    %rax,0x30(%r9)
+    0.00 :   13149:  mov    0x58(%r9),%r8
+    0.00 :   1314d:  mov    %rcx,%rdx
+    0.00 :   13150:  mov    0x40(%r9),%rdi
+    0.06 :   13154:  and    %r8,%rdx
+    0.00 :   13157:  jmp    13170 <lle::book::BasicFastBook<(lle::book::RefHash)1>::add(unsigned short, unsigned long, lle::itch::Side, unsigned int, unsigned int)+0xd0>
+    0.00 :   13159:  nopl   0x0(%rax)
+   28.17 :   13160:  cmp    (%rax),%rcx
+    0.00 :   13163:  je     13338 <lle::book::BasicFastBook<(lle::book::RefHash)1>::add(unsigned short, unsigned long, lle::itch::Side, unsigned int, unsigned int)+0x298>
+    3.65 :   13169:  add    $0x1,%rdx
+    0.00 :   1316d:  and    %r8,%rdx
+    0.00 :   13170:  mov    %rdx,%rax
+   25.74 :   13173:  shl    $0x4,%rax
+    2.24 :   13177:  add    %rdi,%rax
+    0.00 :   1317a:  cmpl   $0xffffffff,0x8(%rax)
+   36.88 :   1317e:  jne    13160 <lle::book::BasicFastBook<(lle::book::RefHash)1>::add(unsigned short, unsigned long, lle::itch::Side, unsigned int, unsigned int)+0xc0>
+    0.06 :   13180:  mov    $0xffffffff,%edx
+    0.19 :   13185:  movd   %r15d,%xmm0
+    0.00 :   1318a:  movd   %edx,%xmm1
+    0.00 :   1318e:  mov    0x60(%r9),%rdx
+    0.06 :   13192:  punpckldq %xmm1,%xmm0
+    0.00 :   13196:  cmp    0x68(%r9),%rdx
+    0.00 :   1319a:  jae    13646 <lle::book::BasicFastBook<(lle::book::RefHash)1>::add(unsigned short, unsigned long, lle::itch::Side, unsigned int, unsigned int)+0x5a6>
+    0.00 :   131a0:  mov    %rcx,(%rax)
+    0.00 :   131a3:  add    $0x1,%rdx
+    0.06 :   131a7:  mov    %r11d,0x8(%rax)
+    0.13 :   131ab:  movl   $0x0,0xc(%rax)
+    0.00 :   131b2:  mov    %r11d,%eax
+    0.00 :   131b5:  shl    $0x5,%rax
+    0.06 :   131b9:  mov    %rdx,0x60(%r9)
+    0.00 :   131bd:  mov    %esi,%edx
+    0.00 :   131bf:  lea    (%r14,%rax,1),%r8
+    0.00 :   131c3:  lea    (%rbx,%rbx,2),%rax
+    0.00 :   131c7:  mov    %r9,0x20(%rsp)
+    0.06 :   131cc:  shl    $0x4,%rax
+    0.00 :   131d0:  mov    %rcx,(%r8)
+    0.00 :   131d3:  mov    %ebp,%ecx
+    0.00 :   131d5:  add    %rax,%r10
+    0.00 :   131d8:  test   %r13b,%r13b
+    0.00 :   131db:  mov    %r12w,0x18(%r8)
+    0.00 :   131e0:  lea    0x18(%r10),%rax
+    0.00 :   131e4:  mov    %ebp,0x14(%r8)
+    0.06 :   131e8:  cmovne %rax,%r10
+    0.00 :   131ec:  mov    %r13b,0x1a(%r8)
+    0.00 :   131f0:  movq   %xmm0,0x8(%r8)
+    0.00 :   131f6:  mov    0x8(%r10),%rbx
+    0.77 :   131fa:  mov    (%r10),%rdi
+    0.13 :   131fd:  mov    %r11d,0x18(%rsp)
+    0.00 :   13202:  mov    %r8,0x10(%rsp)
+    0.00 :   13207:  mov    %rbx,%rsi
+    0.00 :   1320a:  mov    %r10,0x8(%rsp)
+    0.00 :   1320f:  mov    %rdi,%r14
+    0.00 :   13212:  call   9ab0 <lle::book::BasicFastBook<(lle::book::RefHash)1>::find_level(std::vector<lle::book::BasicFastBook<(lle::book::RefHash)1>::Level, std::allocator<lle::book::BasicFastBook<(lle::book::RefHash)1>::Level> > const&, lle::itch::Side, unsigned int) [clone .isra.0]>
+    0.06 :   13217:  mov    0x8(%rsp),%r10
+    0.00 :   1321c:  mov    0x10(%rsp),%r8
+    0.00 :   13221:  lea    (%rax,%rax,2),%rcx
+    0.00 :   13225:  test   %dl,%dl
+    0.00 :   13227:  mov    0x18(%rsp),%r11d
+    0.00 :   1322c:  mov    0x20(%rsp),%r9
+    0.00 :   13231:  lea    0x0(,%rcx,8),%r12
+    0.00 :   13239:  jne    13368 <lle::book::BasicFastBook<(lle::book::RefHash)1>::add(unsigned short, unsigned long, lle::itch::Side, unsigned int, unsigned int)+0x2c8>
+    0.00 :   1323f:  mov    0x10(%r10),%rax
+    0.00 :   13243:  movd   %ebp,%xmm2
+    0.00 :   13247:  movq   %xmm2,%rbp
+    0.00 :   1324c:  cmp    %rdi,%rax
+    0.00 :   1324f:  je     133d0 <lle::book::BasicFastBook<(lle::book::RefHash)1>::add(unsigned short, unsigned long, lle::itch::Side, unsigned int, unsigned int)+0x330>
+    0.00 :   13255:  lea    (%r14,%r12,1),%rcx
+    0.00 :   13259:  cmp    %rax,%rbx
+    0.00 :   1325c:  je     13474 <lle::book::BasicFastBook<(lle::book::RefHash)1>::add(unsigned short, unsigned long, lle::itch::Side, unsigned int, unsigned int)+0x3d4>
+    0.00 :   13262:  lea    0x18(%rbx),%rax
+    0.00 :   13266:  cmp    %rbx,%rcx
+    0.00 :   13269:  je     133b0 <lle::book::BasicFastBook<(lle::book::RefHash)1>::add(unsigned short, unsigned long, lle::itch::Side, unsigned int, unsigned int)+0x310>
+    0.00 :   1326f:  mov    -0x8(%rbx),%rdx
+    0.00 :   13273:  movdqu -0x18(%rbx),%xmm0
+    0.00 :   13278:  mov    %rdx,0x10(%rbx)
+    0.00 :   1327c:  lea    -0x18(%rbx),%rdx
+    0.00 :   13280:  sub    %rcx,%rdx
+    0.00 :   13283:  movups %xmm0,(%rbx)
+    0.00 :   13286:  mov    %rax,0x8(%r10)
+    0.00 :   1328a:  mov    %rdx,%rax
+    0.00 :   1328d:  and    $0xfffffffffffffff8,%rax
+    0.00 :   13291:  sub    %rax,%rbx
+    0.00 :   13294:  mov    %rbx,%rdi
+    0.00 :   13297:  cmp    $0x18,%rdx
+    0.00 :   1329b:  jle    13621 <lle::book::BasicFastBook<(lle::book::RefHash)1>::add(unsigned short, unsigned long, lle::itch::Side, unsigned int, unsigned int)+0x581>
+    0.00 :   132a1:  mov    %rcx,%rsi
+    0.00 :   132a4:  mov    %r9,0x20(%rsp)
+    0.00 :   132a9:  mov    %r12,%rbx
+    0.00 :   132ac:  mov    %r11d,0x18(%rsp)
+    0.00 :   132b1:  mov    %r8,0x10(%rsp)
+    0.00 :   132b6:  mov    %rcx,0x8(%rsp)
+    0.00 :   132bb:  mov    %r10,0x28(%rsp)
+    0.00 :   132c0:  call   4510 <memmove@plt>
+    0.00 :   132c5:  mov    0x28(%rsp),%r10
+    0.00 :   132ca:  mov    0x8(%rsp),%rcx
+    0.00 :   132cf:  mov    0x10(%rsp),%r8
+    0.00 :   132d4:  mov    0x18(%rsp),%r11d
+    0.00 :   132d9:  mov    0x20(%rsp),%r9
+    0.00 :   132de:  add    (%r10),%rbx
+    0.00 :   132e1:  mov    %rbp,(%rcx)
+    0.00 :   132e4:  movq   $0x0,0x8(%rcx)
+    0.00 :   132ec:  movq   $0xffffffffffffffff,0x10(%rcx)
+    0.00 :   132f4:  jmp    1336c <lle::book::BasicFastBook<(lle::book::RefHash)1>::add(unsigned short, unsigned long, lle::itch::Side, unsigned int, unsigned int)+0x2cc>
+    0.00 :   132f6:  cs nopw 0x0(%rax,%rax,1)
+    0.00 :   13300:  addq   $0x1,0xc0(%rdi)
+    0.00 :   13308:  add    $0x48,%rsp
+    0.00 :   1330c:  pop    %rbx
+    0.00 :   1330d:  pop    %rbp
+    0.00 :   1330e:  pop    %r12
+    0.00 :   13310:  pop    %r13
+    0.00 :   13312:  pop    %r14
+    0.00 :   13314:  pop    %r15
+    0.00 :   13316:  ret
+    0.00 :   13317:  nopw   0x0(%rax,%rax,1)
+    0.06 :   13320:  mov    %r11d,%eax
+    0.06 :   13323:  shl    $0x5,%rax
+    0.00 :   13327:  mov    0xc(%rdi,%rax,1),%eax
+    0.19 :   1332b:  mov    %eax,0x38(%r9)
+    0.00 :   1332f:  jmp    13149 <lle::book::BasicFastBook<(lle::book::RefHash)1>::add(unsigned short, unsigned long, lle::itch::Side, unsigned int, unsigned int)+0xa9>
+    0.00 :   13334:  nopl   0x0(%rax)
+    0.00 :   13338:  mov    0x38(%r9),%edx
+    0.00 :   1333c:  mov    %r11d,%eax
+    0.00 :   1333f:  shl    $0x5,%rax
+    0.00 :   13343:  mov    %edx,0xc(%r14,%rax,1)
+    0.00 :   13348:  addq   $0x1,0xa8(%r9)
+    0.00 :   13350:  mov    %r11d,0x38(%r9)
+    0.00 :   13354:  add    $0x48,%rsp
+    0.00 :   13358:  pop    %rbx
+    0.00 :   13359:  pop    %rbp
+    0.00 :   1335a:  pop    %r12
+    0.00 :   1335c:  pop    %r13
+    0.00 :   1335e:  pop    %r14
+    0.00 :   13360:  pop    %r15
+    0.00 :   13362:  ret
+    0.00 :   13363:  nopl   0x0(%rax,%rax,1)
+    0.00 :   13368:  lea    (%rdi,%r12,1),%rbx
+    0.00 :   1336c:  mov    0x14(%rbx),%eax
+    0.00 :   1336f:  mov    %eax,0x10(%r8)
+    0.06 :   13373:  cmp    $0xffffffff,%eax
+    0.00 :   13376:  je     133a8 <lle::book::BasicFastBook<(lle::book::RefHash)1>::add(unsigned short, unsigned long, lle::itch::Side, unsigned int, unsigned int)+0x308>
+    0.00 :   13378:  shl    $0x5,%rax
+    0.00 :   1337c:  add    0x18(%r9),%rax
+    0.06 :   13380:  mov    %r11d,0xc(%rax)
+    0.96 :   13384:  addl   $0x1,0x4(%rbx)
+    0.00 :   13388:  mov    %r15d,%eax
+    0.00 :   1338b:  mov    %r11d,0x14(%rbx)
+    0.06 :   1338f:  add    %rax,0x8(%rbx)
+    0.00 :   13393:  add    $0x48,%rsp
+    0.00 :   13397:  pop    %rbx
+    0.00 :   13398:  pop    %rbp
+    0.00 :   13399:  pop    %r12
+    0.00 :   1339b:  pop    %r13
+    0.00 :   1339d:  pop    %r14
+    0.00 :   1339f:  pop    %r15
+    0.00 :   133a1:  ret
+    0.00 :   133a2:  nopw   0x0(%rax,%rax,1)
+    0.00 :   133a8:  mov    %r11d,0x10(%rbx)
+    0.00 :   133ac:  jmp    13384 <lle::book::BasicFastBook<(lle::book::RefHash)1>::add(unsigned short, unsigned long, lle::itch::Side, unsigned int, unsigned int)+0x2e4>
+    0.00 :   133ae:  xchg   %ax,%ax
+    0.00 :   133b0:  mov    %rbp,(%rbx)
+    0.00 :   133b3:  movq   $0x0,0x8(%rbx)
+    0.06 :   133bb:  movq   $0xffffffffffffffff,0x10(%rbx)
+    0.00 :   133c3:  mov    %rax,0x8(%r10)
+    0.00 :   133c7:  jmp    1336c <lle::book::BasicFastBook<(lle::book::RefHash)1>::add(unsigned short, unsigned long, lle::itch::Side, unsigned int, unsigned int)+0x2cc>
+    0.00 :   133c9:  nopl   0x0(%rax)
+    0.00 :   133d0:  sub    %rdi,%rbx
+    0.00 :   133d3:  mov    $0x600,%edi
+    0.00 :   133d8:  mov    %r9,0x20(%rsp)
+    0.00 :   133dd:  mov    %r11d,0x18(%rsp)
+    0.00 :   133e2:  mov    %rbx,%r13
+    0.00 :   133e5:  mov    %r8,0x10(%rsp)
+    0.00 :   133ea:  mov    %r10,0x8(%rsp)
+    0.00 :   133ef:  call   148f0 <operator new(unsigned long)>
+    0.00 :   133f4:  test   %rbx,%rbx
+    0.00 :   133f7:  mov    0x8(%rsp),%r10
+    0.00 :   133fc:  mov    0x10(%rsp),%r8
+    0.00 :   13401:  mov    0x18(%rsp),%r11d
+    0.00 :   13406:  mov    0x20(%rsp),%r9
+    0.00 :   1340b:  mov    %rax,%rcx
+    0.00 :   1340e:  jne    135f0 <lle::book::BasicFastBook<(lle::book::RefHash)1>::add(unsigned short, unsigned long, lle::itch::Side, unsigned int, unsigned int)+0x550>
+    0.00 :   13414:  mov    %r14,%rdi
+    0.00 :   13417:  test   %r14,%r14
+    0.00 :   1341a:  je     13456 <lle::book::BasicFastBook<(lle::book::RefHash)1>::add(unsigned short, unsigned long, lle::itch::Side, unsigned int, unsigned int)+0x3b6>
+    0.00 :   1341c:  mov    %rbx,%rsi
+    0.00 :   1341f:  mov    %r9,0x28(%rsp)
+    0.00 :   13424:  mov    %rcx,0x20(%rsp)
+    0.00 :   13429:  mov    %r11d,0x18(%rsp)
+    0.00 :   1342e:  mov    %r8,0x10(%rsp)
+    0.00 :   13433:  mov    %r10,0x8(%rsp)
+    0.00 :   13438:  call   149f0 <operator delete(void*, unsigned long)>
+    0.00 :   1343d:  mov    0x28(%rsp),%r9
+    0.00 :   13442:  mov    0x20(%rsp),%rcx
+    0.00 :   13447:  mov    0x18(%rsp),%r11d
+    0.00 :   1344c:  mov    0x10(%rsp),%r8
+    0.00 :   13451:  mov    0x8(%rsp),%r10
+    0.00 :   13456:  lea    (%rcx,%r13,1),%rbx
+    0.00 :   1345a:  lea    0x600(%rcx),%rax
+    0.00 :   13461:  mov    %rcx,(%r10)
+    0.00 :   13464:  mov    %rcx,%r14
+    0.00 :   13467:  mov    %rbx,0x8(%r10)
+    0.00 :   1346b:  mov    %rax,0x10(%r10)
+    0.00 :   1346f:  jmp    13255 <lle::book::BasicFastBook<(lle::book::RefHash)1>::add(unsigned short, unsigned long, lle::itch::Side, unsigned int, unsigned int)+0x1b5>
+    0.00 :   13474:  movabs $0xaaaaaaaaaaaaaaab,%rax
+    0.00 :   1347e:  mov    %rbx,%rdx
+    0.00 :   13481:  sub    %r14,%rdx
+    0.00 :   13484:  sar    $0x3,%rdx
+    0.00 :   13488:  imul   %rax,%rdx
+    0.00 :   1348c:  movabs $0x555555555555555,%rax
+    0.00 :   13496:  cmp    %rax,%rdx
+    0.00 :   13499:  je     1363a <lle::book::BasicFastBook<(lle::book::RefHash)1>::add(unsigned short, unsigned long, lle::itch::Side, unsigned int, unsigned int)+0x59a>
+    0.00 :   1349f:  test   %rdx,%rdx
+    0.00 :   134a2:  mov    $0x1,%eax
+    0.00 :   134a7:  mov    %r9,0x38(%rsp)
+    0.00 :   134ac:  cmovne %rdx,%rax
+    0.00 :   134b0:  mov    %r11d,0x30(%rsp)
+    0.00 :   134b5:  mov    %r8,0x28(%rsp)
+    0.00 :   134ba:  add    %rdx,%rax
+    0.00 :   134bd:  mov    %r10,0x20(%rsp)
+    0.00 :   134c2:  movabs $0x555555555555555,%rdx
+    0.00 :   134cc:  cmp    %rdx,%rax
+    0.00 :   134cf:  mov    %rcx,0x18(%rsp)
+    0.00 :   134d4:  cmova  %rdx,%rax
+    0.00 :   134d8:  lea    (%rax,%rax,2),%rax
+    0.00 :   134dc:  shl    $0x3,%rax
+    0.00 :   134e0:  mov    %rax,%rdi
+    0.00 :   134e3:  mov    %rax,0x10(%rsp)
+    0.00 :   134e8:  call   148f0 <operator new(unsigned long)>
+    0.00 :   134ed:  test   %r12,%r12
+    0.00 :   134f0:  mov    0x18(%rsp),%rcx
+    0.00 :   134f5:  mov    %r12,%rdx
+    0.00 :   134f8:  mov    %rax,%rdi
+    0.00 :   134fb:  mov    %rax,%r13
+    0.00 :   134fe:  lea    (%rax,%r12,1),%rax
+    0.00 :   13502:  mov    0x20(%rsp),%r10
+    0.00 :   13507:  mov    %rax,0x8(%rsp)
+    0.00 :   1350c:  mov    0x28(%rsp),%r8
+    0.00 :   13511:  mov    0x30(%rsp),%r11d
+    0.00 :   13516:  mov    0x38(%rsp),%r9
+    0.00 :   1351b:  mov    %rbp,(%rax)
+    0.00 :   1351e:  movq   $0x0,0x8(%rax)
+    0.00 :   13526:  movq   $0xffffffffffffffff,0x10(%rax)
+    0.00 :   1352e:  jle    13551 <lle::book::BasicFastBook<(lle::book::RefHash)1>::add(unsigned short, unsigned long, lle::itch::Side, unsigned int, unsigned int)+0x4b1>
+    0.00 :   13530:  mov    %r14,%rsi
+    0.00 :   13533:  call   42c0 <memcpy@plt>
+    0.00 :   13538:  mov    0x38(%rsp),%r9
+    0.00 :   1353d:  mov    0x30(%rsp),%r11d
+    0.00 :   13542:  mov    0x28(%rsp),%r8
+    0.00 :   13547:  mov    0x20(%rsp),%r10
+    0.00 :   1354c:  mov    0x18(%rsp),%rcx
+    0.00 :   13551:  sub    %rcx,%rbx
+    0.00 :   13554:  lea    0x18(%r13,%r12,1),%rdi
+    0.00 :   13559:  test   %rbx,%rbx
+    0.00 :   1355c:  jle    13594 <lle::book::BasicFastBook<(lle::book::RefHash)1>::add(unsigned short, unsigned long, lle::itch::Side, unsigned int, unsigned int)+0x4f4>
+    0.00 :   1355e:  mov    %rbx,%rdx
+    0.00 :   13561:  mov    %rcx,%rsi
+    0.00 :   13564:  mov    %r9,0x30(%rsp)
+    0.00 :   13569:  mov    %r11d,0x28(%rsp)
+    0.00 :   1356e:  mov    %r8,0x20(%rsp)
+    0.00 :   13573:  mov    %r10,0x18(%rsp)
+    0.00 :   13578:  call   42c0 <memcpy@plt>
+    0.00 :   1357d:  mov    0x30(%rsp),%r9
+    0.00 :   13582:  mov    0x28(%rsp),%r11d
+    0.00 :   13587:  mov    0x20(%rsp),%r8
+    0.00 :   1358c:  mov    0x18(%rsp),%r10
+    0.00 :   13591:  mov    %rax,%rdi
+    0.00 :   13594:  add    %rdi,%rbx
+    0.00 :   13597:  test   %r14,%r14
+    0.00 :   1359a:  je     135d3 <lle::book::BasicFastBook<(lle::book::RefHash)1>::add(unsigned short, unsigned long, lle::itch::Side, unsigned int, unsigned int)+0x533>
+    0.00 :   1359c:  mov    0x10(%r10),%rsi
+    0.00 :   135a0:  mov    %r14,%rdi
+    0.00 :   135a3:  mov    %r9,0x30(%rsp)
+    0.00 :   135a8:  mov    %r11d,0x28(%rsp)
+    0.00 :   135ad:  sub    %r14,%rsi
+    0.00 :   135b0:  mov    %r8,0x20(%rsp)
+    0.00 :   135b5:  mov    %r10,0x18(%rsp)
+    0.00 :   135ba:  call   149f0 <operator delete(void*, unsigned long)>
+    0.00 :   135bf:  mov    0x30(%rsp),%r9
+    0.00 :   135c4:  mov    0x28(%rsp),%r11d
+    0.00 :   135c9:  mov    0x20(%rsp),%r8
+    0.00 :   135ce:  mov    0x18(%rsp),%r10
+    0.00 :   135d3:  mov    0x10(%rsp),%rax
+    0.00 :   135d8:  mov    %rbx,0x8(%r10)
+    0.00 :   135dc:  mov    %r13,(%r10)
+    0.00 :   135df:  mov    0x8(%rsp),%rbx
+    0.00 :   135e4:  add    %r13,%rax
+    0.00 :   135e7:  mov    %rax,0x10(%r10)
+    0.00 :   135eb:  jmp    1336c <lle::book::BasicFastBook<(lle::book::RefHash)1>::add(unsigned short, unsigned long, lle::itch::Side, unsigned int, unsigned int)+0x2cc>
+    0.00 :   135f0:  mov    %rbx,%rdx
+    0.00 :   135f3:  mov    %r14,%rsi
+    0.00 :   135f6:  mov    %rax,%rdi
+    0.00 :   135f9:  call   42c0 <memcpy@plt>
+    0.00 :   135fe:  mov    0x8(%rsp),%r10
+    0.00 :   13603:  mov    0x20(%rsp),%r9
+    0.00 :   13608:  mov    0x18(%rsp),%r11d
+    0.00 :   1360d:  mov    0x10(%rsp),%r8
+    0.00 :   13612:  mov    %rax,%rcx
+    0.00 :   13615:  mov    0x10(%r10),%rbx
+    0.00 :   13619:  sub    %r14,%rbx
+    0.00 :   1361c:  jmp    13414 <lle::book::BasicFastBook<(lle::book::RefHash)1>::add(unsigned short, unsigned long, lle::itch::Side, unsigned int, unsigned int)+0x374>
+    0.00 :   13621:  jne    13632 <lle::book::BasicFastBook<(lle::book::RefHash)1>::add(unsigned short, unsigned long, lle::itch::Side, unsigned int, unsigned int)+0x592>
+    0.00 :   13623:  movdqu (%rcx),%xmm0
+    0.00 :   13627:  movups %xmm0,(%rbx)
+    0.00 :   1362a:  mov    0x10(%rcx),%rax
+    0.00 :   1362e:  mov    %rax,0x10(%rbx)
+    0.00 :   13632:  mov    %rcx,%rbx
+    0.00 :   13635:  jmp    132e1 <lle::book::BasicFastBook<(lle::book::RefHash)1>::add(unsigned short, unsigned long, lle::itch::Side, unsigned int, unsigned int)+0x241>
+    0.00 :   1363a:  lea    0xa096(%rip),%rdi        # 1d6d7 <_IO_stdin_used+0x6d7>
+    0.00 :   13641:  call   41c0 <std::__throw_length_error(char const*)@plt>
+    0.00 :   13646:  mov    $0x10,%edi
+    0.00 :   1364b:  call   4190 <__cxa_allocate_exception@plt>
+    0.00 :   13650:  lea    0x9b69(%rip),%rsi        # 1d1c0 <_IO_stdin_used+0x1c0>
+    0.00 :   13657:  mov    %rax,%rdi
+    0.00 :   1365a:  mov    %rax,%rbx
+    0.00 :   1365d:  call   4360 <std::length_error::length_error(char const*)@plt>
+    0.00 :   13662:  mov    0xf937(%rip),%rdx        # 22fa0 <std::length_error::~length_error()@GLIBCXX_3.4>
+    0.00 :   13669:  lea    0xf530(%rip),%rsi        # 22ba0 <typeinfo for std::length_error@GLIBCXX_3.4>
+    0.00 :   13670:  mov    %rbx,%rdi
+    0.00 :   13673:  call   4570 <__cxa_throw@plt>
+    0.00 :   13678:  mov    $0x10,%edi
+    0.00 :   1367d:  call   4190 <__cxa_allocate_exception@plt>
+    0.00 :   13682:  lea    0x9aff(%rip),%rsi        # 1d188 <_IO_stdin_used+0x188>
+    0.00 :   13689:  mov    %rax,%rdi
+    0.00 :   1368c:  mov    %rax,%rbx
+    0.00 :   1368f:  call   4360 <std::length_error::length_error(char const*)@plt>
+    0.00 :   13694:  jmp    13662 <lle::book::BasicFastBook<(lle::book::RefHash)1>::add(unsigned short, unsigned long, lle::itch::Side, unsigned int, unsigned int)+0x5c2>
+    0.00 :   13696:  mov    %rax,%r15
+    0.00 :   13699:  jmp    1369d <lle::book::BasicFastBook<(lle::book::RefHash)1>::add(unsigned short, unsigned long, lle::itch::Side, unsigned int, unsigned int)+0x5fd>
+    0.00 :   1369b:  jmp    13696 <lle::book::BasicFastBook<(lle::book::RefHash)1>::add(unsigned short, unsigned long, lle::itch::Side, unsigned int, unsigned int)+0x5f6>
+    0.00 :   1369d:  mov    %rbx,%rdi
+    0.00 :   136a0:  call   4230 <__cxa_free_exception@plt>
+    0.00 :   136a5:  mov    %r15,%rdi
+    0.00 :   136a8:  call   45a0 <_Unwind_Resume@plt>

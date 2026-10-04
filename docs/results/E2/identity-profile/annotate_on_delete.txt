@@ -1,0 +1,168 @@
+ Percent |	Source code & Disassembly of e2_book for cpu-clock (1188 samples, percent: local period)
+--------------------------------------------------------------------------------------------------------
+         :
+         :
+         :
+         : 3     Disassembly of section .text:
+         :
+         : 5     0000000000010c40 <lle::book::BookBuilder<lle::book::BasicFastBook<(lle::book::RefHash)1> >::on_delete(lle::itch::OrderDelete const&)>:
+    0.00 :   10c40:  push   %r15
+    0.00 :   10c42:  push   %r14
+    0.00 :   10c44:  push   %r13
+    0.00 :   10c46:  push   %r12
+    0.00 :   10c48:  push   %rbp
+    0.00 :   10c49:  push   %rbx
+    0.00 :   10c4a:  sub    $0x18,%rsp
+    0.00 :   10c4e:  mov    (%rdi),%rbx
+    0.00 :   10c51:  movzwl 0x2(%rsi),%r9d
+    0.00 :   10c56:  addq   $0x1,0x230(%rdi)
+    0.00 :   10c5e:  mov    0x10(%rsi),%r11
+    0.00 :   10c62:  mov    0x58(%rbx),%r10
+    0.00 :   10c66:  mov    0x40(%rbx),%r8
+    0.00 :   10c6a:  mov    %r11,%rax
+    0.00 :   10c6d:  addq   $0x1,0x810(%rdi)
+    0.00 :   10c75:  and    %r10,%rax
+    0.00 :   10c78:  addq   $0x1,0x90(%rbx)
+    0.00 :   10c80:  mov    %rax,%rdx
+    0.00 :   10c83:  shl    $0x4,%rdx
+    0.00 :   10c87:  add    %r8,%rdx
+    0.00 :   10c8a:  mov    0x8(%rdx),%ecx
+    1.26 :   10c8d:  jmp    10ce1 <lle::book::BookBuilder<lle::book::BasicFastBook<(lle::book::RefHash)1> >::on_delete(lle::itch::OrderDelete const&)+0xa1>
+    0.00 :   10c8f:  nopl   0x0(%rax,%rax,1)
+    0.00 :   10c94:  data16 cs nopw 0x0(%rax,%rax,1)
+    0.00 :   10c9f:  data16 cs nopw 0x0(%rax,%rax,1)
+    0.00 :   10caa:  data16 cs nopw 0x0(%rax,%rax,1)
+    0.00 :   10cb5:  data16 cs nopw 0x0(%rax,%rax,1)
+   10.86 :   10cc0:  mov    %rax,%rdi
+    3.20 :   10cc3:  lea    0x1(%rax),%rax
+    1.43 :   10cc7:  mov    (%rdx),%rsi
+    1.35 :   10cca:  mov    %ecx,%ebp
+   10.69 :   10ccc:  and    %r10,%rax
+    3.11 :   10ccf:  mov    %rax,%rdx
+    1.52 :   10cd2:  shl    $0x4,%rdx
+    1.01 :   10cd6:  add    %r8,%rdx
+   20.20 :   10cd9:  mov    0x8(%rdx),%ecx
+   20.79 :   10cdc:  cmp    %rsi,%r11
+    0.00 :   10cdf:  je     10d00 <lle::book::BookBuilder<lle::book::BasicFastBook<(lle::book::RefHash)1> >::on_delete(lle::itch::OrderDelete const&)+0xc0>
+    1.43 :   10ce1:  cmp    $0xffffffff,%ecx
+    0.00 :   10ce4:  jne    10cc0 <lle::book::BookBuilder<lle::book::BasicFastBook<(lle::book::RefHash)1> >::on_delete(lle::itch::OrderDelete const&)+0x80>
+    0.00 :   10ce6:  addq   $0x1,0xa0(%rbx)
+    0.00 :   10cee:  add    $0x18,%rsp
+    0.00 :   10cf2:  pop    %rbx
+    0.00 :   10cf3:  pop    %rbp
+    0.00 :   10cf4:  pop    %r12
+    0.00 :   10cf6:  pop    %r13
+    0.00 :   10cf8:  pop    %r14
+    0.00 :   10cfa:  pop    %r15
+    0.00 :   10cfc:  ret
+    0.00 :   10cfd:  nopl   (%rax)
+    0.08 :   10d00:  cmp    $0xffffffff,%ecx
+    0.00 :   10d03:  je     10d5d <lle::book::BookBuilder<lle::book::BasicFastBook<(lle::book::RefHash)1> >::on_delete(lle::itch::OrderDelete const&)+0x11d>
+    0.00 :   10d05:  data16 cs nopw 0x0(%rax,%rax,1)
+    0.34 :   10d10:  mov    (%rdx),%rsi
+    0.34 :   10d13:  and    %r10,%rsi
+    0.25 :   10d16:  cmp    %rsi,%rdi
+    0.51 :   10d19:  setb   %cl
+    0.76 :   10d1c:  cmp    %rsi,%rax
+    0.59 :   10d1f:  setae  %sil
+    1.68 :   10d23:  mov    %ecx,%r11d
+    0.17 :   10d26:  and    %esi,%r11d
+    0.93 :   10d29:  or     %esi,%ecx
+    0.67 :   10d2b:  cmp    %rdi,%rax
+    0.59 :   10d2e:  cmovae %r11d,%ecx
+    0.17 :   10d32:  test   %cl,%cl
+    0.00 :   10d34:  jne    10d46 <lle::book::BookBuilder<lle::book::BasicFastBook<(lle::book::RefHash)1> >::on_delete(lle::itch::OrderDelete const&)+0x106>
+    1.77 :   10d36:  movdqu (%rdx),%xmm0
+    1.52 :   10d3a:  shl    $0x4,%rdi
+    0.00 :   10d3e:  movups %xmm0,(%r8,%rdi,1)
+    0.25 :   10d43:  mov    %rax,%rdi
+    1.85 :   10d46:  add    $0x1,%rax
+    2.10 :   10d4a:  and    %r10,%rax
+    0.17 :   10d4d:  mov    %rax,%rdx
+    0.17 :   10d50:  shl    $0x4,%rdx
+    0.84 :   10d54:  add    %r8,%rdx
+    0.51 :   10d57:  cmpl   $0xffffffff,0x8(%rdx)
+    3.11 :   10d5b:  jne    10d10 <lle::book::BookBuilder<lle::book::BasicFastBook<(lle::book::RefHash)1> >::on_delete(lle::itch::OrderDelete const&)+0xd0>
+    0.00 :   10d5d:  mov    0x18(%rbx),%r14
+    0.25 :   10d61:  mov    %ebp,%r13d
+    0.00 :   10d64:  mov    %rdi,%rax
+    0.00 :   10d67:  shl    $0x5,%r13
+    0.00 :   10d6b:  shl    $0x4,%rax
+    0.00 :   10d6f:  movl   $0xffffffff,0x8(%r8,%rax,1)
+    0.00 :   10d78:  lea    (%r14,%r13,1),%r12
+    0.00 :   10d7c:  movzwl 0x18(%r12),%eax
+    1.85 :   10d82:  subq   $0x1,0x60(%rbx)
+    0.00 :   10d87:  cmp    %ax,%r9w
+    0.00 :   10d8b:  je     10d95 <lle::book::BookBuilder<lle::book::BasicFastBook<(lle::book::RefHash)1> >::on_delete(lle::itch::OrderDelete const&)+0x155>
+    0.00 :   10d8d:  addq   $0x1,0xb8(%rbx)
+    0.08 :   10d95:  movzbl 0x1a(%r12),%edx
+    0.08 :   10d9b:  lea    (%rax,%rax,2),%rax
+    0.00 :   10d9f:  mov    0x14(%r12),%ecx
+    0.00 :   10da4:  shl    $0x4,%rax
+    0.00 :   10da8:  add    (%rbx),%rax
+    0.08 :   10dab:  lea    0x18(%rax),%r15
+    0.00 :   10daf:  test   %dl,%dl
+    0.00 :   10db1:  cmove  %rax,%r15
+    0.00 :   10db5:  mov    0x8(%r15),%rsi
+    0.84 :   10db9:  mov    (%r15),%rdi
+    0.00 :   10dbc:  mov    %rsi,0x8(%rsp)
+    0.00 :   10dc1:  call   9ab0 <lle::book::BasicFastBook<(lle::book::RefHash)1>::find_level(std::vector<lle::book::BasicFastBook<(lle::book::RefHash)1>::Level, std::allocator<lle::book::BasicFastBook<(lle::book::RefHash)1>::Level> > const&, lle::itch::Side, unsigned int) [clone .isra.0]>
+    0.08 :   10dc6:  mov    0x10(%r12),%edx
+    0.00 :   10dcb:  mov    0x8(%rsp),%rsi
+    0.00 :   10dd0:  lea    (%rax,%rax,2),%rax
+    0.00 :   10dd4:  cmp    $0xffffffff,%edx
+    0.08 :   10dd7:  lea    (%rdi,%rax,8),%rdi
+    0.00 :   10ddb:  mov    0xc(%r12),%eax
+    0.00 :   10de0:  je     10e28 <lle::book::BookBuilder<lle::book::BasicFastBook<(lle::book::RefHash)1> >::on_delete(lle::itch::OrderDelete const&)+0x1e8>
+    0.00 :   10de2:  mov    %edx,%ecx
+    0.00 :   10de4:  shl    $0x5,%rcx
+    0.00 :   10de8:  mov    %eax,0xc(%r14,%rcx,1)
+    0.00 :   10ded:  cmp    $0xffffffff,%eax
+    0.00 :   10df0:  je     10e30 <lle::book::BookBuilder<lle::book::BasicFastBook<(lle::book::RefHash)1> >::on_delete(lle::itch::OrderDelete const&)+0x1f0>
+    0.00 :   10df2:  shl    $0x5,%rax
+    0.00 :   10df6:  mov    %edx,0x10(%r14,%rax,1)
+    0.25 :   10dfb:  mov    0x8(%r12),%eax
+    0.00 :   10e00:  sub    %rax,0x8(%rdi)
+    0.00 :   10e04:  subl   $0x1,0x4(%rdi)
+    0.00 :   10e08:  je     10e42 <lle::book::BookBuilder<lle::book::BasicFastBook<(lle::book::RefHash)1> >::on_delete(lle::itch::OrderDelete const&)+0x202>
+    0.00 :   10e0a:  mov    0x38(%rbx),%eax
+    0.00 :   10e0d:  mov    %eax,0xc(%r12)
+    0.00 :   10e12:  mov    %ebp,0x38(%rbx)
+    0.00 :   10e15:  add    $0x18,%rsp
+    0.00 :   10e19:  pop    %rbx
+    0.00 :   10e1a:  pop    %rbp
+    0.00 :   10e1b:  pop    %r12
+    0.08 :   10e1d:  pop    %r13
+    0.00 :   10e1f:  pop    %r14
+    0.00 :   10e21:  pop    %r15
+    0.00 :   10e23:  ret
+    0.00 :   10e24:  nopl   0x0(%rax)
+    0.00 :   10e28:  mov    %eax,0x10(%rdi)
+    0.00 :   10e2b:  cmp    $0xffffffff,%eax
+    0.00 :   10e2e:  jne    10df2 <lle::book::BookBuilder<lle::book::BasicFastBook<(lle::book::RefHash)1> >::on_delete(lle::itch::OrderDelete const&)+0x1b2>
+    0.00 :   10e30:  mov    0x8(%r12),%eax
+    0.00 :   10e35:  sub    %rax,0x8(%rdi)
+    0.00 :   10e39:  subl   $0x1,0x4(%rdi)
+    0.00 :   10e3d:  mov    %edx,0x14(%rdi)
+    0.00 :   10e40:  jne    10e0a <lle::book::BookBuilder<lle::book::BasicFastBook<(lle::book::RefHash)1> >::on_delete(lle::itch::OrderDelete const&)+0x1ca>
+    0.00 :   10e42:  lea    0x18(%rdi),%rax
+    0.00 :   10e46:  cmp    %rax,%rsi
+    0.00 :   10e49:  je     10e6a <lle::book::BookBuilder<lle::book::BasicFastBook<(lle::book::RefHash)1> >::on_delete(lle::itch::OrderDelete const&)+0x22a>
+    0.00 :   10e4b:  mov    %rsi,%rdx
+    0.00 :   10e4e:  sub    %rax,%rdx
+    0.00 :   10e51:  cmp    $0x18,%rdx
+    0.00 :   10e55:  jle    10e74 <lle::book::BookBuilder<lle::book::BasicFastBook<(lle::book::RefHash)1> >::on_delete(lle::itch::OrderDelete const&)+0x234>
+    0.00 :   10e57:  mov    %rax,%rsi
+    0.00 :   10e5a:  call   4510 <memmove@plt>
+    0.00 :   10e5f:  add    0x18(%rbx),%r13
+    0.00 :   10e63:  mov    0x8(%r15),%rsi
+    0.00 :   10e67:  mov    %r13,%r12
+    0.00 :   10e6a:  sub    $0x18,%rsi
+    0.08 :   10e6e:  mov    %rsi,0x8(%r15)
+    0.00 :   10e72:  jmp    10e0a <lle::book::BookBuilder<lle::book::BasicFastBook<(lle::book::RefHash)1> >::on_delete(lle::itch::OrderDelete const&)+0x1ca>
+    0.00 :   10e74:  jne    10e6a <lle::book::BookBuilder<lle::book::BasicFastBook<(lle::book::RefHash)1> >::on_delete(lle::itch::OrderDelete const&)+0x22a>
+    0.00 :   10e76:  movdqu 0x18(%rdi),%xmm0
+    0.00 :   10e7b:  mov    0x28(%rdi),%rax
+    0.00 :   10e7f:  movups %xmm0,(%rdi)
+    0.00 :   10e82:  mov    %rax,0x10(%rdi)
+    0.00 :   10e86:  jmp    10e6a <lle::book::BookBuilder<lle::book::BasicFastBook<(lle::book::RefHash)1> >::on_delete(lle::itch::OrderDelete const&)+0x22a>

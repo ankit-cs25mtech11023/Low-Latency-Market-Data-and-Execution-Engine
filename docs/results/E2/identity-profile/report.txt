@@ -1,0 +1,51 @@
+# To display the perf.data header info, please use --header/--header-only options.
+#
+#
+# Total Lost Samples: 0
+#
+# Samples: 4K of event 'cpu-clock'
+# Event count (approx.): 4605605601
+#
+# Overhead  Symbol                                                                                                                                                                                      
+# ........  ............................................................................................................................................................................................
+#
+    33.95%  [.] lle::book::BasicFastBook<(lle::book::RefHash)1>::add(unsigned short, unsigned long, lle::itch::Side, unsigned int, unsigned int)                                                        
+    25.82%  [.] lle::book::BookBuilder<lle::book::BasicFastBook<(lle::book::RefHash)1> >::on_delete(lle::itch::OrderDelete const&)                                                                      
+    25.41%  [.] main                                                                                                                                                                                    
+     5.06%  [.] lle::book::BookBuilder<lle::book::BasicFastBook<(lle::book::RefHash)1> >::on_replace(lle::itch::OrderReplace const&)                                                                    
+     2.48%  [.] lle::book::BookBuilder<lle::book::BasicFastBook<(lle::book::RefHash)1> >::on_executed(lle::itch::OrderExecuted const&)                                                                  
+     2.37%  [.] lle::book::BasicFastBook<(lle::book::RefHash)1>::find_level(std::vector<lle::book::BasicFastBook<(lle::book::RefHash)1>::Level, std::allocator<lle::book::BasicFastBook<(lle::book::RefH
+     1.85%  [.] lle::book::BasicFastBook<(lle::book::RefHash)1>::reduce(unsigned short, unsigned long, unsigned int)                                                                                    
+     0.83%  [k] generic_exec_single                                                                                                                                                                     
+     0.80%  [.] __memmove_avx_unaligned_erms                                                                                                                                                            
+     0.30%  [.] lle::itch::ItchFileReader::next(std::byte const*&, unsigned long&)                                                                                                                      
+     0.15%  [.] lle::book::BookBuilder<lle::book::BasicFastBook<(lle::book::RefHash)1> >::on_cancel(lle::itch::OrderCancel const&)                                                                      
+     0.11%  [k] do_syscall_64                                                                                                                                                                           
+     0.11%  [.] lle::itch::ItchFileReader::fill(unsigned long)                                                                                                                                          
+     0.07%  [.] __GI___ioctl                                                                                                                                                                            
+     0.07%  [.] __internal_syscall_cancel                                                                                                                                                               
+     0.07%  [k] anon_pipe_buf_release                                                                                                                                                                   
+     0.07%  [k] anon_pipe_read                                                                                                                                                                          
+     0.07%  [k] fdget_pos                                                                                                                                                                               
+     0.04%  [.] _IO_file_underflow@@GLIBC_2.2.5                                                                                                                                                         
+     0.04%  [k] _raw_spin_unlock_irqrestore                                                                                                                                                             
+     0.04%  [k] event_function_call                                                                                                                                                                     
+     0.02%  [.] _IO_default_xsgetn                                                                                                                                                                      
+     0.02%  [k] __list_add_valid_or_report                                                                                                                                                              
+     0.02%  [k] _perf_ioctl                                                                                                                                                                             
+     0.02%  [k] bpf_lsm_perf_event_write                                                                                                                                                                
+     0.02%  [k] fdget                                                                                                                                                                                   
+     0.02%  [k] finish_task_switch.isra.0                                                                                                                                                               
+     0.02%  [k] mem_cgroup_handle_over_high                                                                                                                                                             
+     0.02%  [k] page_counter_uncharge                                                                                                                                                                   
+     0.02%  [k] perf_event_ctx_lock_nested.isra.0                                                                                                                                                       
+     0.02%  [k] prepare_to_wait_event                                                                                                                                                                   
+     0.02%  [k] rep_movs_alternative                                                                                                                                                                    
+     0.02%  [k] sched_balance_rq                                                                                                                                                                        
+     0.02%  [k] uncharge_folio                                                                                                                                                                          
+     0.02%  [k] vfs_read                                                                                                                                                                                
+
+
+#
+# (Tip: Use parent filter to see specific call path: perf report -p <regex>)
+#
