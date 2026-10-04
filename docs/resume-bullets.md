@@ -13,6 +13,22 @@ If a claim is not in this file, it is not measured yet: describe it as "in progr
 
 **Low-Latency Market Data Engine (C++20, Linux)** — github.com/ankit-cs25mtech11023/Low-Latency-Market-Data-and-Execution-Engine
 
+## One-page version (3 bullets, submitted 2026-10-04)
+
+Condensed from the long bullets below; same numbers, same sources (E0–E3).
+
+- Built a NASDAQ TotalView-ITCH 5.0 decoder and order book that processes a full trading day
+  (**282 M messages**) with zero invariant violations, verified by per-message differential
+  testing, fuzzing and sanitizer CI (192 tests); calibrated TSC timing first (21 ns floor,
+  cross-core skew within ±2.2 ns).
+- Redesigned the order book for cache locality (pooled 32-byte nodes, intrusive FIFO lists,
+  open-addressing hash map): **2.64× faster** full-day book building (821 → 311 ns/msg,
+  95% CI 2.57–2.69×, N = 10 runs); PMU counters trace the gain to memory stalls
+  (IPC 0.32 → 0.60, 3.4× fewer dTLB misses).
+- Built a lock-free SPSC queue: **249 ns one-way p50 between cores, 91 M msg/s**, 44× lower
+  latency than a mutex queue; showed with hardware counters that acquire/release beats
+  `seq_cst` by 3.2× and cached indices give 4.9×.
+
 ## Bullets (pick 3–5)
 
 - Rebuilt the order book around the memory hierarchy (32-byte pooled order nodes with intrusive
