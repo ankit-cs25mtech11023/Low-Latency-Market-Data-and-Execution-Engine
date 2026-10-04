@@ -27,3 +27,6 @@ lle_add_test(test_book
     unit/test_differential.cpp
     unit/test_book_properties.cpp
     unit/test_fast_book.cpp)
+
+lle_add_test(test_concurrency
+    unit/test_spsc.cpp)

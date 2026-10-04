@@ -78,6 +78,15 @@ def load_run(hist_csv: Path) -> Run:
     if meta["params"].get("heap_allocations_measured") is not None and r.total > 0:
         # Counted by an operator-new shim around the timed region only (E2 driver).
         r.counter_metrics["heap allocs/op"] = meta["params"]["heap_allocations_measured"] / (r.total * r.divisor)
+    # Second thread's counters (E3: `counters` = consumer, `producer_counters` = producer),
+    # same per-op normalization; only the columns needed to explain a difference are kept.
+    prod = counter_metrics(meta["params"].get("producer_counters"), r.total * r.divisor)
+    for k in ("cycles/op", "IPC", "cache-misses/op", "L1-dcache-load-misses/op", "context-switches/op"):
+        if k in prod:
+            r.counter_metrics[f"prod {k}"] = prod[k]
+    # Run-level values the driver computed itself (e.g. E3 CPU% per thread); not per-op.
+    for k, v in (meta["params"].get("extra_metrics") or {}).items():
+        r.counter_metrics[k] = float(v)
     return r
 
 
