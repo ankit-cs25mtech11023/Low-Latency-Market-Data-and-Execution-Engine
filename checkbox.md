@@ -67,6 +67,7 @@
 - [ ] Top-down analysis (toplev / `perf stat -M TopdownL1/L2`) per layer
 - [ ] Use Intel PT / magic-trace to explain at least one p99.9 event
 - [ ] Compare llvm-mca's prediction for the hottest loop with measured throughput
+- [ ] E2 session B (`fast`, identity hash, N = 10 full days): after the resume deadline
 - [ ] E2 runs: L0–L5 plus leave-one-out ablation on the full day, top-symbol slice and adversarial synthetic stream
 - [ ] Write `docs/experiments/E2-orderbook.md` (mechanism per layer) and `docs/orderbook.md`
 - [ ] Tag v0.3
@@ -81,7 +82,7 @@
 - [ ] Timeboxed (≤2 days) GenMC/Relacy model check: accepts acquire/release, rejects weakened ordering; or document why it was dropped
 - [ ] Queue benchmark: throughput, one-way latency percentiles, CPU%, context switches
 - [ ] E3 sweeps: variants → padding (with `perf c2c` HITM) → placement (unpinned / SMT siblings 2-6 / separate cores 2-3)
-- [ ] Write `docs/experiments/E3-queues.md`
+- [ ] Write `docs/experiments/E3-queues.md` (part 1 before the 2026-10-04 deadline: variants, padding, placement; batch publish, seqlock, model check, `perf c2c` after)
 - [ ] Tag v0.4
 
 ## Phase 4: Hero Threading-Model Study → E4 (week 8)
