@@ -12,6 +12,7 @@
 #include <string>
 #include <system_error>
 
+#include "lle/core/cpu.hpp"
 #include "lle/protocol/endian.hpp"
 
 namespace lle::itch {
@@ -72,7 +73,9 @@ private:
 
 class PipeSource final : public ByteSource {
 public:
-    explicit PipeSource(const std::string& cmd) : f_(::popen(cmd.c_str(), "r")) {
+    // The child is started from a ChildAffinityScope: it would otherwise inherit the calling
+    // thread's pinning and share the measured CPU (see lle/core/cpu.hpp).
+    explicit PipeSource(const std::string& cmd) : f_(spawn(cmd)) {
         if (f_ == nullptr) throw std::runtime_error("popen failed: " + cmd);
     }
     ~PipeSource() override {
@@ -98,6 +101,11 @@ public:
     }
 
 private:
+    static std::FILE* spawn(const std::string& cmd) {
+        const ChildAffinityScope off_core;
+        return ::popen(cmd.c_str(), "r");
+    }
+
     std::FILE* f_;
 };
 

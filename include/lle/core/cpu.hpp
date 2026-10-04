@@ -6,12 +6,38 @@
 // "which core talks to which" an explicit experimental variable. On the i5-8250U, logical
 // CPUs n and n+4 are SMT siblings sharing one physical core.
 
+#include <sched.h>
+
 #include <string>
 
 namespace lle {
 
 // Pins the calling thread to `cpu`. Throws std::system_error on failure.
 void pin_current_thread(int cpu);
+
+// While alive, moves the calling thread off the CPUs it may run on now AND their SMT
+// siblings (onto every other online CPU); the destructor restores the original affinity.
+//
+// Why: a child process started with popen/fork/exec inherits the CPU affinity of the thread
+// that starts it. A benchmark thread pinned to CPU 2 that then starts `pigz` would get pigz
+// pinned to CPU 2 as well, time-sliced with the code being measured (found in E2: the
+// decompressor's time slices landed inside the timed regions). Wrap the spawn in this scope
+// so the child runs on other physical cores. If the caller is not pinned (no CPU would be
+// left), it does nothing.
+class ChildAffinityScope {
+public:
+    ChildAffinityScope();
+    ~ChildAffinityScope();
+    ChildAffinityScope(const ChildAffinityScope&) = delete;
+    ChildAffinityScope& operator=(const ChildAffinityScope&) = delete;
+
+    // True if the affinity was changed (the caller was pinned and other CPUs exist).
+    [[nodiscard]] bool active() const noexcept { return changed_; }
+
+private:
+    cpu_set_t saved_{};
+    bool changed_ = false;
+};
 
 // Logical CPU the calling thread is running on right now (sched_getcpu).
 [[nodiscard]] int current_cpu() noexcept;

@@ -10,7 +10,8 @@ endfunction()
 lle_add_test(test_core
     unit/test_histogram.cpp
     unit/test_tsc.cpp
-    unit/test_perf_counters.cpp)
+    unit/test_perf_counters.cpp
+    unit/test_cpu.cpp)
 
 if(LLE_HDR_VALIDATE)
     lle_add_test(test_histogram_vs_hdr unit/test_histogram_vs_hdr.cpp)
