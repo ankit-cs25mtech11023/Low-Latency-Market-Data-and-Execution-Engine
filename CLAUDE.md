@@ -7,14 +7,14 @@ The real deliverable is 10 reproducible, counter-explained experiments (E0–E9)
 
 The working blueprint is `plan.md`; progress is tracked in `checkbox.md`; full detail lives in `Low_Latency_Cpp_Systems_Engine_Master_Project_Plan_v3.md` (the "master plan").
 
-**Current state:** planning complete, implementation starting.
+**Current state (2026-10-04):** E0, E1 done; E2 and E3 written up as partial (core measurements done, ablations/extras after the deadline); E4 in progress.
 
 ## Current Phase
-**Phase 0: Toolchain and Measurement Infrastructure → E0.** In progress. Blocked on the user installing the missing tools (clang/llvm, cmake, ninja, perf, …); code is written meanwhile.
+**Phase 4: Hero Threading-Model Study → E4.** In progress (see plan.md Notes for the E4 design and deadline order).
 
 ## Working Agreement with the User (2026-10-04)
 - **Who builds:** Claude owns the implementation up to **v1.0 = core + HFT specialization (P0–P8, E0–E6)** end to end. The user is a beginner in HFT/low-latency systems.
-- **Deadline:** the user submits a resume to an HFT firm on 2026-10-06. Interviews are expected around early December 2026. Aim for v1.0 by the deadline; if it is missed, the resume describes only what is done and measured by then (core-only bullets if needed). Work continues to v1.0 afterwards either way.
+- **Deadline:** the user submits a resume to an HFT firm by 2026-10-05 12:00 IST (moved from 2026-10-06 → 2026-10-04 → 2026-10-05; resume goes through OCS verification). Interviews are expected around early December 2026. Aim for v1.0 by the deadline; if it is missed, the resume describes only what is done and measured by then (core-only bullets if needed). Work continues to v1.0 afterwards either way.
 - **Order of work:** (1) build P0–P8 → (2) resume bullets from measured numbers only → (3) the user studies every part in detail (study-guide task in P8) → (4) v1.1/silicon later.
 - **No quality cuts for the deadline.** Do not skip tests, statistics or write-ups to finish faster. Anything not measured by the deadline is described on the resume with neutral wording, never estimated.
 - **No workarounds.** If something needs the user (sudo, installs, downloads, accounts, a GitHub remote, hardware) or Claude is stuck, stop and tell the user exactly what to do. Do not substitute pip/conda/vendored tools, skip a step, or fake an input.

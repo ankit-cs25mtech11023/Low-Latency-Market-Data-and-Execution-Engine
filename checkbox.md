@@ -67,7 +67,7 @@
 - [ ] Top-down analysis (toplev / `perf stat -M TopdownL1/L2`) per layer
 - [ ] Use Intel PT / magic-trace to explain at least one p99.9 event
 - [ ] Compare llvm-mca's prediction for the hottest loop with measured throughput
-- [ ] E2 session B (`fast`, identity hash, N = 10 full days): after the resume deadline
+- [ ] E2 session B (`fast`, identity hash, N = 10 full days): runs 2026-10-04 13:13–~17:10 UTC; write-up after
 - [ ] E2 runs: L0–L5 plus leave-one-out ablation on the full day, top-symbol slice and adversarial synthetic stream
 - [ ] Write `docs/experiments/E2-orderbook.md` (mechanism per layer) and `docs/orderbook.md`
 - [ ] Tag v0.3
@@ -88,13 +88,14 @@
 - [ ] Tag v0.4
 
 ## Phase 4: Hero Threading-Model Study → E4 (week 8)
-- [ ] Implement `apps/feeder`: open-loop replay into a raw-message SPSC ring with intended send TSC; speed-factor and fixed-rate modes
+- [ ] Implement the feeder (in-process pinned thread, `include/lle/engine/feeder.hpp`): open-loop replay into a raw-message SPSC ring with intended send TSC; speed-factor (bursty) and fixed-rate (smooth) modes
 - [ ] Implement a minimal decision stage + output sink so both models do identical work before P6 exists
 - [ ] Implement Model A: run-to-completion on one pinned thread
 - [ ] Implement Model B: 3-stage pipeline over SPSC rings
 - [ ] Add the synthetic per-message work knob (spin k ns)
 - [ ] Sweep driver: offered load 10% → past saturation × work {0, 200, 500, 1000 ns} × bursty vs smooth arrival
-- [ ] Measure per-hop costs in Model B (TSC stamps + `perf c2c`)
+- [ ] Measure per-hop costs in Model B (TSC stamps)
+- [ ] Confirm Model B per-hop coherence traffic with `perf c2c` (after the 2026-10-05 deadline)
 - [ ] Produce latency-vs-offered-load plots (the hero plot)
 - [ ] Write `docs/experiments/E4-threading-model.md`, including where the hypothesis was wrong
 - [ ] Checkpoint "core": README draft with the hero plot, core resume bullets filled with measured numbers
