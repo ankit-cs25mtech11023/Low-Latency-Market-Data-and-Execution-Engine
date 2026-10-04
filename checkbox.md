@@ -52,9 +52,9 @@
 - [ ] Implement a fixed-size object pool with 32-bit indices
 - [ ] Define the `OrderNode` (32 B) and `Level` structs with `static_assert` sizes
 - [ ] L1: map levels + pooled intrusive doubly-linked order lists
-- [ ] L2: per-symbol/side tick ladder (±W ticks, W from E1), sparse map fallback, recentring with a counter
+- [ ] L2: per-symbol/side tick ladder (±W ticks; E1 coverage gives the candidates, E2 sweeps W ∈ {64, 256, 1024}), sparse map fallback, recentring with a counter
 - [ ] L2: two-level bitmap best-price search using `std::countr_zero`/`std::countl_zero`
-- [ ] L3: open-addressing order-ref map (linear probing, backward-shift delete), or a direct vector if E1 shows dense refs
+- [ ] L3: open-addressing order-ref map (linear probing, backward-shift delete); E1 ruled out a direct vector (refs span 260 M, peak live 1.96 M)
 - [ ] L4: `mlockall` + prefault (`MAP_POPULATE`/touch)
 - [ ] L5: 2 MiB pages (`MAP_HUGETLB` or THP `madvise`) for pools and the ID map
 - [ ] Make layers selectable so every layer and every leave-one-out build can be benchmarked
