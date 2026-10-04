@@ -88,7 +88,35 @@ should be higher for B than for A even where B's throughput is higher.
 
 ## Results
 
-*(pending)*
+### Capacity (closed loop)
+
+N = 10 interleaved runs per row, median [95% bootstrap CI]; the window is 1 M messages, so
+capacity = messages / window wall time. Counters are summed over the engine threads (one for
+A, three for B) and divided by the window's messages. Files:
+[`capacity.md`](../results/E4/capacity.md), [`capacity.csv`](../results/E4/capacity.csv).
+
+| work (ns/msg) | A capacity (M msg/s) | B capacity (M msg/s) | **B / A** | cycles/msg A | cycles/msg B | B / A cycles |
+|---|---|---|---|---|---|---|
+| 0 | 1.940 [1.898, 1.954] | 2.083 [1.998, 2.134] | **1.074×** [1.040, 1.113] | 821 | 2 282 | 2.78× [2.68, 2.88] |
+| 200 | 1.358 [1.345, 1.383] | 1.413 [1.381, 1.423] | **1.040×** [1.011, 1.052] | 1 173 | 3 367 | 2.87× [2.84, 2.95] |
+| 500 | 0.945 [0.932, 0.952] | 0.962 [0.953, 0.991] | **1.019×** [1.006, 1.051] | 1 685 | 4 940 | 2.93× [2.85, 2.97] |
+| 1000 | 0.627 [0.625, 0.641] | 0.635 [0.623, 0.641] | **1.013×** [0.988, 1.024] | 2 538 | 7 448 | 2.93× [2.91, 3.01] |
+
+All 80 runs made the same 100 290 order decisions (digest `f81da7945b24d496`) with 0 unknown
+refs, duplicates or overfills (`scripts/e4_check_digest.py`).
+
+**Where B's time goes** (work 0, per stage, median of 10 runs): the decide stage (book +
+strategy) has **17.9 LLC misses/msg at IPC 0.77**, i.e. all of the cache misses (A has 17.8 in
+total). Decode and sink run at the same 764 cycles/msg only because they spin waiting for the
+decide stage (their instruction counts, 978 and 1 355 per message, are mostly the spin loop).
+So the pipeline's throughput is the decide stage's, and the only work B moves off that
+critical path is decode + sink: A spends 821 cycles/msg in total, B's bottleneck stage 764,
+a difference of ~57 cycles (7%) — exactly the measured 1.074×. Added work lands in the same
+stage, so the ratio falls toward 1.0 (1.013× at 1000 ns, CI includes 1).
+
+### Latency vs offered load (open loop)
+
+*(sweep running; filled in from the N = 10 sweep only)*
 
 ## Where the hypotheses were wrong
 
