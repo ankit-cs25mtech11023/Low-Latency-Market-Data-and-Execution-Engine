@@ -1,0 +1,9 @@
+# Diagnostic (single runs, not a timing result): user vs system CPU time of the whole process
+# (both threads), perf stat -e task-clock,user_time,system_time,context-switches, git a495e87, 2026-10-04 ~13:02 UTC.
+# Command: perf stat -e task-clock,user_time,system_time,context-switches \
+#   ./build/release/apps/e3_queue --queue Q --pad 64 --mode M --place 2-3 --msgs 2000000 --warmup-msgs 10000 --calib-s 0.2 --counters none --out X
+queue=mutex-spin mode=latency    task-clock 4212.82 ms  user_time 2.971 s  system_time 1.240 s  context-switches 568  elapsed 2.215 s
+queue=mutex-spin mode=throughput task-clock 1304.05 ms  user_time 0.955 s  system_time 0.350 s  context-switches 156  elapsed 0.758 s
+queue=acqrel     mode=latency                           user_time 4.225 s  system_time 0     s
+# Reading: the only system calls the mutex queue adds are futex calls made by std::mutex (glibc)
+# when lock() finds the mutex held; ~29% of CPU time in the kernel vs 0 for the lock-free ring.

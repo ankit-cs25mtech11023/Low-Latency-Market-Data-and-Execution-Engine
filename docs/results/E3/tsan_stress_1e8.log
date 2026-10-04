@@ -1,0 +1,40 @@
+Sunday 04 October 2026 01:01:01 PM UTC
+Running main() from /home/ankit-kali/D/Projects/Latency/Dev/build/tsan/_deps/googletest-src/googletest/src/gtest_main.cc
+Note: Google Test filter = SpscTest/*.TwoThreadStress*:-SpscTest/6.*:SpscTest/7.*
+[==========] Running 6 tests from 6 test suites.
+[----------] Global test environment set-up.
+[----------] 1 test from SpscTest/0, where TypeParam = lle::concurrency::SpscRing<(anonymous namespace)::Msg,8ul,(lle::concurrency::Ordering)0,false,64ul>
+[ RUN      ] SpscTest/0.TwoThreadStressDeliversEveryMessageInOrder
+[       OK ] SpscTest/0.TwoThreadStressDeliversEveryMessageInOrder (161746 ms)
+[----------] 1 test from SpscTest/0 (161747 ms total)
+
+[----------] 1 test from SpscTest/1, where TypeParam = lle::concurrency::SpscRing<(anonymous namespace)::Msg,8ul,(lle::concurrency::Ordering)1,false,0ul>
+[ RUN      ] SpscTest/1.TwoThreadStressDeliversEveryMessageInOrder
+[       OK ] SpscTest/1.TwoThreadStressDeliversEveryMessageInOrder (126761 ms)
+[----------] 1 test from SpscTest/1 (126762 ms total)
+
+[----------] 1 test from SpscTest/2, where TypeParam = lle::concurrency::SpscRing<(anonymous namespace)::Msg,8ul,(lle::concurrency::Ordering)1,false,64ul>
+[ RUN      ] SpscTest/2.TwoThreadStressDeliversEveryMessageInOrder
+[       OK ] SpscTest/2.TwoThreadStressDeliversEveryMessageInOrder (131770 ms)
+[----------] 1 test from SpscTest/2 (131770 ms total)
+
+[----------] 1 test from SpscTest/3, where TypeParam = lle::concurrency::SpscRing<(anonymous namespace)::Msg,8ul,(lle::concurrency::Ordering)1,true,0ul>
+[ RUN      ] SpscTest/3.TwoThreadStressDeliversEveryMessageInOrder
+[       OK ] SpscTest/3.TwoThreadStressDeliversEveryMessageInOrder (96444 ms)
+[----------] 1 test from SpscTest/3 (96444 ms total)
+
+[----------] 1 test from SpscTest/4, where TypeParam = lle::concurrency::SpscRing<(anonymous namespace)::Msg,8ul,(lle::concurrency::Ordering)1,true,64ul>
+[ RUN      ] SpscTest/4.TwoThreadStressDeliversEveryMessageInOrder
+[       OK ] SpscTest/4.TwoThreadStressDeliversEveryMessageInOrder (94055 ms)
+[----------] 1 test from SpscTest/4 (94055 ms total)
+
+[----------] 1 test from SpscTest/5, where TypeParam = lle::concurrency::SpscRing<(anonymous namespace)::Msg,8ul,(lle::concurrency::Ordering)1,true,128ul>
+[ RUN      ] SpscTest/5.TwoThreadStressDeliversEveryMessageInOrder
+[       OK ] SpscTest/5.TwoThreadStressDeliversEveryMessageInOrder (87683 ms)
+[----------] 1 test from SpscTest/5 (87683 ms total)
+
+[----------] Global test environment tear-down
+[==========] 6 tests from 6 test suites ran. (698464 ms total)
+[  PASSED  ] 6 tests.
+exit=0
+Sunday 04 October 2026 01:12:40 PM UTC

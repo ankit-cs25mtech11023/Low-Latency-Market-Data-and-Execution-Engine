@@ -1,0 +1,193 @@
+variant,metric,median,ci95_lo,ci95_hi,runs
+queue=acqrel-cached__pad=0__mode=latency__place=2-3,cycles/op,1590.3051732499998,1590.219916,1592.159511,10
+queue=acqrel-cached__pad=0__mode=latency__place=2-3,core GHz,1.5912888679010275,1.5911446176871236,1.5948237350089014,10
+queue=acqrel-cached__pad=0__mode=latency__place=2-3,instr/op,2112.0758532500004,2100.30552725,2190.6390380000003,10
+queue=acqrel-cached__pad=0__mode=latency__place=2-3,IPC,1.3265923675577664,1.3206845617677387,1.3775867170882288,10
+queue=acqrel-cached__pad=0__mode=latency__place=2-3,pmu running %,100.0,100.0,100.0,10
+queue=acqrel-cached__pad=0__mode=latency__place=2-3,cache-misses/op,0.15114575,0.14057150000000002,0.1624865,10
+queue=acqrel-cached__pad=0__mode=latency__place=2-3,L1-dcache-load-misses/op,4.709981,4.6402635,4.7529215,10
+queue=acqrel-cached__pad=0__mode=latency__place=2-3,context-switches/op,2e-06,1.75e-06,3.5e-06,10
+queue=acqrel-cached__pad=0__mode=latency__place=2-3,prod cycles/op,1590.2645722500001,1590.1443325,1593.724176,10
+queue=acqrel-cached__pad=0__mode=latency__place=2-3,prod IPC,0.2014384674537557,0.20071227339358516,0.20313601535245748,10
+queue=acqrel-cached__pad=0__mode=latency__place=2-3,prod cache-misses/op,0.1224315,0.110031,0.1409875,10
+queue=acqrel-cached__pad=0__mode=latency__place=2-3,prod L1-dcache-load-misses/op,3.132072,3.1126075,3.264363,10
+queue=acqrel-cached__pad=0__mode=latency__place=2-3,prod context-switches/op,4.75e-06,3e-06,5.5e-06,10
+queue=acqrel-cached__pad=0__mode=latency__place=2-3,producer_cpu_pct,99.99,99.98,99.99,10
+queue=acqrel-cached__pad=0__mode=latency__place=2-3,consumer_cpu_pct,99.99,99.99,100.0,10
+queue=acqrel-cached__pad=0__mode=latency__place=2-3,consumer_wall_ms,1998.879,1998.8784999999998,1998.881,10
+queue=acqrel-cached__pad=0__mode=throughput__place=2-3,cycles/op,73.37227119007125,63.322116723094055,82.1581873747984,10
+queue=acqrel-cached__pad=0__mode=throughput__place=2-3,core GHz,1.5917325303550145,1.5915061309946392,1.5933136567709418,10
+queue=acqrel-cached__pad=0__mode=throughput__place=2-3,instr/op,34.057248732783776,32.82455090425157,35.158683993655096,10
+queue=acqrel-cached__pad=0__mode=throughput__place=2-3,IPC,0.46735976001033575,0.4298669498102604,0.517183215467732,10
+queue=acqrel-cached__pad=0__mode=throughput__place=2-3,pmu running %,100.0,100.0,100.0,10
+queue=acqrel-cached__pad=0__mode=throughput__place=2-3,cache-misses/op,0.005721623236777431,0.004943413275689929,0.006077002785635656,10
+queue=acqrel-cached__pad=0__mode=throughput__place=2-3,L1-dcache-load-misses/op,1.9166524831517844,1.6982331873847984,2.146272397286685,10
+queue=acqrel-cached__pad=0__mode=throughput__place=2-3,context-switches/op,2.000025600327684e-07,1.5000192002457631e-07,2.500032000409605e-07,10
+queue=acqrel-cached__pad=0__mode=throughput__place=2-3,prod cycles/op,73.3752354530138,63.3192524614315,82.15405007184091,10
+queue=acqrel-cached__pad=0__mode=throughput__place=2-3,prod IPC,0.3382386409057734,0.3000952083325358,0.3921650106408163,10
+queue=acqrel-cached__pad=0__mode=throughput__place=2-3,prod cache-misses/op,0.003964450744969535,0.0034325939372023963,0.004364705868235114,10
+queue=acqrel-cached__pad=0__mode=throughput__place=2-3,prod L1-dcache-load-misses/op,1.6466640773001893,1.4448236437426398,1.8844291206927448,10
+queue=acqrel-cached__pad=0__mode=throughput__place=2-3,prod context-switches/op,1.7500224002867237e-07,1.000012800163842e-07,3.0000384004915263e-07,10
+queue=acqrel-cached__pad=0__mode=throughput__place=2-3,producer_cpu_pct,99.99,99.97,99.995,10
+queue=acqrel-cached__pad=0__mode=throughput__place=2-3,consumer_cpu_pct,99.99,99.985,99.99,10
+queue=acqrel-cached__pad=0__mode=throughput__place=2-3,consumer_wall_ms,921.328,794.9795,1032.391,10
+queue=acqrel-cached__pad=128__mode=latency__place=2-3,cycles/op,1590.24157775,1589.674123,1592.165289,10
+queue=acqrel-cached__pad=128__mode=latency__place=2-3,core GHz,1.5912255321971036,1.5910169076231242,1.5931493334494102,10
+queue=acqrel-cached__pad=128__mode=latency__place=2-3,instr/op,2476.6870925000003,2437.48533625,2522.4125285,10
+queue=acqrel-cached__pad=128__mode=latency__place=2-3,IPC,1.5574282257206509,1.5359849563752905,1.583836196091309,10
+queue=acqrel-cached__pad=128__mode=latency__place=2-3,pmu running %,100.0,100.0,100.0,10
+queue=acqrel-cached__pad=128__mode=latency__place=2-3,cache-misses/op,0.1579565,0.139358,0.1669755,10
+queue=acqrel-cached__pad=128__mode=latency__place=2-3,L1-dcache-load-misses/op,4.456123,3.705907,4.502901,10
+queue=acqrel-cached__pad=128__mode=latency__place=2-3,context-switches/op,2.5e-06,1.7500000000000002e-06,3e-06,10
+queue=acqrel-cached__pad=128__mode=latency__place=2-3,prod cycles/op,1590.2131215,1589.937839,1591.97709725,10
+queue=acqrel-cached__pad=128__mode=latency__place=2-3,prod IPC,0.20285013050679368,0.20152279051481253,0.2138473893293329,10
+queue=acqrel-cached__pad=128__mode=latency__place=2-3,prod cache-misses/op,0.13416299999999998,0.1082635,0.1423861062499997,10
+queue=acqrel-cached__pad=128__mode=latency__place=2-3,prod L1-dcache-load-misses/op,3.074102,2.2941639437500037,3.1172715,10
+queue=acqrel-cached__pad=128__mode=latency__place=2-3,prod context-switches/op,4.5e-06,3.5e-06,5.2500000000000006e-06,10
+queue=acqrel-cached__pad=128__mode=latency__place=2-3,producer_cpu_pct,99.99,99.98,99.99,10
+queue=acqrel-cached__pad=128__mode=latency__place=2-3,consumer_cpu_pct,99.99,99.975,99.99,10
+queue=acqrel-cached__pad=128__mode=latency__place=2-3,consumer_wall_ms,1998.878,1998.8745,1998.8795,10
+queue=acqrel-cached__pad=128__mode=throughput__place=2-3,cycles/op,19.58418372755171,18.77496216951577,20.29744338227529,10
+queue=acqrel-cached__pad=128__mode=throughput__place=2-3,core GHz,1.590869705165734,1.5898228963363354,1.5933970805823348,10
+queue=acqrel-cached__pad=128__mode=throughput__place=2-3,instr/op,32.12244051723862,32.10479064132021,32.14992591905176,10
+queue=acqrel-cached__pad=128__mode=throughput__place=2-3,IPC,1.6401335226847489,1.588613612939541,1.7086398444209037,10
+queue=acqrel-cached__pad=128__mode=throughput__place=2-3,pmu running %,100.0,100.0,100.0,10
+queue=acqrel-cached__pad=128__mode=throughput__place=2-3,cache-misses/op,0.0012312157595617225,0.0011248643982642978,0.0014831189839229941,10
+queue=acqrel-cached__pad=128__mode=throughput__place=2-3,L1-dcache-load-misses/op,1.1493671618996724,1.120563468212393,1.1696798719023604,10
+queue=acqrel-cached__pad=128__mode=throughput__place=2-3,context-switches/op,1.000012800163842e-07,5.00006400081921e-08,1.000012800163842e-07,10
+queue=acqrel-cached__pad=128__mode=throughput__place=2-3,prod cycles/op,19.58599920078977,18.77056516323409,20.282562416798935,10
+queue=acqrel-cached__pad=128__mode=throughput__place=2-3,prod IPC,1.292406964870386,1.252199420711002,1.3343461993497914,10
+queue=acqrel-cached__pad=128__mode=throughput__place=2-3,prod cache-misses/op,0.0011609898606702166,0.0009827125787210077,0.0013615924283830834,10
+queue=acqrel-cached__pad=128__mode=throughput__place=2-3,prod L1-dcache-load-misses/op,1.093212243116712,1.0800690998844784,1.1023667602945317,10
+queue=acqrel-cached__pad=128__mode=throughput__place=2-3,prod context-switches/op,7.500096001228816e-08,2.500032000409605e-08,1.2500160002048025e-07,10
+queue=acqrel-cached__pad=128__mode=throughput__place=2-3,producer_cpu_pct,99.99,99.9,99.995,10
+queue=acqrel-cached__pad=128__mode=throughput__place=2-3,consumer_cpu_pct,99.99,99.985,99.995,10
+queue=acqrel-cached__pad=128__mode=throughput__place=2-3,consumer_wall_ms,246.235,235.75650000000002,254.92200000000003,10
+queue=acqrel-cached__pad=64__mode=latency__place=2-3,cycles/op,1590.1444055000002,1589.8344925000001,1592.29856875,10
+queue=acqrel-cached__pad=64__mode=latency__place=2-3,core GHz,1.5911720372673557,1.590778999894155,1.5932342435526827,10
+queue=acqrel-cached__pad=64__mode=latency__place=2-3,instr/op,4741.93356075,4621.9257225,4808.430505,10
+queue=acqrel-cached__pad=64__mode=latency__place=2-3,IPC,2.9819591032817057,2.9074264754134025,3.0160490573838765,10
+queue=acqrel-cached__pad=64__mode=latency__place=2-3,pmu running %,100.0,100.0,100.0,10
+queue=acqrel-cached__pad=64__mode=latency__place=2-3,cache-misses/op,0.14127875,0.12446,0.1590205,10
+queue=acqrel-cached__pad=64__mode=latency__place=2-3,L1-dcache-load-misses/op,5.09149575,4.885268999999999,5.501819,10
+queue=acqrel-cached__pad=64__mode=latency__place=2-3,context-switches/op,2.75e-06,2e-06,3.5e-06,10
+queue=acqrel-cached__pad=64__mode=latency__place=2-3,prod cycles/op,1590.11946575,1589.6026735,1591.7345917500002,10
+queue=acqrel-cached__pad=64__mode=latency__place=2-3,prod IPC,0.20854380200219436,0.20341481983008708,0.21004944464890365,10
+queue=acqrel-cached__pad=64__mode=latency__place=2-3,prod cache-misses/op,0.11740275,0.098249,0.135049,10
+queue=acqrel-cached__pad=64__mode=latency__place=2-3,prod L1-dcache-load-misses/op,2.85805025,2.6417235,3.7595855,10
+queue=acqrel-cached__pad=64__mode=latency__place=2-3,prod context-switches/op,4.25e-06,3.5e-06,7e-06,10
+queue=acqrel-cached__pad=64__mode=latency__place=2-3,producer_cpu_pct,99.99,99.95500000000001,99.99,10
+queue=acqrel-cached__pad=64__mode=latency__place=2-3,consumer_cpu_pct,99.99,99.99,100.0,10
+queue=acqrel-cached__pad=64__mode=latency__place=2-3,consumer_wall_ms,1998.878,1998.8755,1998.88,10
+queue=acqrel-cached__pad=64__mode=throughput__place=2-3,cycles/op,17.723169506569683,17.233540214314743,18.31049687435999,10
+queue=acqrel-cached__pad=64__mode=throughput__place=2-3,core GHz,1.591949184477203,1.5908369152356114,1.5935212564650287,10
+queue=acqrel-cached__pad=64__mode=throughput__place=2-3,instr/op,32.24491590992365,32.16683353546925,32.36263194168885,10
+queue=acqrel-cached__pad=64__mode=throughput__place=2-3,IPC,1.8228370239583853,1.7745261504331482,1.8674047287244577,10
+queue=acqrel-cached__pad=64__mode=throughput__place=2-3,pmu running %,100.0,100.0,100.0,10
+queue=acqrel-cached__pad=64__mode=throughput__place=2-3,cache-misses/op,0.0010895639464185143,0.000894561450386565,0.0014430184706364243,10
+queue=acqrel-cached__pad=64__mode=throughput__place=2-3,L1-dcache-load-misses/op,1.0559908916834135,1.0505298467820388,1.070025546326993,10
+queue=acqrel-cached__pad=64__mode=throughput__place=2-3,context-switches/op,5.00006400081921e-08,5.00006400081921e-08,7.500096001228816e-08,10
+queue=acqrel-cached__pad=64__mode=throughput__place=2-3,prod cycles/op,17.70514190081633,17.234770755065664,18.233941844455607,10
+queue=acqrel-cached__pad=64__mode=throughput__place=2-3,prod IPC,1.3770286787950767,1.3374044856596727,1.41112845314401,10
+queue=acqrel-cached__pad=64__mode=throughput__place=2-3,prod cache-misses/op,0.0009896376673621424,0.000803210281091598,0.0012338657934821565,10
+queue=acqrel-cached__pad=64__mode=throughput__place=2-3,prod L1-dcache-load-misses/op,1.0471888040166912,1.040545568983283,1.0556893628238442,10
+queue=acqrel-cached__pad=64__mode=throughput__place=2-3,prod context-switches/op,0.0,0.0,2.2500288003686447e-07,10
+queue=acqrel-cached__pad=64__mode=throughput__place=2-3,producer_cpu_pct,100.0,99.89,100.0,10
+queue=acqrel-cached__pad=64__mode=throughput__place=2-3,consumer_cpu_pct,99.99,99.985,99.99,10
+queue=acqrel-cached__pad=64__mode=throughput__place=2-3,consumer_wall_ms,222.857,216.0625,229.813,10
+queue=acqrel__pad=0__mode=latency__place=2-3,cycles/op,1590.1002429999999,1589.9964332499999,1592.14435,10
+queue=acqrel__pad=0__mode=latency__place=2-3,core GHz,1.5910610241300587,1.5909476057858316,1.5930822176964823,10
+queue=acqrel__pad=0__mode=latency__place=2-3,instr/op,4694.95954475,4523.0174735,4754.9752705,10
+queue=acqrel__pad=0__mode=latency__place=2-3,IPC,2.9528981181930347,2.843974454250005,2.9904584217300094,10
+queue=acqrel__pad=0__mode=latency__place=2-3,pmu running %,100.0,100.0,100.0,10
+queue=acqrel__pad=0__mode=latency__place=2-3,cache-misses/op,0.14369700000000002,0.1277855,0.16895425,10
+queue=acqrel__pad=0__mode=latency__place=2-3,L1-dcache-load-misses/op,4.34355175,4.33493975,4.352491,10
+queue=acqrel__pad=0__mode=latency__place=2-3,context-switches/op,1.75e-06,1.5e-06,2.5e-06,10
+queue=acqrel__pad=0__mode=latency__place=2-3,prod cycles/op,1589.995081,1589.967827,1591.9883077499999,10
+queue=acqrel__pad=0__mode=latency__place=2-3,prod IPC,0.20278889513966541,0.20211848248300512,0.20327505301121213,10
+queue=acqrel__pad=0__mode=latency__place=2-3,prod cache-misses/op,0.120867,0.1092765,0.13850825,10
+queue=acqrel__pad=0__mode=latency__place=2-3,prod L1-dcache-load-misses/op,3.08623425,3.0824350000000003,3.09335325,10
+queue=acqrel__pad=0__mode=latency__place=2-3,prod context-switches/op,4e-06,2.4999999999999998e-06,4.75e-06,10
+queue=acqrel__pad=0__mode=latency__place=2-3,producer_cpu_pct,99.99,99.99,99.99,10
+queue=acqrel__pad=0__mode=latency__place=2-3,consumer_cpu_pct,99.995,99.99,100.0,10
+queue=acqrel__pad=0__mode=latency__place=2-3,consumer_wall_ms,1998.8775,1998.8719999999998,1998.881,10
+queue=acqrel__pad=0__mode=throughput__place=2-3,cycles/op,89.8787443979283,85.69646986481428,90.1501151964745,10
+queue=acqrel__pad=0__mode=throughput__place=2-3,core GHz,1.5913625034295644,1.59104812718541,1.5933412272675938,10
+queue=acqrel__pad=0__mode=throughput__place=2-3,instr/op,35.83060603175721,35.56686330585031,36.3901170934988,10
+queue=acqrel__pad=0__mode=throughput__place=2-3,IPC,0.40373140535594354,0.39467053877855096,0.4215286835521126,10
+queue=acqrel__pad=0__mode=throughput__place=2-3,pmu running %,100.0,100.0,100.0,10
+queue=acqrel__pad=0__mode=throughput__place=2-3,cache-misses/op,0.006105828154600379,0.005873100175682249,0.006799487033434028,10
+queue=acqrel__pad=0__mode=throughput__place=2-3,L1-dcache-load-misses/op,2.283404627579233,2.240869883134504,2.352238558653551,10
+queue=acqrel__pad=0__mode=throughput__place=2-3,context-switches/op,2.500032000409605e-07,1.000012800163842e-07,3.250041600532487e-07,10
+queue=acqrel__pad=0__mode=throughput__place=2-3,prod cycles/op,89.88509632923302,85.9574541904137,90.15478855629351,10
+queue=acqrel__pad=0__mode=throughput__place=2-3,prod IPC,0.2979594445164307,0.2872472882398269,0.3271862719160606,10
+queue=acqrel__pad=0__mode=throughput__place=2-3,prod cache-misses/op,0.0046505095265219395,0.004041651733142184,0.005225491886296145,10
+queue=acqrel__pad=0__mode=throughput__place=2-3,prod L1-dcache-load-misses/op,2.028099609675004,2.0099288270889866,2.1335295091777176,10
+queue=acqrel__pad=0__mode=throughput__place=2-3,prod context-switches/op,2.500032000409605e-07,1.7500224002867237e-07,3.0000384004915263e-07,10
+queue=acqrel__pad=0__mode=throughput__place=2-3,producer_cpu_pct,99.99,99.99,99.99,10
+queue=acqrel__pad=0__mode=throughput__place=2-3,consumer_cpu_pct,99.99,99.98,100.0,10
+queue=acqrel__pad=0__mode=throughput__place=2-3,consumer_wall_ms,1129.025,1077.2765,1131.499,10
+queue=acqrel__pad=128__mode=latency__place=2-3,cycles/op,1590.28152025,1590.2259265,1592.1412810000002,10
+queue=acqrel__pad=128__mode=latency__place=2-3,core GHz,1.5912592399590597,1.591187286842752,1.5931104997570438,10
+queue=acqrel__pad=128__mode=latency__place=2-3,instr/op,2425.17941625,2406.532608025,2457.86561325,10
+queue=acqrel__pad=128__mode=latency__place=2-3,IPC,1.525013060710849,1.5117298391681668,1.5421622462139561,10
+queue=acqrel__pad=128__mode=latency__place=2-3,pmu running %,100.0,100.0,100.0,10
+queue=acqrel__pad=128__mode=latency__place=2-3,cache-misses/op,0.15139375,0.1383775,0.15928525,10
+queue=acqrel__pad=128__mode=latency__place=2-3,L1-dcache-load-misses/op,4.831842,4.7668775,4.84595725,10
+queue=acqrel__pad=128__mode=latency__place=2-3,context-switches/op,2.5e-06,1.75e-06,3.2500000000000002e-06,10
+queue=acqrel__pad=128__mode=latency__place=2-3,prod cycles/op,1590.22357475,1589.8476195,1591.5786037500002,10
+queue=acqrel__pad=128__mode=latency__place=2-3,prod IPC,0.2028459265246616,0.20232189417474625,0.20419802836157158,10
+queue=acqrel__pad=128__mode=latency__place=2-3,prod cache-misses/op,0.11528425,0.107274,0.1222455,10
+queue=acqrel__pad=128__mode=latency__place=2-3,prod L1-dcache-load-misses/op,3.33297975,3.2807055,3.36304025,10
+queue=acqrel__pad=128__mode=latency__place=2-3,prod context-switches/op,4.5e-06,4e-06,1.1249999999999999e-05,10
+queue=acqrel__pad=128__mode=latency__place=2-3,producer_cpu_pct,99.99,99.945,99.99,10
+queue=acqrel__pad=128__mode=latency__place=2-3,consumer_cpu_pct,99.99,99.99,100.0,10
+queue=acqrel__pad=128__mode=latency__place=2-3,consumer_wall_ms,1998.877,1998.8755,1998.88,10
+queue=acqrel__pad=128__mode=throughput__place=2-3,cycles/op,56.15477263108968,55.29022603989331,57.56457800159842,10
+queue=acqrel__pad=128__mode=throughput__place=2-3,core GHz,1.5915818641301027,1.5910173889804362,1.5949050677245844,10
+queue=acqrel__pad=128__mode=throughput__place=2-3,instr/op,33.36732545176578,33.27636858751792,33.61830181426322,10
+queue=acqrel__pad=128__mode=throughput__place=2-3,IPC,0.5929629934800398,0.5781500211173881,0.608536937400062,10
+queue=acqrel__pad=128__mode=throughput__place=2-3,pmu running %,100.0,100.0,100.0,10
+queue=acqrel__pad=128__mode=throughput__place=2-3,cache-misses/op,0.0036055461509907323,0.003039238902257949,0.0038525993132712097,10
+queue=acqrel__pad=128__mode=throughput__place=2-3,L1-dcache-load-misses/op,2.2663510842938788,2.20874144689052,2.3120514442584863,10
+queue=acqrel__pad=128__mode=throughput__place=2-3,context-switches/op,5.00006400081921e-08,5.00006400081921e-08,1.7500224002867235e-07,10
+queue=acqrel__pad=128__mode=throughput__place=2-3,prod cycles/op,56.14704305715114,55.22290805322308,57.578874009587324,10
+queue=acqrel__pad=128__mode=throughput__place=2-3,prod IPC,0.6866673739106572,0.6096946613138313,0.7325707703921707,10
+queue=acqrel__pad=128__mode=throughput__place=2-3,prod cache-misses/op,0.0029134622923173417,0.0027609353399723514,0.003189590826762583,10
+queue=acqrel__pad=128__mode=throughput__place=2-3,prod L1-dcache-load-misses/op,1.7901577640193795,1.7651141934616763,1.8110884819325688,10
+queue=acqrel__pad=128__mode=throughput__place=2-3,prod context-switches/op,1.5000192002457631e-07,5.00006400081921e-08,2.000025600327684e-07,10
+queue=acqrel__pad=128__mode=throughput__place=2-3,producer_cpu_pct,99.99,99.98,100.0,10
+queue=acqrel__pad=128__mode=throughput__place=2-3,consumer_cpu_pct,100.0,99.99,100.0,10
+queue=acqrel__pad=128__mode=throughput__place=2-3,consumer_wall_ms,705.88,697.072,722.052,10
+queue=acqrel__pad=64__mode=latency__place=2-3,cycles/op,1590.1261359999999,1586.6118270000002,1591.9824600000002,10
+queue=acqrel__pad=64__mode=latency__place=2-3,core GHz,1.5912436923307134,1.5910631830870459,1.593167393588501,10
+queue=acqrel__pad=64__mode=latency__place=2-3,instr/op,4580.3987535,4495.6476805,4658.090546,10
+queue=acqrel__pad=64__mode=latency__place=2-3,IPC,2.876853869372865,2.8360156867962476,2.929598196751009,10
+queue=acqrel__pad=64__mode=latency__place=2-3,pmu running %,100.0,100.0,100.0,10
+queue=acqrel__pad=64__mode=latency__place=2-3,cache-misses/op,0.14238075,0.1370505,0.16124349999999998,10
+queue=acqrel__pad=64__mode=latency__place=2-3,L1-dcache-load-misses/op,5.0767387500000005,5.046485,5.1202505,10
+queue=acqrel__pad=64__mode=latency__place=2-3,context-switches/op,4.75e-06,2.25e-06,5.2500000000000006e-06,10
+queue=acqrel__pad=64__mode=latency__place=2-3,prod cycles/op,1590.2465447499999,1589.9174645,1592.27074275,10
+queue=acqrel__pad=64__mode=latency__place=2-3,prod IPC,0.2026244334905985,0.20205740782501092,0.20601545291668327,10
+queue=acqrel__pad=64__mode=latency__place=2-3,prod cache-misses/op,0.12194250000000001,0.10450799999999999,0.1459315,10
+queue=acqrel__pad=64__mode=latency__place=2-3,prod L1-dcache-load-misses/op,3.9761490000000004,3.9448327499999998,3.9981665,10
+queue=acqrel__pad=64__mode=latency__place=2-3,prod context-switches/op,3.7499999999999997e-06,2.75e-06,5e-06,10
+queue=acqrel__pad=64__mode=latency__place=2-3,producer_cpu_pct,99.99,99.985,99.99,10
+queue=acqrel__pad=64__mode=latency__place=2-3,consumer_cpu_pct,99.99,99.765,100.0,10
+queue=acqrel__pad=64__mode=latency__place=2-3,consumer_wall_ms,1998.878,1998.877,1998.881,10
+queue=acqrel__pad=64__mode=throughput__place=2-3,cycles/op,85.75749167089339,84.17850403485164,88.2428261331745,10
+queue=acqrel__pad=64__mode=throughput__place=2-3,core GHz,1.5909294204525186,1.5907705532263012,1.5928403850222816,10
+queue=acqrel__pad=64__mode=throughput__place=2-3,instr/op,46.07462493019911,45.57029844982016,47.53734360299812,10
+queue=acqrel__pad=64__mode=throughput__place=2-3,IPC,0.5394112155995587,0.5352189341191236,0.542944189344368,10
+queue=acqrel__pad=64__mode=throughput__place=2-3,pmu running %,100.0,100.0,100.0,10
+queue=acqrel__pad=64__mode=throughput__place=2-3,cache-misses/op,0.006904963383531309,0.005674722636449746,0.00793170152577953,10
+queue=acqrel__pad=64__mode=throughput__place=2-3,L1-dcache-load-misses/op,2.5049890888603374,2.4563626414418103,2.5651269586250702,10
+queue=acqrel__pad=64__mode=throughput__place=2-3,context-switches/op,1.5000192002457631e-07,1.000012800163842e-07,2.000025600327684e-07,10
+queue=acqrel__pad=64__mode=throughput__place=2-3,prod cycles/op,85.75525996732759,84.17133544309367,88.29885297531808,10
+queue=acqrel__pad=64__mode=throughput__place=2-3,prod IPC,0.3035430467537278,0.2962378992042338,0.3068892736741432,10
+queue=acqrel__pad=64__mode=throughput__place=2-3,prod cache-misses/op,0.005056289720508422,0.004641059405560391,0.0059270258659310845,10
+queue=acqrel__pad=64__mode=throughput__place=2-3,prod L1-dcache-load-misses/op,2.470360095609224,2.4240384776925143,2.517060168370155,10
+queue=acqrel__pad=64__mode=throughput__place=2-3,prod context-switches/op,2.000025600327684e-07,1.2500160002048025e-07,2.500032000409605e-07,10
+queue=acqrel__pad=64__mode=throughput__place=2-3,producer_cpu_pct,99.99,99.99,99.995,10
+queue=acqrel__pad=64__mode=throughput__place=2-3,consumer_cpu_pct,99.99,99.99,99.995,10
+queue=acqrel__pad=64__mode=throughput__place=2-3,consumer_wall_ms,1077.5014999999999,1058.205,1108.08,10

@@ -49,20 +49,20 @@
 - [ ] Tag v0.2
 
 ## Phase 2: Optimized Order Book, Memory, Profiling → E2 (weeks 4–6)
-- [ ] Implement a fixed-size object pool with 32-bit indices
-- [ ] Define the `OrderNode` (32 B) and `Level` structs with `static_assert` sizes
+- [x] Implement a fixed-size object pool with 32-bit indices
+- [x] Define the `OrderNode` (32 B) and `Level` structs with `static_assert` sizes
 - [ ] L1: map levels + pooled intrusive doubly-linked order lists
-- [ ] L2a (deadline build): per-symbol/side sorted level vector, best at the back, linear-then-binary search; compared against the reference book first
+- [x] L2a (deadline build): per-symbol/side sorted level vector, best at the back, linear-then-binary search; compared against the reference book first
 - [ ] L2: per-symbol/side tick ladder (±W ticks; E1 coverage gives the candidates, E2 sweeps W ∈ {64, 256, 1024}), sparse map fallback, recentring with a counter
 - [ ] L2: two-level bitmap best-price search using `std::countr_zero`/`std::countl_zero`
-- [ ] L3: open-addressing order-ref map (linear probing, backward-shift delete); E1 ruled out a direct vector (refs span 260 M, peak live 1.96 M)
+- [x] L3: open-addressing order-ref map (linear probing, backward-shift delete); E1 ruled out a direct vector (refs span 260 M, peak live 1.96 M)
 - [ ] L4: `mlockall` + prefault (`MAP_POPULATE`/touch)
 - [ ] L5: 2 MiB pages (`MAP_HUGETLB` or THP `madvise`) for pools and the ID map
 - [ ] Make layers selectable so every layer and every leave-one-out build can be benchmarked
 - [ ] Add an allocation-counting shim test asserting 0 heap allocations after warm-up
 - [ ] Add a page-fault check asserting 0 steady-state page faults
 - [ ] Every layer passes the differential test on a full real day
-- [ ] Build the book benchmark harness: replay a slice, per-message TSC latency into the histogram
+- [x] Build the book benchmark harness: replay a slice, per-message TSC latency into the histogram
 - [ ] Write profiling scripts: `perf stat` counter set, `perf record` + FlameGraph
 - [ ] Top-down analysis (toplev / `perf stat -M TopdownL1/L2`) per layer
 - [ ] Use Intel PT / magic-trace to explain at least one p99.9 event
@@ -73,15 +73,17 @@
 - [ ] Tag v0.3
 
 ## Phase 3: Queues and Concurrency → E3 (week 7)
-- [ ] Implement SPSC variants: mutex+condvar, mutex+spin, `seq_cst` atomics, acquire/release, +cached remote index, +batch publish
-- [ ] Make index padding configurable: none / 64 B / 128 B
-- [ ] Write the SPSC happens-before correctness argument in `docs/concurrency.md`
-- [ ] Unit tests: wraparound, full, empty, producer/consumer ordering
-- [ ] TSan stress tests with randomized delays (~10⁸ operations)
+- [x] Implement SPSC variants: mutex+condvar, mutex+spin, `seq_cst` atomics, acquire/release, +cached remote index
+- [ ] SPSC batch publish variant
+- [x] Make index padding configurable: none / 64 B / 128 B
+- [x] Write the SPSC happens-before correctness argument in `docs/concurrency.md`
+- [x] Unit tests: wraparound, full, empty, producer/consumer ordering
+- [x] TSan stress tests with randomized delays (~10⁸ operations)
 - [ ] Implement the seqlock (relaxed-atomic fields + fences) with tests
 - [ ] Timeboxed (≤2 days) GenMC/Relacy model check: accepts acquire/release, rejects weakened ordering; or document why it was dropped
-- [ ] Queue benchmark: throughput, one-way latency percentiles, CPU%, context switches
-- [ ] E3 sweeps: variants → padding (with `perf c2c` HITM) → placement (unpinned / SMT siblings 2-6 / separate cores 2-3)
+- [x] Queue benchmark: throughput, one-way latency percentiles, CPU%, context switches
+- [x] E3 sweeps: variants → padding → placement (unpinned / SMT siblings 2-6 / separate cores 2-3)
+- [ ] Confirm the padding results with `perf c2c` HITM counts
 - [ ] Write `docs/experiments/E3-queues.md` (part 1 before the 2026-10-04 deadline: variants, padding, placement; batch publish, seqlock, model check, `perf c2c` after)
 - [ ] Tag v0.4
 

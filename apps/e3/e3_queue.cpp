@@ -116,7 +116,7 @@ void maybe_pin(int cpu) {
 struct Result {
     std::unique_ptr<Histogram> hist = std::make_unique<Histogram>();
     std::uint64_t measured_msgs = 0;
-    std::uint64_t order_errors = 0;     // wrong sequence number: lost / duplicated / reordered
+    std::uint64_t order_errors = 0;      // wrong sequence number: lost / duplicated / reordered
     std::uint64_t negative_samples = 0;  // consumer stamp before intended time (clock skew)
     int producer_ran_on = -1, consumer_ran_on = -1;
 };
@@ -205,10 +205,14 @@ Result run(const Options& o, const TscCalibration& cal, Window& wp, Window& wc) 
 template <bool kCached, Ordering Ord>
 Result run_padded(const Options& o, const TscCalibration& cal, Window& wp, Window& wc) {
     switch (o.pad) {
-        case 0: return run<SpscRing<Msg, kCapacity, Ord, kCached, 0>>(o, cal, wp, wc);
-        case 64: return run<SpscRing<Msg, kCapacity, Ord, kCached, 64>>(o, cal, wp, wc);
-        case 128: return run<SpscRing<Msg, kCapacity, Ord, kCached, 128>>(o, cal, wp, wc);
-        default: throw std::invalid_argument("--pad must be 0, 64 or 128");
+        case 0:
+            return run<SpscRing<Msg, kCapacity, Ord, kCached, 0>>(o, cal, wp, wc);
+        case 64:
+            return run<SpscRing<Msg, kCapacity, Ord, kCached, 64>>(o, cal, wp, wc);
+        case 128:
+            return run<SpscRing<Msg, kCapacity, Ord, kCached, 128>>(o, cal, wp, wc);
+        default:
+            throw std::invalid_argument("--pad must be 0, 64 or 128");
     }
 }
 
@@ -265,16 +269,16 @@ int main(int argc, char** argv) try {
                   R"({"producer_cpu_pct":%.2f,"consumer_cpu_pct":%.2f,"consumer_wall_ms":%.3f})", wp.cpu_pct(),
                   wc.cpu_pct(), static_cast<double>(wc.wall_ns) / 1e6);
     const std::string params =
-        R"({"experiment":"E3","queue":")" + o.queue + R"(","pad":)" + std::to_string(o.pad) +
-        R"(,"pad_applies":)" + (padded ? "true" : "false") + R"(,"mode":")" + o.mode + R"(","capacity":)" +
-        std::to_string(kCapacity) + R"(,"msg_bytes":)" + std::to_string(sizeof(Msg)) + R"(,"cpu_producer":)" +
-        std::to_string(o.cpu_producer) + R"(,"cpu_consumer":)" + std::to_string(o.cpu_consumer) +
-        R"(,"producer_ran_on_cpu":)" + std::to_string(r.producer_ran_on) + R"(,"consumer_ran_on_cpu":)" +
-        std::to_string(r.consumer_ran_on) + R"(,"interval_ns":)" + (latency ? std::to_string(o.interval_ns) : "null") +
-        R"(,"value_divisor":)" + std::to_string(latency ? 1 : kBatch) + R"(,"unit":"ticks","warmup_msgs":)" +
-        std::to_string(o.warmup) + R"(,"measured_msgs":)" + std::to_string(r.measured_msgs) +
-        R"(,"negative_samples":)" + std::to_string(r.negative_samples) + R"(,"extra_metrics":)" + cpu_pct +
-        R"(,"counters":)" + wc.counters_json() + R"(,"producer_counters":)" + wp.counters_json() + "}";
+        R"({"experiment":"E3","queue":")" + o.queue + R"(","pad":)" + std::to_string(o.pad) + R"(,"pad_applies":)" +
+        (padded ? "true" : "false") + R"(,"mode":")" + o.mode + R"(","capacity":)" + std::to_string(kCapacity) +
+        R"(,"msg_bytes":)" + std::to_string(sizeof(Msg)) + R"(,"cpu_producer":)" + std::to_string(o.cpu_producer) +
+        R"(,"cpu_consumer":)" + std::to_string(o.cpu_consumer) + R"(,"producer_ran_on_cpu":)" +
+        std::to_string(r.producer_ran_on) + R"(,"consumer_ran_on_cpu":)" + std::to_string(r.consumer_ran_on) +
+        R"(,"interval_ns":)" + (latency ? std::to_string(o.interval_ns) : "null") + R"(,"value_divisor":)" +
+        std::to_string(latency ? 1 : kBatch) + R"(,"unit":"ticks","warmup_msgs":)" + std::to_string(o.warmup) +
+        R"(,"measured_msgs":)" + std::to_string(r.measured_msgs) + R"(,"negative_samples":)" +
+        std::to_string(r.negative_samples) + R"(,"extra_metrics":)" + cpu_pct + R"(,"counters":)" + wc.counters_json() +
+        R"(,"producer_counters":)" + wp.counters_json() + "}";
     write_run(out, *r.hist, cal, params);
 
     const double div = latency ? 1.0 : static_cast<double>(kBatch);

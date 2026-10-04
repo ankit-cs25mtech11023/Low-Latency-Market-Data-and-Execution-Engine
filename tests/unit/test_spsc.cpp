@@ -31,17 +31,19 @@ struct Msg {
     std::uint64_t check;  // derived from seq, so a torn or stale slot is detected
 };
 
-constexpr std::uint64_t check_of(std::uint64_t seq) { return seq * 0x9E3779B97F4A7C15ULL + 1; }
+constexpr std::uint64_t check_of(std::uint64_t seq) {
+    return seq * 0x9E3779B97F4A7C15ULL + 1;
+}
 
 template <class Q>
 class SpscTest : public ::testing::Test {};
 
 template <std::size_t Cap>
-using AllQueues = ::testing::Types<
-    SpscRing<Msg, Cap, Ordering::kSeqCst, false, 64>, SpscRing<Msg, Cap, Ordering::kAcqRel, false, 0>,
-    SpscRing<Msg, Cap, Ordering::kAcqRel, false, 64>, SpscRing<Msg, Cap, Ordering::kAcqRel, true, 0>,
-    SpscRing<Msg, Cap, Ordering::kAcqRel, true, 64>, SpscRing<Msg, Cap, Ordering::kAcqRel, true, 128>,
-    MutexSpinQueue<Msg, Cap>, MutexCvQueue<Msg, Cap>>;
+using AllQueues =
+    ::testing::Types<SpscRing<Msg, Cap, Ordering::kSeqCst, false, 64>, SpscRing<Msg, Cap, Ordering::kAcqRel, false, 0>,
+                     SpscRing<Msg, Cap, Ordering::kAcqRel, false, 64>, SpscRing<Msg, Cap, Ordering::kAcqRel, true, 0>,
+                     SpscRing<Msg, Cap, Ordering::kAcqRel, true, 64>, SpscRing<Msg, Cap, Ordering::kAcqRel, true, 128>,
+                     MutexSpinQueue<Msg, Cap>, MutexCvQueue<Msg, Cap>>;
 
 TYPED_TEST_SUITE(SpscTest, AllQueues<8>);
 
