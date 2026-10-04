@@ -24,3 +24,6 @@ __pycache__/
 # Editor
 .vscode/
 .idea/
+
+# Personal resume files (contain contact details; never commit)
+resume/
