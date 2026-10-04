@@ -30,3 +30,6 @@ lle_add_test(test_book
 
 lle_add_test(test_concurrency
     unit/test_spsc.cpp)
+
+lle_add_test(test_engine
+    unit/test_engine.cpp)
