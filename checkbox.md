@@ -11,7 +11,7 @@
 - [x] Enable warnings `-Wall -Wextra -Wpedantic -Wconversion -Wshadow -Wold-style-cast`, with `-Werror` in CI
 - [x] Add `.clang-format` and `.clang-tidy`
 - [x] Integrate GoogleTest and Google Benchmark via CMake FetchContent
-- [ ] Add a GitHub Actions CI skeleton: {gcc, clang} × {debug, asan, ubsan, tsan}, build + ctest
+- [x] Add a GitHub Actions CI skeleton: {gcc, clang} × {debug, asan, ubsan, tsan}, build + ctest
 - [x] Implement the TSC clock: `lfence;rdtsc` start stamp, `rdtscp;lfence` end stamp, behind an arch-abstract interface
 - [x] Implement TSC calibration against `CLOCK_MONOTONIC_RAW` (~1 s) and a startup check for `constant_tsc`/`nonstop_tsc`
 - [x] Implement the log-linear histogram (fixed memory, no allocation on record) with unit tests; validate against HdrHistogram_c

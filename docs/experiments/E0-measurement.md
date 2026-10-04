@@ -4,6 +4,9 @@
 > [`docs/results/E0/`](../results/E0/) (tables, CSVs, `env.json`, `manifest.json`). The
 > hypotheses were written before the tuned runs and are left unchanged. A short untuned
 > smoke run made while developing the drivers is not used anywhere.
+>
+> Commit IDs below are the pre-rewrite IDs recorded in the result files; see
+> [`docs/git-history.md`](../git-history.md) for the current ones (`7291ce5` is now `083cfda`).
 
 ## Question
 

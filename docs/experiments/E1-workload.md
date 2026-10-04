@@ -5,6 +5,9 @@
 > [`docs/results/E1/`](../results/E1/) (summary JSON, histograms, tables, plots, `env.json`).
 > E1 measures the **data**, not the speed of our code: there are no latency numbers here.
 > The wall time printed by the tool is untuned and informational only.
+>
+> Commit IDs below are the pre-rewrite IDs recorded in the result files; see
+> [`docs/git-history.md`](../git-history.md) for the current ones (`a4102bd` is now `ff265fa`).
 
 ## Question
 

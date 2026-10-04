@@ -1,7 +1,7 @@
 # E1 curated results
 
 Copies of the result files behind `docs/experiments/E1-workload.md`, from the run
-`results/E1/07302019` (git `a4102bd`, `release` preset, clean tree; see `env.json`).
+`results/E1/07302019` (git `a4102bd` (now `ff265fa`, see [`docs/git-history.md`](../../git-history.md)), `release` preset, clean tree; see `env.json`).
 
 | file | what |
 |---|---|

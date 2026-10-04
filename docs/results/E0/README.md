@@ -10,5 +10,5 @@ captures and run manifests needed to check every number in the write-up.
 | `hist-counters-*` | `results/E0-hist-counters/20261003T221418Z` | histogram record, N = 10, counters incl. branch-misses and L1D load misses |
 | `skew*` | `results/E0-skew/20261003T221107Z` | cross-core TSC skew, all 56 ordered CPU pairs, N = 10 |
 
-All three were built from git `7291ce5` with the `release` preset on the tuned machine
+All three were built from git `7291ce5` (now `083cfda`, see [`docs/git-history.md`](../../git-history.md)) with the `release` preset on the tuned machine
 (see the `*-env.json` files).
