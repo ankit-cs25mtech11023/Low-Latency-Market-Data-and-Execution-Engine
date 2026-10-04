@@ -1,11 +1,10 @@
-#include "lle/core/tsc.hpp"
-
 #include <gtest/gtest.h>
 
 #include <chrono>
 #include <thread>
 
 #include "lle/core/cpu.hpp"
+#include "lle/core/tsc.hpp"
 
 namespace {
 
@@ -28,8 +27,8 @@ TEST(Tsc, FeatureDetectionReadsCpuinfo) {
 
 TEST(Tsc, CalibrationIsConsistentWithSteadyClock) {
     const auto cal = lle::calibrate_tsc(0.2);
-    ASSERT_GT(cal.ticks_per_ns, 0.1);  // > 100 MHz
-    ASSERT_LT(cal.ticks_per_ns, 10.0); // < 10 GHz
+    ASSERT_GT(cal.ticks_per_ns, 0.1);   // > 100 MHz
+    ASSERT_LT(cal.ticks_per_ns, 10.0);  // < 10 GHz
     // Independent check: time a ~100 ms sleep with both clocks; they must agree to ~1%.
     const auto t0 = lle::Tsc::start();
     const auto c0 = std::chrono::steady_clock::now();

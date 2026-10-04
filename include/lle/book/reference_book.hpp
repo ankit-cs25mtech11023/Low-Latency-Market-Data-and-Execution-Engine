@@ -124,8 +124,10 @@ public:
                 out.push_back(LevelView{px, lvl.total, static_cast<std::uint32_t>(lvl.orders.size())});
             }
         };
-        if (side == Side::Buy) emit(books_[loc].bids);
-        else emit(books_[loc].asks);
+        if (side == Side::Buy)
+            emit(books_[loc].bids);
+        else
+            emit(books_[loc].asks);
     }
 
     // Refs of the orders at one price level in priority order (tests: verifies FIFO).

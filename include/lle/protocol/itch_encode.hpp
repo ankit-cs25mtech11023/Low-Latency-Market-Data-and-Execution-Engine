@@ -21,7 +21,9 @@ inline void put_header(std::byte* out, char type, Locate locate, Timestamp ts, s
     proto::store_be<std::uint16_t>(out + 3, tracking);
     proto::store_be48(out + 5, ts);
 }
-inline void put_char(std::byte* out, char c) noexcept { *out = static_cast<std::byte>(c); }
+inline void put_char(std::byte* out, char c) noexcept {
+    *out = static_cast<std::byte>(c);
+}
 template <std::size_t N>
 inline void put_alpha(std::byte* out, const std::array<char, N>& a) noexcept {
     std::memcpy(out, a.data(), N);

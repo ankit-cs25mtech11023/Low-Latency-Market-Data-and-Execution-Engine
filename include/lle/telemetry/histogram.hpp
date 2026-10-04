@@ -112,8 +112,8 @@ public:
         if (count_ == 0) return 0;
         if (q <= 0.0) return min_;
         if (q >= 1.0) return max_;
-        const auto rank = std::max<std::uint64_t>(
-            1, static_cast<std::uint64_t>(std::ceil(q * static_cast<double>(count_))));
+        const auto rank =
+            std::max<std::uint64_t>(1, static_cast<std::uint64_t>(std::ceil(q * static_cast<double>(count_))));
         std::uint64_t cum = 0;
         for (std::size_t i = 0; i < kBucketCount; ++i) {
             cum += counts_[i];

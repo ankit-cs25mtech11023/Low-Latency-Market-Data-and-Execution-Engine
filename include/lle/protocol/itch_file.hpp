@@ -13,9 +13,9 @@
 #include <cstddef>
 #include <cstdint>
 #include <memory>
-#include <string>
 #include <span>
 #include <stdexcept>
+#include <string>
 #include <vector>
 
 #include "lle/protocol/endian.hpp"

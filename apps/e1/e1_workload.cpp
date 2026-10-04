@@ -17,6 +17,8 @@
 //
 //   e1_workload --in data/07302019.NASDAQ_ITCH50.gz --out results/E1/07302019
 
+#include <sys/resource.h>
+
 #include <algorithm>
 #include <array>
 #include <chrono>
@@ -28,8 +30,6 @@
 #include <string>
 #include <unordered_map>
 #include <vector>
-
-#include <sys/resource.h>
 
 #include "lle/book/book_builder.hpp"
 #include "lle/book/book_concept.hpp"
@@ -51,7 +51,9 @@ constexpr Timestamp kOpen = 34'200 * kNsPerSec;   // 09:30:00
 constexpr Timestamp kClose = 57'600 * kNsPerSec;  // 16:00:00
 
 // Nasdaq's minimum price increment: $0.01 at or above $1.00, $0.0001 below.
-constexpr Price tick_of(Price px) { return px >= 10'000 ? 100 : 1; }
+constexpr Price tick_of(Price px) {
+    return px >= 10'000 ? 100 : 1;
+}
 
 // Counts messages per fixed window of feed time, including empty windows, during regular
 // trading hours. Timestamps in the file are non-decreasing, so one counter suffices.
@@ -98,9 +100,9 @@ public:
     Workload() : builder_(book_, dir_) {
         add_ts_.reserve(1u << 22);
         for (auto& w : windows_) w = nullptr;
-        windows_[0] = std::make_unique<WindowCounter>(1'000'000);       // 1 ms
-        windows_[1] = std::make_unique<WindowCounter>(10'000'000);      // 10 ms
-        windows_[2] = std::make_unique<WindowCounter>(kNsPerSec);       // 1 s
+        windows_[0] = std::make_unique<WindowCounter>(1'000'000);   // 1 ms
+        windows_[1] = std::make_unique<WindowCounter>(10'000'000);  // 10 ms
+        windows_[2] = std::make_unique<WindowCounter>(kNsPerSec);   // 1 s
     }
 
     // ---- ItchHandler -----------------------------------------------------------------------
@@ -191,11 +193,13 @@ private:
             return;
         }
         const Price best = side == Side::Buy ? t.bid_px : t.ask_px;
-        const std::int64_t diff = side == Side::Buy ? static_cast<std::int64_t>(best) - px
-                                                    : static_cast<std::int64_t>(px) - best;
+        const std::int64_t diff =
+            side == Side::Buy ? static_cast<std::int64_t>(best) - px : static_cast<std::int64_t>(px) - best;
         const auto ticks = static_cast<std::uint64_t>(std::llabs(diff) / tick_of(best));
-        if (diff >= 0) hists[0].record(ticks);  // behind or at best
-        else hists[1].record(ticks);            // improves best
+        if (diff >= 0)
+            hists[0].record(ticks);  // behind or at best
+        else
+            hists[1].record(ticks);  // improves best
     }
 
     template <class Apply>
@@ -314,14 +318,12 @@ std::string inv_json(const InvariantCounters& c) {
 
 std::string q(const Histogram& h) {  // compact percentile summary as a JSON object
     char buf[320];
-    std::snprintf(buf, sizeof buf,
-                  R"({"count":%llu,"mean":%.3f,"p50":%llu,"p90":%llu,"p99":%llu,"p99.9":%llu,"max":%llu})",
-                  static_cast<unsigned long long>(h.count()), h.mean(),
-                  static_cast<unsigned long long>(h.value_at_quantile(0.5)),
-                  static_cast<unsigned long long>(h.value_at_quantile(0.9)),
-                  static_cast<unsigned long long>(h.value_at_quantile(0.99)),
-                  static_cast<unsigned long long>(h.value_at_quantile(0.999)),
-                  static_cast<unsigned long long>(h.max()));
+    std::snprintf(
+        buf, sizeof buf, R"({"count":%llu,"mean":%.3f,"p50":%llu,"p90":%llu,"p99":%llu,"p99.9":%llu,"max":%llu})",
+        static_cast<unsigned long long>(h.count()), h.mean(), static_cast<unsigned long long>(h.value_at_quantile(0.5)),
+        static_cast<unsigned long long>(h.value_at_quantile(0.9)),
+        static_cast<unsigned long long>(h.value_at_quantile(0.99)),
+        static_cast<unsigned long long>(h.value_at_quantile(0.999)), static_cast<unsigned long long>(h.max()));
     return buf;
 }
 
@@ -376,12 +378,12 @@ void Workload::write(const std::string& dir, double wall_s, const std::string& i
     // Snapshots.
     {
         std::FILE* f = open_out(dir + "/depth_snapshots.csv");
-        std::fprintf(f, "ts_s,live_orders,nonempty_sides,levels_p50,levels_p90,levels_p99,levels_max,"
-                        "orders_per_level_p50,orders_per_level_p99,orders_per_level_max\n");
+        std::fprintf(f,
+                     "ts_s,live_orders,nonempty_sides,levels_p50,levels_p90,levels_p99,levels_max,"
+                     "orders_per_level_p50,orders_per_level_p99,orders_per_level_max\n");
         for (const auto& s : snaps_)
-            std::fprintf(f, "%.0f,%llu,%llu,%llu,%llu,%llu,%llu,%llu,%llu,%llu\n",
-                         static_cast<double>(s.ts) / 1e9, static_cast<unsigned long long>(s.live_orders),
-                         static_cast<unsigned long long>(s.sides),
+            std::fprintf(f, "%.0f,%llu,%llu,%llu,%llu,%llu,%llu,%llu,%llu,%llu\n", static_cast<double>(s.ts) / 1e9,
+                         static_cast<unsigned long long>(s.live_orders), static_cast<unsigned long long>(s.sides),
                          static_cast<unsigned long long>(s.levels_per_side.value_at_quantile(0.5)),
                          static_cast<unsigned long long>(s.levels_per_side.value_at_quantile(0.9)),
                          static_cast<unsigned long long>(s.levels_per_side.value_at_quantile(0.99)),
@@ -411,7 +413,8 @@ void Workload::write(const std::string& dir, double wall_s, const std::string& i
         write_hist(dir + "/rate_window_" + std::to_string(w->width() / 1'000'000) + "ms.hist.csv", w->hist());
 
     std::FILE* f = open_out(dir + "/summary.json");
-    std::fprintf(f, "{\n  \"input\": \"%s\",\n  \"build\": %s,\n", json_escape(input).c_str(), build_info_json().c_str());
+    std::fprintf(f, "{\n  \"input\": \"%s\",\n  \"build\": %s,\n", json_escape(input).c_str(),
+                 build_info_json().c_str());
     std::fprintf(f, "  \"messages\": %llu,\n", static_cast<unsigned long long>(counts.total));
     std::fprintf(f,
                  "  \"book_counters\": {\"adds\":%llu,\"executes\":%llu,\"cancels\":%llu,\"deletes\":%llu,"
@@ -436,7 +439,8 @@ void Workload::write(const std::string& dir, double wall_s, const std::string& i
                  static_cast<unsigned long long>(refs_), static_cast<unsigned long long>(min_ref_),
                  static_cast<unsigned long long>(max_ref_), span > 0 ? static_cast<double>(refs_) / span : 0.0);
     std::fprintf(f, "  \"lifetime_ns\": {");
-    for (int e = 0; e < kEndCount; ++e) std::fprintf(f, "%s\"%s\":%s", e ? "," : "", kEndName[e], q(lifetime_[e]).c_str());
+    for (int e = 0; e < kEndCount; ++e)
+        std::fprintf(f, "%s\"%s\":%s", e ? "," : "", kEndName[e], q(lifetime_[e]).c_str());
     std::fprintf(f, "},\n  \"distance_ticks\": {\"add_behind\":%s,\"add_improve\":%s,\"no_best_on_side\":%llu,",
                  q(dist_add_[0]).c_str(), q(dist_add_[1]).c_str(), static_cast<unsigned long long>(hists_no_best_));
     std::fprintf(f, R"("coverage_add":%s,"coverage_replace_new":%s)", coverage(dist_add_).c_str(),

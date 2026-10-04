@@ -1,5 +1,3 @@
-#include "lle/telemetry/histogram.hpp"
-
 #include <gtest/gtest.h>
 
 #include <algorithm>
@@ -7,6 +5,8 @@
 #include <memory>
 #include <random>
 #include <vector>
+
+#include "lle/telemetry/histogram.hpp"
 
 namespace {
 
@@ -16,7 +16,8 @@ using H = lle::Histogram;
 // Exact nearest-rank quantile over sorted data, the definition the histogram approximates.
 std::uint64_t exact_quantile(const std::vector<std::uint64_t>& sorted, double q) {
     if (q <= 0.0) return sorted.front();
-    const auto rank = std::max<std::size_t>(1, static_cast<std::size_t>(std::ceil(q * static_cast<double>(sorted.size()))));
+    const auto rank =
+        std::max<std::size_t>(1, static_cast<std::size_t>(std::ceil(q * static_cast<double>(sorted.size()))));
     return sorted[rank - 1];
 }
 

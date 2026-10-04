@@ -1,5 +1,8 @@
 # Bug-finding and modernization checks. Style-only checks are off; magic numbers are common
 # and intentional in wire-format code (field offsets come straight from the ITCH spec).
+# Also off as style-only: misc-const-correctness (wants `const` on every local that is not
+# modified) and modernize-use-designated-initializers (wants `{.a = 1}` for every aggregate).
+# Run: run-clang-tidy-21 -p build/debug -quiet "^$PWD/(src|apps|tools|tests|fuzz)/"
 Checks: >
   -*,
   bugprone-*,
@@ -13,11 +16,15 @@ Checks: >
   -misc-non-private-member-variables-in-classes,
   -misc-include-cleaner,
   -misc-no-recursion,
+  -misc-const-correctness,
   modernize-*,
   -modernize-use-trailing-return-type,
   -modernize-avoid-c-arrays,
+  -modernize-use-designated-initializers,
   performance-*,
   readability-container-size-empty,
   readability-redundant-*,
 WarningsAsErrors: ''
-HeaderFilterRegex: '(include|src|apps|tools|tests)/.*'
+HeaderFilterRegex: '(include|src|apps|tools|tests|fuzz)/.*'
+# FetchContent sources live under build/*/_deps/ and also match the filter above.
+ExcludeHeaderFilterRegex: '_deps/'

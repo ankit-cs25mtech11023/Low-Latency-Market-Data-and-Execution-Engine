@@ -16,14 +16,41 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Install tools
-        run: sudo apt-get update && sudo apt-get install -y ninja-build clang lld zlib1g-dev
+        # g++-14 is the newest GCC packaged for Ubuntu 24.04 (the dev machine uses GCC 15;
+        # the code is strict C++20, so both must accept it). pigz enables the pipe-reader tests.
+        run: sudo apt-get update && sudo apt-get install -y ninja-build g++-14 clang lld zlib1g-dev pigz
+      - name: Allow TSan's memory layout
+        # Ubuntu 24.04 runners use 32 bits of mmap ASLR entropy, which collides with the fixed
+        # shadow-memory layout of ThreadSanitizer ("unexpected memory mapping"). 28 bits is the
+        # older default that TSan supports.
+        if: matrix.config == 'tsan'
+        run: sudo sysctl vm.mmap_rnd_bits=28
       - name: Configure
         run: |
           preset=${{ matrix.config }}
-          if [ "${{ matrix.compiler }}" = "clang" ]; then preset="clang-${{ matrix.config }}"; fi
+          extra=""
+          if [ "${{ matrix.compiler }}" = "clang" ]; then
+            preset="clang-${{ matrix.config }}"
+          else
+            extra="-DCMAKE_C_COMPILER=gcc-14 -DCMAKE_CXX_COMPILER=g++-14"
+          fi
           echo "PRESET=$preset" >> "$GITHUB_ENV"
-          cmake --preset "$preset" -DLLE_WERROR=ON
+          cmake --preset "$preset" -DLLE_WERROR=ON $extra
       - name: Build
         run: cmake --build --preset "$PRESET"
       - name: Test
         run: ctest --preset "$PRESET" --timeout 600
+
+  format:
+    # The same clang-format major version as the dev machine (21): formatting output differs
+    # between major versions, so the distro's older clang-format would report false diffs.
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install clang-format 21
+        run: |
+          wget -qO- https://apt.llvm.org/llvm-snapshot.gpg.key | sudo tee /etc/apt/trusted.gpg.d/apt.llvm.org.asc
+          echo "deb http://apt.llvm.org/noble/ llvm-toolchain-noble-21 main" | sudo tee /etc/apt/sources.list.d/llvm-21.list
+          sudo apt-get update && sudo apt-get install -y clang-format-21
+      - name: Check formatting
+        run: git ls-files '*.cpp' '*.hpp' '*.h' | xargs clang-format-21 --dry-run --Werror

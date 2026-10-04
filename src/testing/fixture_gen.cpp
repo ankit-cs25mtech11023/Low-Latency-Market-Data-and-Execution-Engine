@@ -64,10 +64,9 @@ public:
         emit_system('Q');
 
         if (cfg_.mode == FixtureMode::Mixed) {
-            constexpr FixtureMode blocks[] = {FixtureMode::Realistic,     FixtureMode::DeepQueue,
-                                              FixtureMode::WidePrices,    FixtureMode::ReplaceChains,
-                                              FixtureMode::Crossing,      FixtureMode::ManySymbols,
-                                              FixtureMode::ErrorPaths};
+            constexpr FixtureMode blocks[] = {
+                FixtureMode::Realistic, FixtureMode::DeepQueue,   FixtureMode::WidePrices, FixtureMode::ReplaceChains,
+                FixtureMode::Crossing,  FixtureMode::ManySymbols, FixtureMode::ErrorPaths};
             const std::uint64_t per = cfg_.messages / std::size(blocks);
             for (const FixtureMode m : blocks) run_block(m, per);
             run_block(FixtureMode::Realistic, cfg_.messages - per * std::size(blocks));
@@ -82,10 +81,13 @@ public:
 private:
     [[nodiscard]] std::uint32_t symbols_for(FixtureMode m) const {
         switch (m) {
-            case FixtureMode::DeepQueue: return 1;
+            case FixtureMode::DeepQueue:
+                return 1;
             case FixtureMode::ManySymbols:
-            case FixtureMode::Mixed: return std::max(cfg_.symbols, kManySymbols);
-            default: return std::max<std::uint32_t>(cfg_.symbols, 1);
+            case FixtureMode::Mixed:
+                return std::max(cfg_.symbols, kManySymbols);
+            default:
+                return std::max<std::uint32_t>(cfg_.symbols, 1);
         }
     }
 
@@ -93,7 +95,7 @@ private:
         mode_ = m;
         // Symbols this block draws from. Zipf weights for the realistic shape: the k-th most
         // active symbol gets weight 1/k, so a few symbols carry most of the traffic.
-        nsym_ = m == FixtureMode::DeepQueue ? 1
+        nsym_ = m == FixtureMode::DeepQueue     ? 1
                 : m == FixtureMode::ManySymbols ? static_cast<std::uint32_t>(mids_.size() - 1)
                                                 : std::min<std::uint32_t>(std::max<std::uint32_t>(cfg_.symbols, 1),
                                                                           static_cast<std::uint32_t>(mids_.size() - 1));
@@ -115,13 +117,27 @@ private:
             int a = live_.empty() ? 0 : pick(rng_);
             if (m == FixtureMode::DeepQueue && live_.size() > 20'000 && a == 0) a = 4;  // bound memory
             switch (a) {
-                case 0: add(); break;
-                case 1: execute(false); break;
-                case 2: execute(true); break;
-                case 3: cancel(); break;
-                case 4: del(); break;
-                case 5: replace(); break;
-                default: trade(); break;
+                case 0:
+                    add();
+                    break;
+                case 1:
+                    execute(false);
+                    break;
+                case 2:
+                    execute(true);
+                    break;
+                case 3:
+                    cancel();
+                    break;
+                case 4:
+                    del();
+                    break;
+                case 5:
+                    replace();
+                    break;
+                default:
+                    trade();
+                    break;
             }
         }
     }
@@ -190,10 +206,18 @@ private:
         const Locate loc = pick_locate();
         const OrderRef ghost = next_ref_ + 1'000'000'000'000ull + uniform<OrderRef>(0, 1'000'000);
         switch (uniform<int>(0, 8)) {
-            case 0: emit(itch::encode_executed(buf_.data(), loc, tick(), ghost, 10, ++match_)); break;
-            case 1: emit(itch::encode_cancel(buf_.data(), loc, tick(), ghost, 10)); break;
-            case 2: emit(itch::encode_delete(buf_.data(), loc, tick(), ghost)); break;
-            case 3: emit(itch::encode_replace(buf_.data(), loc, tick(), ghost, new_ref(), 100, mids_[loc])); break;
+            case 0:
+                emit(itch::encode_executed(buf_.data(), loc, tick(), ghost, 10, ++match_));
+                break;
+            case 1:
+                emit(itch::encode_cancel(buf_.data(), loc, tick(), ghost, 10));
+                break;
+            case 2:
+                emit(itch::encode_delete(buf_.data(), loc, tick(), ghost));
+                break;
+            case 3:
+                emit(itch::encode_replace(buf_.data(), loc, tick(), ghost, new_ref(), 100, mids_[loc]));
+                break;
             case 4:  // overfill: execute more than the order has; the book removes the order
                 if (!live_.empty()) {
                     const std::size_t i = pick_live();
@@ -232,8 +256,10 @@ private:
     // ---- helpers -------------------------------------------------------------------------
 
     void reduce(std::size_t i, Qty q) {
-        if (q >= live_[i].qty) erase(i);
-        else live_[i].qty -= q;
+        if (q >= live_[i].qty)
+            erase(i);
+        else
+            live_[i].qty -= q;
     }
     void erase(std::size_t i) {  // O(1) swap-remove; order inside live_ does not matter
         live_[i] = live_.back();
@@ -254,7 +280,7 @@ private:
         Price mid = mids_[loc];
         if (mode_ == FixtureMode::WidePrices) {
             if (chance(0.001)) mids_[loc] = mid = log_uniform_price();  // jump: forces recentring
-            if (chance(0.3)) return log_uniform_price();                 // far from the touch
+            if (chance(0.3)) return log_uniform_price();                // far from the touch
         }
         const Price t = tick_size(mid);
         if (mode_ == FixtureMode::Crossing) {  // either side anywhere near the mid
@@ -262,19 +288,21 @@ private:
             return clamp_price(static_cast<std::int64_t>(mid) + off);
         }
         // Distance from the mid in ticks: geometric, so most orders rest near the touch.
-        const auto d = static_cast<std::int64_t>(std::geometric_distribution<int>(mode_ == FixtureMode::DeepQueue ? 0.7 : 0.25)(rng_)) + 1;
+        const auto d = static_cast<std::int64_t>(
+                           std::geometric_distribution<int>(mode_ == FixtureMode::DeepQueue ? 0.7 : 0.25)(rng_)) +
+                       1;
         const std::int64_t off = d * static_cast<std::int64_t>(t);
-        return clamp_price(side == Side::Buy ? static_cast<std::int64_t>(mid) - off : static_cast<std::int64_t>(mid) + off);
+        return clamp_price(side == Side::Buy ? static_cast<std::int64_t>(mid) - off
+                                             : static_cast<std::int64_t>(mid) + off);
     }
 
     Price log_uniform_price() {
-        const double v = std::exp(std::uniform_real_distribution<double>(0.0, std::log(static_cast<double>(kMaxPrice)))(rng_));
+        const double v =
+            std::exp(std::uniform_real_distribution<double>(0.0, std::log(static_cast<double>(kMaxPrice)))(rng_));
         return clamp_price(std::llround(v));
     }
 
-    static Price clamp_price(std::int64_t p) {
-        return static_cast<Price>(std::clamp<std::int64_t>(p, 1, kMaxPrice));
-    }
+    static Price clamp_price(std::int64_t p) { return static_cast<Price>(std::clamp<std::int64_t>(p, 1, kMaxPrice)); }
 
     Qty random_qty() {
         if (chance(0.15)) return uniform<Qty>(1, 99);  // odd lot
@@ -336,7 +364,9 @@ const char* fixture_mode_name(FixtureMode m) noexcept {
     return "?";
 }
 
-void generate_fixture(const FixtureConfig& cfg, const FrameSink& sink) { Generator(cfg, sink).run(); }
+void generate_fixture(const FixtureConfig& cfg, const FrameSink& sink) {
+    Generator(cfg, sink).run();
+}
 
 std::vector<std::byte> generate_fixture_bytes(const FixtureConfig& cfg) {
     std::vector<std::byte> out;

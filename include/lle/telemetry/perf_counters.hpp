@@ -33,11 +33,11 @@
 namespace lle {
 
 enum class PerfEvent : std::uint8_t {
-    kCycles,          // core clock cycles (runs at the actual core frequency)
-    kInstructions,    // instructions retired
-    kRefCycles,       // reference cycles: ticks at a fixed rate regardless of core frequency
+    kCycles,        // core clock cycles (runs at the actual core frequency)
+    kInstructions,  // instructions retired
+    kRefCycles,     // reference cycles: ticks at a fixed rate regardless of core frequency
     kBranchMisses,
-    kCacheMisses,     // "LLC misses" on Intel (generic PERF_COUNT_HW_CACHE_MISSES)
+    kCacheMisses,  // "LLC misses" on Intel (generic PERF_COUNT_HW_CACHE_MISSES)
     kL1dReadMisses,
     kDtlbReadMisses,
     kPageFaults,      // software event: no PMU counter needed
@@ -72,7 +72,7 @@ public:
     PerfCounters(const PerfCounters&) = delete;
     PerfCounters& operator=(const PerfCounters&) = delete;
 
-    void start();  // reset + enable the group
+    void start();        // reset + enable the group
     PerfReading stop();  // disable the group and read it
 
 private:

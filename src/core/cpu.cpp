@@ -19,7 +19,9 @@ void pin_current_thread(int cpu) {
     sched_yield();
 }
 
-int current_cpu() noexcept { return sched_getcpu(); }
+int current_cpu() noexcept {
+    return sched_getcpu();
+}
 
 void set_thread_name(const std::string& name) noexcept {
     pthread_setname_np(pthread_self(), name.substr(0, 15).c_str());

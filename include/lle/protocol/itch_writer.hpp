@@ -17,7 +17,7 @@ public:
     ItchWriter(const ItchWriter&) = delete;
     ItchWriter& operator=(const ItchWriter&) = delete;
 
-    void write_message(const std::byte* msg, std::size_t len);  // adds the length prefix
+    void write_message(const std::byte* msg, std::size_t len);    // adds the length prefix
     void write_framed(const std::byte* framed, std::size_t len);  // already framed
     void close();  // flushes; throws std::runtime_error if any write failed
 

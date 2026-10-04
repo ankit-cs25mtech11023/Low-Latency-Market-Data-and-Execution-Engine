@@ -120,8 +120,7 @@ PerfCounters::PerfCounters(std::vector<PerfEvent> events) : events_(std::move(ev
         if (fd < 0) {
             const int err = errno;
             for (const int f : fds_) close(f);
-            throw std::system_error(err, std::generic_category(),
-                                    std::string("perf_event_open(") + spec.name + ")");
+            throw std::system_error(err, std::generic_category(), std::string("perf_event_open(") + spec.name + ")");
         }
         fds_.push_back(fd);
     }
@@ -148,9 +147,8 @@ PerfReading PerfCounters::stop() {
     r.events = events_;
     r.time_enabled_ns = buf[1];
     r.time_running_ns = buf[2];
-    const double scale = r.time_running_ns ? static_cast<double>(r.time_enabled_ns) /
-                                                 static_cast<double>(r.time_running_ns)
-                                           : 0.0;
+    const double scale =
+        r.time_running_ns ? static_cast<double>(r.time_enabled_ns) / static_cast<double>(r.time_running_ns) : 0.0;
     for (std::size_t i = 0; i < events_.size(); ++i) {
         const std::uint64_t raw = buf[3 + i];
         r.values.push_back(r.time_running_ns == r.time_enabled_ns

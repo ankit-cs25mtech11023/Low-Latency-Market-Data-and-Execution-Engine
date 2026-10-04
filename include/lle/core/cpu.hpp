@@ -26,6 +26,8 @@ template <class T>
     asm volatile("" : : "r,m"(value) : "memory");
 }
 
-[[gnu::always_inline]] inline void compiler_barrier() noexcept { asm volatile("" : : : "memory"); }
+[[gnu::always_inline]] inline void compiler_barrier() noexcept {
+    asm volatile("" : : : "memory");
+}
 
 }  // namespace lle

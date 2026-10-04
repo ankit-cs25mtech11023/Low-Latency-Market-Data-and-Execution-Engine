@@ -38,8 +38,8 @@ extern "C" int LLVMFuzzerTestOneInput(const std::uint8_t* data, std::size_t size
     //    book path with adversarial values and let the sanitizers check memory safety.
     auto a = std::make_unique<lle::book::ReferenceBook>(kLocates);
     auto b = std::make_unique<lle::book::ReferenceBook>(kLocates);
-    auto t = std::make_unique<lle::book::DifferentialTester<lle::book::ReferenceBook, lle::book::ReferenceBook>>(
-        *a, *b, 16);
+    auto t =
+        std::make_unique<lle::book::DifferentialTester<lle::book::ReferenceBook, lle::book::ReferenceBook>>(*a, *b, 16);
     try {
         lle::itch::for_each_framed(in, [&](const std::byte* p, std::size_t n) { (void)lle::itch::decode(p, n, *t); });
     } catch (const std::runtime_error&) {

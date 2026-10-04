@@ -49,14 +49,24 @@ public:
         : a_(a), b_(b), ba_(a, dir_a_), bb_(b, dir_b_), full_every_(full_every), dirty_flag_(65536, false) {}
 
     // ItchHandler interface: apply to both books, then compare.
-    void on_add(const itch::AddOrder& m) { both([&](auto& x) { x.on_add(m); }, m.h); }
-    void on_executed(const itch::OrderExecuted& m) { both([&](auto& x) { x.on_executed(m); }, m.h); }
+    void on_add(const itch::AddOrder& m) {
+        both([&](auto& x) { x.on_add(m); }, m.h);
+    }
+    void on_executed(const itch::OrderExecuted& m) {
+        both([&](auto& x) { x.on_executed(m); }, m.h);
+    }
     void on_executed_with_price(const itch::OrderExecutedWithPrice& m) {
         both([&](auto& x) { x.on_executed_with_price(m); }, m.h);
     }
-    void on_cancel(const itch::OrderCancel& m) { both([&](auto& x) { x.on_cancel(m); }, m.h); }
-    void on_delete(const itch::OrderDelete& m) { both([&](auto& x) { x.on_delete(m); }, m.h); }
-    void on_replace(const itch::OrderReplace& m) { both([&](auto& x) { x.on_replace(m); }, m.h); }
+    void on_cancel(const itch::OrderCancel& m) {
+        both([&](auto& x) { x.on_cancel(m); }, m.h);
+    }
+    void on_delete(const itch::OrderDelete& m) {
+        both([&](auto& x) { x.on_delete(m); }, m.h);
+    }
+    void on_replace(const itch::OrderReplace& m) {
+        both([&](auto& x) { x.on_replace(m); }, m.h);
+    }
     void on_directory(const itch::StockDirectory& m) {
         ba_.on_directory(m);
         bb_.on_directory(m);
@@ -90,7 +100,9 @@ public:
         const BookCounters& ca = a_.counters();
         const BookCounters& cb = b_.counters();
         auto cmp = [&](const char* name, std::uint64_t x, std::uint64_t y) {
-            if (!failed() && x != y) fail(index_, 0, 0, std::string("counter ") + name + ": " + std::to_string(x) + " vs " + std::to_string(y));
+            if (!failed() && x != y)
+                fail(index_, 0, 0,
+                     std::string("counter ") + name + ": " + std::to_string(x) + " vs " + std::to_string(y));
         };
         cmp("adds", ca.adds, cb.adds);
         cmp("executes", ca.executes, cb.executes);
@@ -146,9 +158,9 @@ private:
                 b_.depth(loc, s, db_, SIZE_MAX);
                 check_depth(a_, loc, s, da_, inv_);
                 if (da_ != db_) {
-                    fail(idx, loc, type, std::string(s == Side::Buy ? "bid" : "ask") + " depth differs: " +
-                                             std::to_string(da_.size()) + " vs " + std::to_string(db_.size()) +
-                                             " levels; first difference " + first_diff());
+                    fail(idx, loc, type,
+                         std::string(s == Side::Buy ? "bid" : "ask") + " depth differs: " + std::to_string(da_.size()) +
+                             " vs " + std::to_string(db_.size()) + " levels; first difference " + first_diff());
                     break;
                 }
             }

@@ -19,7 +19,9 @@ namespace {
 
 // std::strerror may return a pointer to a shared static buffer (not thread-safe); the
 // error_code message is built from the thread-safe strerror_r.
-std::string errno_message(int err) { return std::error_code(err, std::generic_category()).message(); }
+std::string errno_message(int err) {
+    return std::error_code(err, std::generic_category()).message();
+}
 
 class FdSource final : public ByteSource {
 public:
@@ -89,7 +91,8 @@ public:
             // like a message boundary, so the exit status is the only reliable signal.
             const int status = ::pclose(f_);
             f_ = nullptr;
-            if (status != 0) throw std::runtime_error("decompressor failed (exit status " + std::to_string(status) + ")");
+            if (status != 0)
+                throw std::runtime_error("decompressor failed (exit status " + std::to_string(status) + ")");
         }
         return r;
     }
@@ -127,17 +130,21 @@ std::unique_ptr<ByteSource> open_source(const std::string& path, Decompressor d)
     if (d == Decompressor::Auto) {
         if (!path.ends_with(".gz")) d = Decompressor::None;
         // std::system is not thread-safe; this runs once when a file is opened, never concurrently.
-        else d = (std::system("command -v pigz >/dev/null 2>&1") == 0)  // NOLINT(concurrency-mt-unsafe)
-                     ? Decompressor::Pigz
-                     : Decompressor::Zlib;
+        else
+            d = (std::system("command -v pigz >/dev/null 2>&1") == 0)  // NOLINT(concurrency-mt-unsafe)
+                    ? Decompressor::Pigz
+                    : Decompressor::Zlib;
     }
     switch (d) {
-        case Decompressor::None: return std::make_unique<FdSource>(path);
-        case Decompressor::Zlib: return std::make_unique<ZlibSource>(path);
+        case Decompressor::None:
+            return std::make_unique<FdSource>(path);
+        case Decompressor::Zlib:
+            return std::make_unique<ZlibSource>(path);
         case Decompressor::Pigz:
             if (::access(path.c_str(), R_OK) != 0) throw std::runtime_error("cannot read " + path);
             return std::make_unique<PipeSource>("pigz -dc " + shell_quote(path));
-        case Decompressor::Auto: break;
+        case Decompressor::Auto:
+            break;
     }
     throw std::logic_error("unreachable");
 }

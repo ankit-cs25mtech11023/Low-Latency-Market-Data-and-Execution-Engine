@@ -1,5 +1,3 @@
-#include "lle/telemetry/perf_counters.hpp"
-
 #include <gtest/gtest.h>
 
 #include <memory>
@@ -7,6 +5,7 @@
 #include <vector>
 
 #include "lle/core/cpu.hpp"
+#include "lle/telemetry/perf_counters.hpp"
 
 namespace {
 

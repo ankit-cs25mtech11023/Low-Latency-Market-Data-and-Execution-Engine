@@ -27,18 +27,18 @@
 namespace lle::book {
 
 template <class B>
-concept OrderBook = requires(B& b, const B& cb, Locate loc, OrderRef ref, Side side, Price px, Qty qty,
-                             std::vector<LevelView>& out) {
-    b.add(loc, ref, side, px, qty);
-    b.execute(loc, ref, qty);
-    b.cancel(loc, ref, qty);
-    b.remove(loc, ref);
-    b.replace(loc, ref, ref, qty, px);
-    { cb.top(loc) } -> std::same_as<Top>;
-    cb.depth(loc, side, out, std::size_t{});
-    { cb.live_orders() } -> std::convertible_to<std::size_t>;
-    { cb.counters() } -> std::convertible_to<const BookCounters&>;
-};
+concept OrderBook =
+    requires(B& b, const B& cb, Locate loc, OrderRef ref, Side side, Price px, Qty qty, std::vector<LevelView>& out) {
+        b.add(loc, ref, side, px, qty);
+        b.execute(loc, ref, qty);
+        b.cancel(loc, ref, qty);
+        b.remove(loc, ref);
+        b.replace(loc, ref, ref, qty, px);
+        { cb.top(loc) } -> std::same_as<Top>;
+        cb.depth(loc, side, out, std::size_t{});
+        { cb.live_orders() } -> std::convertible_to<std::size_t>;
+        { cb.counters() } -> std::convertible_to<const BookCounters&>;
+    };
 
 // Book-shape invariants that can be checked from the outside after any message.
 //
@@ -59,8 +59,10 @@ struct InvariantCounters {
 inline void check_top(const Top& t, InvariantCounters& c) noexcept {
     ++c.checks;
     if (t.bid_qty == 0 || t.ask_qty == 0) return;
-    if (t.bid_px > t.ask_px) ++c.crossed;
-    else if (t.bid_px == t.ask_px) ++c.locked;
+    if (t.bid_px > t.ask_px)
+        ++c.crossed;
+    else if (t.bid_px == t.ask_px)
+        ++c.locked;
 }
 
 // Full-depth check of one side; allocates via `scratch`, so not for the hot path.
@@ -71,8 +73,8 @@ void check_depth(const B& book, Locate loc, Side side, std::vector<LevelView>& s
     for (std::size_t i = 0; i < scratch.size(); ++i) {
         if (scratch[i].qty == 0 || scratch[i].orders == 0) ++c.empty_level;
         if (i > 0) {
-            const bool ordered = side == Side::Buy ? scratch[i].price < scratch[i - 1].price
-                                                   : scratch[i].price > scratch[i - 1].price;
+            const bool ordered =
+                side == Side::Buy ? scratch[i].price < scratch[i - 1].price : scratch[i].price > scratch[i - 1].price;
             if (!ordered) ++c.unsorted;
         }
     }

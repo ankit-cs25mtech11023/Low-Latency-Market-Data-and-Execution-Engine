@@ -19,11 +19,10 @@
 // the measured batches only, excluding calibration and warm-up. analyse.py divides them by
 // the number of calls. Use --counters none where perf_event_open is not permitted.
 
-#include <ctime>
-
 #include <chrono>
 #include <cstdio>
 #include <cstdlib>
+#include <ctime>
 #include <exception>
 #include <memory>
 #include <random>
@@ -51,17 +50,26 @@ std::uint64_t clock_ns(clockid_t id) noexcept {
 // the compiler from deleting the call.
 template <int V>
 [[gnu::always_inline]] inline std::uint64_t read_clock() noexcept {
-    if constexpr (V == 0) return x86::rdtsc();
-    else if constexpr (V == 1) return x86::rdtsc_start();     // lfence; rdtsc
-    else if constexpr (V == 2) return x86::rdtscp();          // rdtscp
-    else if constexpr (V == 3) return x86::rdtsc_end();       // rdtscp; lfence
-    else if constexpr (V == 4) return x86::rdtsc_fenced();    // lfence; rdtsc; lfence
+    if constexpr (V == 0)
+        return x86::rdtsc();
+    else if constexpr (V == 1)
+        return x86::rdtsc_start();  // lfence; rdtsc
+    else if constexpr (V == 2)
+        return x86::rdtscp();  // rdtscp
+    else if constexpr (V == 3)
+        return x86::rdtsc_end();  // rdtscp; lfence
+    else if constexpr (V == 4)
+        return x86::rdtsc_fenced();  // lfence; rdtsc; lfence
     else if constexpr (V == 5)
         return static_cast<std::uint64_t>(std::chrono::steady_clock::now().time_since_epoch().count());
-    else if constexpr (V == 6) return clock_ns(CLOCK_MONOTONIC);
-    else if constexpr (V == 7) return clock_ns(CLOCK_MONOTONIC_RAW);
-    else if constexpr (V == 8) return clock_ns(CLOCK_REALTIME);
-    else return 0;  // V == 9: empty loop body (loop overhead baseline)
+    else if constexpr (V == 6)
+        return clock_ns(CLOCK_MONOTONIC);
+    else if constexpr (V == 7)
+        return clock_ns(CLOCK_MONOTONIC_RAW);
+    else if constexpr (V == 8)
+        return clock_ns(CLOCK_REALTIME);
+    else
+        return 0;  // V == 9: empty loop body (loop overhead baseline)
 }
 
 template <int V>
@@ -101,8 +109,10 @@ void run_hist(lle::Histogram& h, std::int64_t batches, std::int64_t k, bool base
         const std::uint64_t t0 = lle::Tsc::start();
         for (std::int64_t i = 0; i < k; ++i) {
             const std::uint64_t v = values[static_cast<std::size_t>(i) & 4095u];
-            if (baseline) sink += v;
-            else target->record(v);
+            if (baseline)
+                sink += v;
+            else
+                target->record(v);
             lle::compiler_barrier();
         }
         const std::uint64_t t1 = lle::Tsc::stop();
@@ -130,20 +140,34 @@ int main(int argc, char** argv) try {
 
     auto hist = std::make_unique<lle::Histogram>();
     auto run = [&](std::int64_t n) {
-        if (variant == "rdtsc") run_batches<0>(*hist, n, k);
-        else if (variant == "lfence_rdtsc") run_batches<1>(*hist, n, k);
-        else if (variant == "rdtscp") run_batches<2>(*hist, n, k);
-        else if (variant == "rdtscp_lfence") run_batches<3>(*hist, n, k);
-        else if (variant == "lfence_rdtsc_lfence") run_batches<4>(*hist, n, k);
-        else if (variant == "steady_clock") run_batches<5>(*hist, n, k);
-        else if (variant == "clock_monotonic") run_batches<6>(*hist, n, k);
-        else if (variant == "clock_monotonic_raw") run_batches<7>(*hist, n, k);
-        else if (variant == "clock_realtime") run_batches<8>(*hist, n, k);
-        else if (variant == "empty_loop") run_batches<9>(*hist, n, k);
-        else if (variant == "empty_region") run_empty_region(*hist, n);
-        else if (variant == "hist_record") run_hist(*hist, n, k, false);
-        else if (variant == "hist_baseline") run_hist(*hist, n, k, true);
-        else throw std::invalid_argument("unknown variant " + variant);
+        if (variant == "rdtsc")
+            run_batches<0>(*hist, n, k);
+        else if (variant == "lfence_rdtsc")
+            run_batches<1>(*hist, n, k);
+        else if (variant == "rdtscp")
+            run_batches<2>(*hist, n, k);
+        else if (variant == "rdtscp_lfence")
+            run_batches<3>(*hist, n, k);
+        else if (variant == "lfence_rdtsc_lfence")
+            run_batches<4>(*hist, n, k);
+        else if (variant == "steady_clock")
+            run_batches<5>(*hist, n, k);
+        else if (variant == "clock_monotonic")
+            run_batches<6>(*hist, n, k);
+        else if (variant == "clock_monotonic_raw")
+            run_batches<7>(*hist, n, k);
+        else if (variant == "clock_realtime")
+            run_batches<8>(*hist, n, k);
+        else if (variant == "empty_loop")
+            run_batches<9>(*hist, n, k);
+        else if (variant == "empty_region")
+            run_empty_region(*hist, n);
+        else if (variant == "hist_record")
+            run_hist(*hist, n, k, false);
+        else if (variant == "hist_baseline")
+            run_hist(*hist, n, k, true);
+        else
+            throw std::invalid_argument("unknown variant " + variant);
     };
     // Open the counters before warm-up so the open() syscalls are not inside the region.
     std::unique_ptr<lle::PerfCounters> pmu;
@@ -156,12 +180,11 @@ int main(int argc, char** argv) try {
     const std::string counters_json = pmu ? pmu->stop().to_json() : "null";
 
     const bool per_call = variant != "empty_region";
-    const std::string params = R"({"experiment":"E0","variant":")" + lle::json_escape(variant) +
-                               R"(","cpu":)" + std::to_string(cpu) + R"(,"batches":)" + std::to_string(batches) +
-                               R"(,"batch_size":)" + std::to_string(per_call ? k : 1) +
-                               R"(,"value_divisor":)" + std::to_string(per_call ? k : 1) +
-                               R"(,"unit":"ticks","ran_on_cpu":)" + std::to_string(lle::current_cpu()) +
-                               R"(,"counters":)" + counters_json + "}";
+    const std::string params = R"({"experiment":"E0","variant":")" + lle::json_escape(variant) + R"(","cpu":)" +
+                               std::to_string(cpu) + R"(,"batches":)" + std::to_string(batches) + R"(,"batch_size":)" +
+                               std::to_string(per_call ? k : 1) + R"(,"value_divisor":)" +
+                               std::to_string(per_call ? k : 1) + R"(,"unit":"ticks","ran_on_cpu":)" +
+                               std::to_string(lle::current_cpu()) + R"(,"counters":)" + counters_json + "}";
     lle::write_run(out, *hist, cal, params);
     std::printf("%s: p50 %.2f ticks/call (%.2f ns), TSC %.4f GHz\n", variant.c_str(),
                 static_cast<double>(hist->value_at_quantile(0.5)) / static_cast<double>(per_call ? k : 1),

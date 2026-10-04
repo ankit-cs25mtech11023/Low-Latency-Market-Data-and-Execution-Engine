@@ -1,8 +1,6 @@
 // Streaming ITCH file reader tests: framing, buffer refills, compressed sources, and every
 // way a stream can end badly. A full day is streamed through this reader, so a silent
 // truncation would silently drop the end of the trading day from every experiment.
-#include "lle/protocol/itch_file.hpp"
-
 #include <gtest/gtest.h>
 #include <unistd.h>
 #include <zlib.h>
@@ -15,6 +13,7 @@
 
 #include "lle/protocol/itch.hpp"
 #include "lle/protocol/itch_encode.hpp"
+#include "lle/protocol/itch_file.hpp"
 
 namespace {
 
@@ -155,7 +154,8 @@ std::vector<std::byte> read_file(const std::string& path) {
 
 TEST_F(TempDir, TruncatedGzipIsAnErrorWithZlib) {
     const auto full = read_file(write_gz("full.gz", make_stream(50'000)));
-    const auto cut = write_raw("cut.gz", std::vector<std::byte>(full.begin(), full.begin() + static_cast<long>(full.size() / 2)));
+    const auto cut =
+        write_raw("cut.gz", std::vector<std::byte>(full.begin(), full.begin() + static_cast<long>(full.size() / 2)));
     ItchFileReader r(open_source(cut, Decompressor::Zlib));
     EXPECT_THROW(read_all(r), std::runtime_error);
 }
@@ -164,7 +164,8 @@ TEST_F(TempDir, TruncatedGzipIsAnErrorWithPigz) {
     if (std::system("command -v pigz >/dev/null 2>&1") != 0)  // NOLINT(concurrency-mt-unsafe): single-threaded test
         GTEST_SKIP() << "pigz not installed";
     const auto full = read_file(write_gz("full.gz", make_stream(50'000)));
-    const auto cut = write_raw("cut.gz", std::vector<std::byte>(full.begin(), full.begin() + static_cast<long>(full.size() / 2)));
+    const auto cut =
+        write_raw("cut.gz", std::vector<std::byte>(full.begin(), full.begin() + static_cast<long>(full.size() / 2)));
     ItchFileReader r(open_source(cut, Decompressor::Pigz));
     EXPECT_THROW(read_all(r), std::runtime_error);
 }

@@ -33,7 +33,16 @@
 
 namespace lle::testing {
 
-enum class FixtureMode : std::uint8_t { Realistic, DeepQueue, WidePrices, ReplaceChains, Crossing, ManySymbols, ErrorPaths, Mixed };
+enum class FixtureMode : std::uint8_t {
+    Realistic,
+    DeepQueue,
+    WidePrices,
+    ReplaceChains,
+    Crossing,
+    ManySymbols,
+    ErrorPaths,
+    Mixed
+};
 
 [[nodiscard]] FixtureMode parse_fixture_mode(const std::string& s);  // throws std::invalid_argument
 [[nodiscard]] const char* fixture_mode_name(FixtureMode m) noexcept;

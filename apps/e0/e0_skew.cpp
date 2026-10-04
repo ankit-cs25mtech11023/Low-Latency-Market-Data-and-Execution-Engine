@@ -46,10 +46,10 @@ struct PairResult {
     int a = 0, b = 0;
     std::size_t n = 0;
     double min_rtt = 0, p50_rtt = 0, p99_rtt = 0;
-    double offset_at_min_rtt = 0;    // ticks, B relative to A
-    double offset_median_best = 0;   // median offset over the 1% lowest-RTT samples
-    double bound_best = 0;           // max RTT/2 within that best 1%
-    std::size_t violations = 0;      // samples where tb fell outside [t0, t3]
+    double offset_at_min_rtt = 0;   // ticks, B relative to A
+    double offset_median_best = 0;  // median offset over the 1% lowest-RTT samples
+    double bound_best = 0;          // max RTT/2 within that best 1%
+    std::size_t violations = 0;     // samples where tb fell outside [t0, t3]
 };
 
 PairResult measure_pair(int cpu_a, int cpu_b, std::size_t samples, std::size_t warmup) {
@@ -145,7 +145,9 @@ int main(int argc, char** argv) try {
     auto closer = [](std::FILE* p) { std::fclose(p); };
     std::unique_ptr<std::FILE, decltype(closer)> f(std::fopen(csv_path.c_str(), "w"), closer);
     if (!f) throw std::runtime_error("cannot open " + csv_path);
-    std::fprintf(f.get(), "cpu_a,cpu_b,n,min_rtt,p50_rtt,p99_rtt,offset_at_min_rtt,offset_median_best1pct,bound_best1pct,violations\n");
+    std::fprintf(
+        f.get(),
+        "cpu_a,cpu_b,n,min_rtt,p50_rtt,p99_rtt,offset_at_min_rtt,offset_median_best1pct,bound_best1pct,violations\n");
 
     auto rtt_hist = std::make_unique<lle::Histogram>();  // RTT/2 over all pairs, for the summary
     for (const auto& [a, b] : pairs) {

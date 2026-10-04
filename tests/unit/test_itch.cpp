@@ -6,8 +6,6 @@
 //      offset, a round-trip test alone would still pass; these catch that.
 //   2. Round trips through itch_encode.hpp for every decoded type, plus the error paths
 //      (empty, truncated, unknown type, valid-but-ignored types).
-#include "lle/protocol/itch.hpp"
-
 #include <gtest/gtest.h>
 
 #include <array>
@@ -16,6 +14,7 @@
 #include <vector>
 
 #include "lle/protocol/endian.hpp"
+#include "lle/protocol/itch.hpp"
 #include "lle/protocol/itch_encode.hpp"
 
 namespace {
@@ -44,16 +43,47 @@ struct Capture {
     char other_type = 0;
     std::size_t other_len = 0;
 
-    void on_add(const AddOrder& m) { ++calls; add = m; }
-    void on_executed(const OrderExecuted& m) { ++calls; exec = m; }
-    void on_executed_with_price(const OrderExecutedWithPrice& m) { ++calls; exec_px = m; }
-    void on_cancel(const OrderCancel& m) { ++calls; cancel = m; }
-    void on_delete(const OrderDelete& m) { ++calls; del = m; }
-    void on_replace(const OrderReplace& m) { ++calls; repl = m; }
-    void on_directory(const StockDirectory& m) { ++calls; dir = m; }
-    void on_system(const SystemEvent& m) { ++calls; sys = m; }
-    void on_trading_action(const TradingAction& m) { ++calls; act = m; }
-    void on_other(char t, const std::byte*, std::size_t n) { ++calls; other_type = t; other_len = n; }
+    void on_add(const AddOrder& m) {
+        ++calls;
+        add = m;
+    }
+    void on_executed(const OrderExecuted& m) {
+        ++calls;
+        exec = m;
+    }
+    void on_executed_with_price(const OrderExecutedWithPrice& m) {
+        ++calls;
+        exec_px = m;
+    }
+    void on_cancel(const OrderCancel& m) {
+        ++calls;
+        cancel = m;
+    }
+    void on_delete(const OrderDelete& m) {
+        ++calls;
+        del = m;
+    }
+    void on_replace(const OrderReplace& m) {
+        ++calls;
+        repl = m;
+    }
+    void on_directory(const StockDirectory& m) {
+        ++calls;
+        dir = m;
+    }
+    void on_system(const SystemEvent& m) {
+        ++calls;
+        sys = m;
+    }
+    void on_trading_action(const TradingAction& m) {
+        ++calls;
+        act = m;
+    }
+    void on_other(char t, const std::byte*, std::size_t n) {
+        ++calls;
+        other_type = t;
+        other_len = n;
+    }
 };
 
 static_assert(ItchHandler<Capture>);
@@ -108,7 +138,7 @@ TEST(ItchGolden, AddOrderNoMpid) {
         0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08,  // 11 order reference
         'B',                                             // 19 buy/sell indicator
         0x00, 0x00, 0x00, 0x64,                          // 20 shares = 100
-        'A', 'A', 'P', 'L', ' ', ' ', ' ', ' ',          // 24 stock
+        'A',  'A',  'P',  'L',  ' ',  ' ',  ' ',  ' ',   // 24 stock
         0x00, 0x12, 0xD6, 0x44,                          // 32 price = 1234500 ($123.45)
     });
     ASSERT_EQ(m.size(), 36u);
@@ -129,9 +159,9 @@ TEST(ItchGolden, AddOrderNoMpid) {
 
 TEST(ItchGolden, AddOrderWithMpid) {
     // Spec 1.3.2: same layout as A plus a 4-byte attribution at offset 36 (40 bytes).
-    auto m = bytes({'F', 0x00, 0x07, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x09, 0x00, 0x00, 0x00, 0x00, 0x00,
-                    0x00, 0x00, 0x2A, 'S', 0x00, 0x00, 0x01, 0xF4, 'M', 'S', 'F', 'T', ' ', ' ', ' ', ' ', 0x00,
-                    0x00, 0x27, 0x10, 'G', 'S', 'C', 'O'});
+    auto m = bytes({'F',  0x00, 0x07, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x09, 0x00, 0x00, 0x00,
+                    0x00, 0x00, 0x00, 0x00, 0x2A, 'S',  0x00, 0x00, 0x01, 0xF4, 'M',  'S',  'F',  'T',
+                    ' ',  ' ',  ' ',  ' ',  0x00, 0x00, 0x27, 0x10, 'G',  'S',  'C',  'O'});
     ASSERT_EQ(m.size(), 40u);
     Capture c;
     ASSERT_EQ(decode(m.data(), m.size(), c), DecodeStatus::Ok);
@@ -148,7 +178,7 @@ TEST(ItchGolden, AddOrderWithMpid) {
 
 TEST(ItchGolden, OrderExecuted) {
     // Spec 1.5.1, 31 bytes: ref @11, executed shares @19, match number @23.
-    auto m = bytes({'E', 0x00, 0x03, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00,
+    auto m = bytes({'E',  0x00, 0x03, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00,
                     0x00, 0x00, 0x2A, 0x00, 0x00, 0x00, 0x0A, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x03, 0xE8});
     ASSERT_EQ(m.size(), 31u);
     Capture c;
@@ -161,9 +191,9 @@ TEST(ItchGolden, OrderExecuted) {
 
 TEST(ItchGolden, OrderReplace) {
     // Spec 1.6.2 "Order Replace", 35 bytes: original ref @11, new ref @19, shares @27, price @31.
-    auto m = bytes({'U', 0x00, 0x03, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x00,
-                    0x00, 0x00, 0x00, 0x2A, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x2B, 0x00, 0x00, 0x00,
-                    0xC8, 0x00, 0x01, 0x86, 0xA0});
+    auto m = bytes({'U',  0x00, 0x03, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01, 0x00,
+                    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x2A, 0x00, 0x00, 0x00, 0x00, 0x00,
+                    0x00, 0x00, 0x2B, 0x00, 0x00, 0x00, 0xC8, 0x00, 0x01, 0x86, 0xA0});
     ASSERT_EQ(m.size(), 35u);
     Capture c;
     ASSERT_EQ(decode(m.data(), m.size(), c), DecodeStatus::Ok);

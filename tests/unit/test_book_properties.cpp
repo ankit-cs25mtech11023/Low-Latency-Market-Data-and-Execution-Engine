@@ -48,8 +48,10 @@ public:
     void reduce(OrderRef ref, Qty by) {
         auto it = orders_.find(ref);
         if (it == orders_.end()) return;
-        if (by >= it->second.qty) orders_.erase(it);
-        else it->second.qty -= by;
+        if (by >= it->second.qty)
+            orders_.erase(it);
+        else
+            it->second.qty -= by;
     }
     void remove(OrderRef ref) { orders_.erase(ref); }
     void replace(OrderRef old_ref, OrderRef new_ref, Qty qty, Price px) {
@@ -137,12 +139,14 @@ struct Case {
     FixtureMode mode;
     std::uint64_t seed;
 };
-void PrintTo(const Case& c, std::ostream* os) { *os << lle::testing::fixture_mode_name(c.mode) << " seed " << c.seed; }
+void PrintTo(const Case& c, std::ostream* os) {
+    *os << lle::testing::fixture_mode_name(c.mode) << " seed " << c.seed;
+}
 
 class ModelBased : public ::testing::TestWithParam<Case> {};
 
 TEST_P(ModelBased, BookDepthEqualsNaiveModelThroughoutTheStream) {
-    constexpr std::uint32_t kSymbols = 8;  // ignored by single-symbol modes
+    constexpr std::uint32_t kSymbols = 8;      // ignored by single-symbol modes
     constexpr std::uint64_t kCheckEvery = 97;  // prime, so checks do not align with generator cycles
     lle::testing::FixtureConfig cfg;
     cfg.mode = GetParam().mode;
@@ -175,7 +179,7 @@ TEST_P(ModelBased, BookDepthEqualsNaiveModelThroughoutTheStream) {
                 const auto it = all.find({loc, s});
                 const auto& want = it == all.end() ? none : it->second;
                 ASSERT_TRUE(got == want) << "locate " << loc << " side " << static_cast<int>(s) << " after message "
-                                             << n << ": book has " << got.size() << " levels, model " << want.size();
+                                         << n << ": book has " << got.size() << " levels, model " << want.size();
                 check_depth(*book, loc, s, got, inv);
                 const Top t = book->top(loc);
                 const auto& best = want.empty() ? LevelView{} : want.front();

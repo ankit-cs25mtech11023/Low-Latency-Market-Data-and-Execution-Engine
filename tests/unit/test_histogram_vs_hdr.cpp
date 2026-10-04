@@ -1,14 +1,14 @@
 // Cross-validation against HdrHistogram_c, the reference implementation of the idea.
 // Both histograms see identical data; their quantiles must agree within the coarser
 // of the two precisions (ours: 2^-7 ≈ 0.78%; HdrHistogram with 3 significant digits: ~0.1%).
-#include "lle/telemetry/histogram.hpp"
-
 #include <gtest/gtest.h>
 #include <hdr/hdr_histogram.h>
 
 #include <cmath>
 #include <memory>
 #include <random>
+
+#include "lle/telemetry/histogram.hpp"
 
 namespace {
 

@@ -126,10 +126,29 @@ struct TradingAction {  // H
 // Message lengths from the ITCH 5.0 spec (0 = unknown type). Used for bounds checks.
 inline constexpr std::array<std::uint8_t, 256> kMessageLength = [] {
     std::array<std::uint8_t, 256> t{};
-    t['S'] = 12; t['R'] = 39; t['H'] = 25; t['Y'] = 20; t['L'] = 26; t['V'] = 35;
-    t['W'] = 12; t['K'] = 28; t['J'] = 35; t['h'] = 21; t['A'] = 36; t['F'] = 40;
-    t['E'] = 31; t['C'] = 36; t['X'] = 23; t['D'] = 19; t['U'] = 35; t['P'] = 44;
-    t['Q'] = 40; t['B'] = 19; t['I'] = 50; t['N'] = 20; t['O'] = 48;
+    t['S'] = 12;
+    t['R'] = 39;
+    t['H'] = 25;
+    t['Y'] = 20;
+    t['L'] = 26;
+    t['V'] = 35;
+    t['W'] = 12;
+    t['K'] = 28;
+    t['J'] = 35;
+    t['h'] = 21;
+    t['A'] = 36;
+    t['F'] = 40;
+    t['E'] = 31;
+    t['C'] = 36;
+    t['X'] = 23;
+    t['D'] = 19;
+    t['U'] = 35;
+    t['P'] = 44;
+    t['Q'] = 40;
+    t['B'] = 19;
+    t['I'] = 50;
+    t['N'] = 20;
+    t['O'] = 48;
     return t;
 }();
 
@@ -175,7 +194,9 @@ template <std::size_t N>
     return a;
 }
 
-[[gnu::always_inline]] inline char ch(const std::byte* p) noexcept { return static_cast<char>(*p); }
+[[gnu::always_inline]] inline char ch(const std::byte* p) noexcept {
+    return static_cast<char>(*p);
+}
 
 }  // namespace detail
 

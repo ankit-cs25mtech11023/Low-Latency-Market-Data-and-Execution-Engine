@@ -32,10 +32,10 @@ struct Tsc {
 
 // Linear mapping between TSC ticks and CLOCK_MONOTONIC_RAW nanoseconds.
 struct TscCalibration {
-    double ticks_per_ns = 0.0;   // e.g. 1.8 for a 1.8 GHz TSC
-    std::uint64_t tsc0 = 0;      // reference point: tsc0 <-> mono_raw_ns0
+    double ticks_per_ns = 0.0;  // e.g. 1.8 for a 1.8 GHz TSC
+    std::uint64_t tsc0 = 0;     // reference point: tsc0 <-> mono_raw_ns0
     std::int64_t mono_raw_ns0 = 0;
-    double duration_s = 0.0;     // length of the calibration window
+    double duration_s = 0.0;         // length of the calibration window
     double max_pair_error_ns = 0.0;  // uncertainty of the clock/TSC sample pairs
 
     [[nodiscard]] double to_ns(double ticks) const noexcept { return ticks / ticks_per_ns; }
@@ -51,7 +51,7 @@ struct TscFeatures {
     bool constant_tsc = false;  // rate does not change with P-states
     bool nonstop_tsc = false;   // keeps ticking in deep C-states
     bool rdtscp = false;
-    std::string clocksource;    // kernel clocksource; "tsc" means the vDSO uses it too
+    std::string clocksource;  // kernel clocksource; "tsc" means the vDSO uses it too
     [[nodiscard]] bool invariant() const noexcept { return constant_tsc && nonstop_tsc && rdtscp; }
     [[nodiscard]] std::string to_json() const;
 };

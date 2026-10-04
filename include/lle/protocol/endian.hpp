@@ -28,9 +28,12 @@ template <std::unsigned_integral T>
 #if defined(__cpp_lib_byteswap)
     return std::byteswap(v);
 #else
-    if constexpr (sizeof(T) == 1) return v;
-    else if constexpr (sizeof(T) == 2) return __builtin_bswap16(v);
-    else if constexpr (sizeof(T) == 4) return __builtin_bswap32(v);
+    if constexpr (sizeof(T) == 1)
+        return v;
+    else if constexpr (sizeof(T) == 2)
+        return __builtin_bswap16(v);
+    else if constexpr (sizeof(T) == 4)
+        return __builtin_bswap32(v);
     else {
         static_assert(sizeof(T) == 8);
         return __builtin_bswap64(v);

@@ -3,18 +3,16 @@
 // The differential tester is only useful if it really detects divergence, so besides
 // "reference vs reference agrees", it is run against mutant books with planted bugs and
 // must stop at the message that introduced each bug.
-#include "lle/book/differential.hpp"
-
 #include <gtest/gtest.h>
-
 #include <unistd.h>
 
 #include <filesystem>
 #include <memory>
 
+#include "lle/book/differential.hpp"
 #include "lle/book/reference_book.hpp"
-#include "lle/protocol/itch.hpp"
 #include "lle/protocol/endian.hpp"
+#include "lle/protocol/itch.hpp"
 #include "lle/protocol/itch_file.hpp"
 #include "lle/protocol/itch_slice.hpp"
 #include "lle/testing/fixture_gen.hpp"
@@ -83,8 +81,7 @@ TEST_P(ValidModes, ReferenceBookSeesNoAnomalies) {
 
 INSTANTIATE_TEST_SUITE_P(Modes, ValidModes,
                          ::testing::Values(FixtureMode::Realistic, FixtureMode::DeepQueue, FixtureMode::WidePrices,
-                                           FixtureMode::ReplaceChains, FixtureMode::Crossing,
-                                           FixtureMode::ManySymbols),
+                                           FixtureMode::ReplaceChains, FixtureMode::Crossing, FixtureMode::ManySymbols),
                          [](const auto& param_info) {
                              std::string n = lle::testing::fixture_mode_name(param_info.param);
                              for (auto& ch : n)
@@ -137,8 +134,8 @@ TEST_P(AllModes, ReferenceAgreesWithItself) {
 
 INSTANTIATE_TEST_SUITE_P(Modes, AllModes,
                          ::testing::Values(FixtureMode::Realistic, FixtureMode::DeepQueue, FixtureMode::WidePrices,
-                                           FixtureMode::ReplaceChains, FixtureMode::Crossing,
-                                           FixtureMode::ManySymbols, FixtureMode::ErrorPaths, FixtureMode::Mixed),
+                                           FixtureMode::ReplaceChains, FixtureMode::Crossing, FixtureMode::ManySymbols,
+                                           FixtureMode::ErrorPaths, FixtureMode::Mixed),
                          [](const auto& param_info) {
                              std::string n = lle::testing::fixture_mode_name(param_info.param);
                              for (auto& ch : n)
@@ -235,7 +232,8 @@ TEST(Differential, MismatchIsReproducedFromAOneSymbolSlice) {
     // of that symbol came before it in the full stream, so the mutant drops the same one.
     std::uint64_t cancels_before = 0, idx = 0;
     itch::for_each_framed(data, [&](const std::byte* p, std::size_t /*len*/) {
-        if (idx++ < m.message_index && static_cast<char>(p[0]) == 'X' && proto::load_be<std::uint16_t>(p + 1) == m.locate)
+        if (idx++ < m.message_index && static_cast<char>(p[0]) == 'X' &&
+            proto::load_be<std::uint16_t>(p + 1) == m.locate)
             ++cancels_before;
     });
     auto a2 = std::make_unique<ReferenceBook>();

@@ -24,7 +24,6 @@ struct SliceStats {
 
 // Writes every message of `locate` (and every S message) with stream index <= last_index to
 // `out_path` as a plain (uncompressed) framed ITCH file. Throws std::runtime_error on I/O errors.
-SliceStats write_locate_slice(ItchFileReader& in, Locate locate, std::uint64_t last_index,
-                              const std::string& out_path);
+SliceStats write_locate_slice(ItchFileReader& in, Locate locate, std::uint64_t last_index, const std::string& out_path);
 
 }  // namespace lle::itch

@@ -2,12 +2,6 @@
 //
 // The reference book is the oracle for the differential tester, so its behaviour must be
 // pinned down independently here. Prices use ITCH's 4 implied decimals (1'000'000 = $100).
-#include "lle/book/reference_book.hpp"
-
-#include "lle/book/book_builder.hpp"
-#include "lle/book/book_concept.hpp"
-#include "lle/protocol/itch_encode.hpp"
-
 #include <gtest/gtest.h>
 
 #include <array>
@@ -16,6 +10,11 @@
 #include <memory>
 #include <vector>
 
+#include "lle/book/book_builder.hpp"
+#include "lle/book/book_concept.hpp"
+#include "lle/book/reference_book.hpp"
+#include "lle/protocol/itch_encode.hpp"
+
 namespace {
 
 using namespace lle::book;
@@ -23,7 +22,9 @@ using namespace lle::book;
 static_assert(OrderBook<ReferenceBook>, "the reference book must satisfy the common interface");
 
 constexpr Locate kL = 1;
-Price px(double dollars) { return static_cast<Price>(std::llround(dollars * 10'000)); }
+Price px(double dollars) {
+    return static_cast<Price>(std::llround(dollars * 10'000));
+}
 
 std::vector<LevelView> levels(const ReferenceBook& b, Side s, Locate l = kL) {
     std::vector<LevelView> v;
@@ -53,7 +54,8 @@ TEST(ReferenceBook, AddsBuildSortedLevels) {
     EXPECT_EQ(t.ask_qty, 60u);
 
     // Bids best (highest) first, asks best (lowest) first.
-    EXPECT_EQ(levels(b, Side::Buy), (std::vector<LevelView>{{px(100.01), 210, 2}, {px(100.00), 100, 1}, {px(99.99), 300, 1}}));
+    EXPECT_EQ(levels(b, Side::Buy),
+              (std::vector<LevelView>{{px(100.01), 210, 2}, {px(100.00), 100, 1}, {px(99.99), 300, 1}}));
     EXPECT_EQ(levels(b, Side::Sell), (std::vector<LevelView>{{px(100.03), 60, 1}, {px(100.05), 50, 1}}));
     EXPECT_EQ(b.live_orders(), 6u);
     EXPECT_EQ(b.counters().adds, 6u);
@@ -224,7 +226,9 @@ TEST(BookBuilder, TradingActionUpdatesSymbolState) {
     BookBuilder<ReferenceBook> bb(*book, *dir);
     std::array<std::byte, 64> buf{};
     const auto sym = lle::itch::make_symbol("ABC");
-    const auto feed = [&](std::size_t n) { ASSERT_EQ(lle::itch::decode(buf.data(), n, bb), lle::itch::DecodeStatus::Ok); };
+    const auto feed = [&](std::size_t n) {
+        ASSERT_EQ(lle::itch::decode(buf.data(), n, bb), lle::itch::DecodeStatus::Ok);
+    };
 
     EXPECT_EQ(dir->state(kL), 0) << "no H seen yet";
     feed(lle::itch::encode_directory(buf.data(), kL, 1, sym));

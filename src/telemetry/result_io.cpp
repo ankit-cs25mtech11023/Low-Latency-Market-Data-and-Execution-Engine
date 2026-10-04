@@ -30,10 +30,18 @@ std::string json_escape(const std::string& s) {
     out.reserve(s.size());
     for (const char c : s) {
         switch (c) {
-            case '"': out += "\\\""; break;
-            case '\\': out += "\\\\"; break;
-            case '\n': out += "\\n"; break;
-            case '\t': out += "\\t"; break;
+            case '"':
+                out += "\\\"";
+                break;
+            case '\\':
+                out += "\\\\";
+                break;
+            case '\n':
+                out += "\\n";
+                break;
+            case '\t':
+                out += "\\t";
+                break;
             default:
                 if (static_cast<unsigned char>(c) < 0x20) {
                     char buf[8];
@@ -49,10 +57,9 @@ std::string json_escape(const std::string& s) {
 
 std::string build_info_json() {
     return std::string(R"({"git_sha":")") + json_escape(build_info::git_sha) + R"(","git_dirty":)" +
-           (build_info::git_dirty ? "true" : "false") + R"(,"build_type":")" +
-           json_escape(build_info::build_type) + R"(","compiler":")" + json_escape(build_info::compiler) +
-           R"(","cxx_flags":")" + json_escape(build_info::cxx_flags) + R"(","sanitizer":")" +
-           json_escape(build_info::sanitizer) + R"("})";
+           (build_info::git_dirty ? "true" : "false") + R"(,"build_type":")" + json_escape(build_info::build_type) +
+           R"(","compiler":")" + json_escape(build_info::compiler) + R"(","cxx_flags":")" +
+           json_escape(build_info::cxx_flags) + R"(","sanitizer":")" + json_escape(build_info::sanitizer) + R"("})";
 }
 
 void write_run(const std::string& prefix, const Histogram& hist, const TscCalibration& cal,

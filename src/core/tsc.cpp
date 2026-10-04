@@ -1,9 +1,8 @@
 #include "lle/core/tsc.hpp"
 
-#include <ctime>
-
 #include <algorithm>
 #include <cstdio>
+#include <ctime>
 #include <fstream>
 #include <limits>
 #include <sstream>
@@ -76,8 +75,8 @@ std::string TscCalibration::to_json() const {
     char buf[256];
     std::snprintf(buf, sizeof buf,
                   R"({"ticks_per_ns":%.9f,"tsc0":%llu,"mono_raw_ns0":%lld,"duration_s":%.6f,"max_pair_error_ns":%.3f})",
-                  ticks_per_ns, static_cast<unsigned long long>(tsc0), static_cast<long long>(mono_raw_ns0),
-                  duration_s, max_pair_error_ns);
+                  ticks_per_ns, static_cast<unsigned long long>(tsc0), static_cast<long long>(mono_raw_ns0), duration_s,
+                  max_pair_error_ns);
     return buf;
 }
 
@@ -102,8 +101,8 @@ TscFeatures detect_tsc_features() {
 std::string TscFeatures::to_json() const {
     std::ostringstream o;
     o << R"({"constant_tsc":)" << (constant_tsc ? "true" : "false") << R"(,"nonstop_tsc":)"
-      << (nonstop_tsc ? "true" : "false") << R"(,"rdtscp":)" << (rdtscp ? "true" : "false")
-      << R"(,"clocksource":")" << clocksource << R"("})";
+      << (nonstop_tsc ? "true" : "false") << R"(,"rdtscp":)" << (rdtscp ? "true" : "false") << R"(,"clocksource":")"
+      << clocksource << R"("})";
     return o.str();
 }
 

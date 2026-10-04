@@ -18,13 +18,16 @@
 //
 // Only compiler intrinsics are used (no inline asm), so the code works with GCC and Clang.
 
-#include <cstdint>
 #include <x86intrin.h>
+
+#include <cstdint>
 
 namespace lle::arch::x86 {
 
 // Plain read: cheapest, no ordering guarantees at all.
-[[gnu::always_inline]] inline std::uint64_t rdtsc() noexcept { return __rdtsc(); }
+[[gnu::always_inline]] inline std::uint64_t rdtsc() noexcept {
+    return __rdtsc();
+}
 
 // Start stamp: wait for earlier instructions, then read.
 [[gnu::always_inline]] inline std::uint64_t rdtsc_start() noexcept {
@@ -62,6 +65,8 @@ namespace lle::arch::x86 {
 }
 
 // Spin-wait hint: reduces power and frees resources for the SMT sibling while polling.
-[[gnu::always_inline]] inline void cpu_relax() noexcept { _mm_pause(); }
+[[gnu::always_inline]] inline void cpu_relax() noexcept {
+    _mm_pause();
+}
 
 }  // namespace lle::arch::x86
