@@ -82,6 +82,7 @@ The engine is a testbed for a small set of deep, reproducible performance experi
 - [ ] Implement a fixed-size object pool with 32-bit indices
 - [ ] Define the `OrderNode` (32 B) and `Level` structs with `static_assert` sizes
 - [ ] L1: map levels + pooled intrusive doubly-linked order lists
+- [ ] L2a (deadline build, 2026-10-04): per-symbol/side sorted level vector, best price at the back, linear scan from the best then binary search (E1: 99.9998% of executions at the best, 91% of deletes within 16 ticks); compared against the reference book first
 - [ ] L2: per-symbol/side tick ladder (±W ticks; E1 coverage gives the candidates, E2 sweeps W ∈ {64, 256, 1024}), sparse map fallback, recentring with a counter
 - [ ] L2: two-level bitmap best-price search using `std::countr_zero`/`std::countl_zero`
 - [ ] L3: open-addressing order-ref map (linear probing, backward-shift delete); E1 ruled out a direct vector (refs span 260 M, peak live 1.96 M)
@@ -231,6 +232,7 @@ The engine is a testbed for a small set of deep, reproducible performance experi
 - **Machine:** i5-8250U, SMT siblings 0/4, 1/5, 2/6, 3/7. Engine cores 2,3 with siblings 6,7 idle in E6. constant/nonstop TSC, LBR, Intel PT, RAPL available. Only GCC 15.2 was present at plan time (clang, perf, llvm-bolt need installing).
 - **RAM 7.6 GiB:** always stream ITCH; never load a full day.
 - **Schedule (revised 2026-10-04):** Claude implements v1.0 (P0–P8: core + HFT specialization, E0–E6) directly, aiming for the user's HFT resume deadline of 2026-10-06; interviews are expected ~early December 2026. If v1.0 is not reached by the deadline, the resume covers only what is finished and measured (core-only bullets if needed), and work continues to v1.0. Quality is never cut for the deadline. After v1.0 the user studies everything in detail (study guide in P8).
+- **Deadline order for P2 (decided 2026-10-04, 5 h before the resume deadline):** first build the combined optimized book (pool + intrusive FIFO lists + L2a level vector + L3 open-addressing ref map), pass the differential test on the full real day, and measure it against the reference book (N ≥ 10 interleaved runs, bootstrap CI, counters, allocation count). E2 is then written up as *partial*: per-layer ablation, ladder+bitmap variant (L2), L4/L5 (need memlock/hugepage limits from sudo), top-down, Intel PT and llvm-mca follow after the deadline. Nothing is dropped; only the order changes.
 - **Original time budget:** 15–20 h/week. Fallbacks: stop at the core checkpoint if ≤8 weeks remain; at ≤11 weeks, do P5 without retransmit + minimal P6 and skip E6.
 - **ITCH data (verified 2026-10-04):** files are listed at `https://emi.nasdaq.com/ITCH/Nasdaq%20ITCH/`. Primary dev day: `07302019.NASDAQ_ITCH50.gz` (3.66 GB, has an `.md5sum`). No terms-of-use text is shown on the listing; this is recorded in `data/README.md`.
 - **Experiment write-up template and benchmark methodology:** master plan §5.3 and §9.

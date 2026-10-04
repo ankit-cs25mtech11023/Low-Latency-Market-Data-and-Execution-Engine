@@ -135,6 +135,14 @@ void PerfCounters::start() {
     ioctl(fds_[0], PERF_EVENT_IOC_ENABLE, PERF_IOC_FLAG_GROUP);
 }
 
+void PerfCounters::pause() {
+    ioctl(fds_[0], PERF_EVENT_IOC_DISABLE, PERF_IOC_FLAG_GROUP);
+}
+
+void PerfCounters::resume() {
+    ioctl(fds_[0], PERF_EVENT_IOC_ENABLE, PERF_IOC_FLAG_GROUP);
+}
+
 PerfReading PerfCounters::stop() {
     ioctl(fds_[0], PERF_EVENT_IOC_DISABLE, PERF_IOC_FLAG_GROUP);
     // PERF_FORMAT_GROUP layout: nr, time_enabled, time_running, value[nr].

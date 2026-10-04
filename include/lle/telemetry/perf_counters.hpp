@@ -74,6 +74,10 @@ public:
 
     void start();        // reset + enable the group
     PerfReading stop();  // disable the group and read it
+    // Accumulate over several separate regions without resetting: start() then pause()
+    // once, then resume()/pause() around each region, then stop() to read the sum.
+    void pause();   // disable, keep counts
+    void resume();  // enable, keep counts
 
 private:
     std::vector<PerfEvent> events_;

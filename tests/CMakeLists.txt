@@ -24,4 +24,5 @@ lle_add_test(test_protocol
 lle_add_test(test_book
     unit/test_reference_book.cpp
     unit/test_differential.cpp
-    unit/test_book_properties.cpp)
+    unit/test_book_properties.cpp
+    unit/test_fast_book.cpp)
